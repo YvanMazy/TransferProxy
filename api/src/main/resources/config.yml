@@ -1,0 +1,13 @@
+network:
+  bind-address: "localhost"
+  bind-port: 25565
+  resource-leak-detector-level: "DISABLED"
+  use-epoll: true
+  boss-threads: 1
+  worker-threads: 3
+  use-tcp-no-delay: false
+
+status:
+  name: "TransferProxy"
+  description: "<green>A TransferProxy server"
+  protocol: "AUTO"

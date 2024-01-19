@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'be.darkkraft.transferproxy'
+version = '1.0'
+
+dependencies {
+    // Project API
+    api project(":api")
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'be.darkkraft.transferproxy.main.Main'
+    }
+}

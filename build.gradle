@@ -1,0 +1,35 @@
+group = 'be.darkkraft.transferproxy'
+version = '1.0.0'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // Logging
+        implementation 'org.tinylog:slf4j-tinylog:2.6.2'
+        implementation 'org.tinylog:tinylog-impl:2.6.2'
+
+        // Networking
+        implementation 'io.netty:netty-all:4.1.104.Final'
+
+        // Annotations
+        implementation 'org.jetbrains:annotations:24.1.0'
+
+        testImplementation platform('org.junit:junit-bom:5.10.1')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
