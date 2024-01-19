@@ -46,6 +46,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
         packet.handle(this);
     }
 
+    @Override
     public void transfer(final @NotNull String host, final int hostPort) {
         if (this.state != ConnectionState.CONFIG) {
             throw new IllegalStateException("Connection cannot be transferred when state is not");

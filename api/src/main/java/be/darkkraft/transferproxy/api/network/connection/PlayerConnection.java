@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface PlayerConnection {
 
+    void transfer(final @NotNull String host, final int hostPort);
+
     void sendPacket(final @NotNull Packet packet);
 
     void sendPacketAndClose(final @NotNull Packet packet);
