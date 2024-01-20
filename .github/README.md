@@ -9,11 +9,11 @@ efficient solution for Minecraft server management.
 
 - **Transfer packet**: Automatically transfers players upon connection using the new "Transfer packets".
 - **High performance**: Built to be very light and fast, it aims to have minimal resource cost.
-- **Flexibility**: (Soon) Designed to support addons for targeted server selection and custom redirection strategies.
+- **Flexibility**: Designed to support plugins for targeted server selection and custom redirection strategies.
 
 ## ⚙️ How to use it ?
 
-The project is currently under development but it is already possible to use it. To do this you will have to clone the
+The project is currently under development; but it is already possible to use it. To do this you will have to clone the
 repository and modify the Main class
 located [here](https://github.com/Darkkraft/TransferProxy/blob/master/core/src/main/java/be/darkkraft/transferproxy/main/Main.java#L38).
 It's a little tedious but that will quickly change.
@@ -48,7 +48,7 @@ Setting up TransferProxy is straightforward:
 
 1. Download and launch the TransferProxy JAR file.
 2. A default configuration file will be created. (More information [coming soon](#)).
-3. Addons can be used to specify server targets and redirection rules.
+3. Then choose an existing plugin or develop your own plugin. This will allow you to configure the redirection rules.
 
 ## 🔌 Contribution
 
