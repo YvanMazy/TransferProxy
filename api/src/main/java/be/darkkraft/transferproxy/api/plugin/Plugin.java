@@ -22,27 +22,27 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.module;
+package be.darkkraft.transferproxy.api.plugin;
 
-import be.darkkraft.transferproxy.api.login.LoginHandler;
-import be.darkkraft.transferproxy.api.plugin.PluginManager;
-import be.darkkraft.transferproxy.api.status.StatusHandler;
-import org.jetbrains.annotations.NotNull;
+import be.darkkraft.transferproxy.api.TransferProxy;
+import be.darkkraft.transferproxy.api.plugin.classloader.PluginClassloader;
+import be.darkkraft.transferproxy.api.plugin.info.PluginInfo;
 
-public interface ModuleManager {
+public interface Plugin {
 
-    void initializeDefaults();
+    void onEnable();
 
-    @NotNull StatusHandler getStatusHandler();
+    void onDisable();
 
-    @NotNull LoginHandler getLoginHandler();
+    default PluginInfo getInfo() {
+        if (this.getClass().getClassLoader() instanceof final PluginClassloader classloader) {
+            return classloader.getInfo();
+        }
+        return null;
+    }
 
-    @NotNull PluginManager getPluginManager();
-
-    void setStatusHandler(final @NotNull StatusHandler statusHandler);
-
-    void setLoginHandler(final @NotNull LoginHandler loginHandler);
-
-    void setPluginManager(final @NotNull PluginManager pluginManager);
+    default TransferProxy getProxy() {
+        return TransferProxy.getInstance();
+    }
 
 }

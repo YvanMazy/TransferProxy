@@ -22,27 +22,16 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.module;
+package be.darkkraft.transferproxy.api.plugin.exception;
 
-import be.darkkraft.transferproxy.api.login.LoginHandler;
-import be.darkkraft.transferproxy.api.plugin.PluginManager;
-import be.darkkraft.transferproxy.api.status.StatusHandler;
-import org.jetbrains.annotations.NotNull;
+public class PluginInitializationException extends RuntimeException {
 
-public interface ModuleManager {
+    public PluginInitializationException(final String message) {
+        super(message);
+    }
 
-    void initializeDefaults();
-
-    @NotNull StatusHandler getStatusHandler();
-
-    @NotNull LoginHandler getLoginHandler();
-
-    @NotNull PluginManager getPluginManager();
-
-    void setStatusHandler(final @NotNull StatusHandler statusHandler);
-
-    void setLoginHandler(final @NotNull LoginHandler loginHandler);
-
-    void setPluginManager(final @NotNull PluginManager pluginManager);
+    public PluginInitializationException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
 }
