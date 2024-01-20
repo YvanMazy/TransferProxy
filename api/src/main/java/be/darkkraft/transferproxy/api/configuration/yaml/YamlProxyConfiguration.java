@@ -39,7 +39,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
     }
 
     @Override
-    public Status getStatus() {
+    public ProxyConfiguration.Status getStatus() {
         return this.status;
     }
 
@@ -79,7 +79,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         }
 
         @Override
-        public boolean useEpoll() {
+        public boolean isUseEpoll() {
             return this.useEpoll;
         }
 
@@ -94,13 +94,13 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         }
 
         @Override
-        public boolean useTcpNoDelay() {
+        public boolean isUseTcpNoDelay() {
             return this.useTcpNoDelay;
         }
 
     }
 
-    private static class YamlStatus implements Status {
+    private static class YamlStatus implements ProxyConfiguration.Status {
 
         private final String name;
         private final String description;

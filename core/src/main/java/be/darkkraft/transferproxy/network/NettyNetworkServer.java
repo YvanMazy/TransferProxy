@@ -73,7 +73,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
         final int workerThread = config.getWorkerThreads();
 
         // Use Epoll if available
-        if (config.useEpoll() && Epoll.isAvailable()) {
+        if (config.isUseEpoll() && Epoll.isAvailable()) {
             bossGroup = new EpollEventLoopGroup(bossThread, bossFactory);
             workerGroup = new EpollEventLoopGroup(workerThread, workerFactory);
             channelClass = EpollServerSocketChannel.class;
@@ -93,7 +93,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
                 .localAddress(address);
 
         // Enable tcp no delay
-        if (config.useTcpNoDelay()) {
+        if (config.isUseTcpNoDelay()) {
             bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
         }
 

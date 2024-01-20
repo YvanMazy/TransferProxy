@@ -40,13 +40,13 @@ public interface ProxyConfiguration {
 
         ResourceLeakDetector.Level getResourceLeakDetectorLevel();
 
-        boolean useEpoll();
+        boolean isUseEpoll();
 
         int getBossThreads();
 
         int getWorkerThreads();
 
-        boolean useTcpNoDelay();
+        boolean isUseTcpNoDelay();
 
     }
 
