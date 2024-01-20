@@ -1,54 +1,35 @@
 ## 🌐 Overview
 
-TransferProxy is a proxy for Minecraft, harnessing the power of the new transfer packet feature introduced in Minecraft 24w03a
+**TransferProxy** is a proxy for Minecraft, harnessing the power of the new transfer packet feature introduced in Minecraft 24w03a
 (release in 1.20.5). This feature allows server-to-server transfers, opening up a myriad of possibilities for server networks.
 Whether it's for large-scale server networks or small private servers, TransferProxy aims to provide a versatile and
 efficient solution for Minecraft server management.
 
-## 🚀 Features
+Here are the project features:
+- **Performance**: The project was designed to be lightweight and inexpensive in terms of resources. It is capable of supporting thousands of requests simultaneously.
+- **Plugins**: The project works with plugins, which allows you to create your own redirection rules.
+- **Community**: The project aims to be community and collaborative, suggestions are appreciated.
+- **Wiki**: Documentation can be found [here](https://github.com/Darkkraft/TransferProxy/wiki), if any information is missing feel free to make an issue.
+ 
+## ⚙️ How to use ?
 
-- **Transfer packet**: Automatically transfers players upon connection using the new "Transfer packets".
-- **High performance**: Built to be very light and fast, it aims to have minimal resource cost.
-- **Flexibility**: Designed to support plugins for targeted server selection and custom redirection strategies.
+TransferProxy works with a system of plugins, it is thanks to these that you can configure the redirection rules or the motd.
+There are several ways to set up TransferProxy. The simplest use is to download it in the "release" section and set up a plugin or develop one.
 
-## ⚙️ How to use it ?
+If you want to learn more about plugin development with TransferProxy, click this [wiki link](https://github.com/Darkkraft/TransferProxy/wiki/Plugins).
 
-The project is currently under development; but it is already possible to use it. To do this you will have to clone the
-repository and modify the Main class
-located [here](https://github.com/Darkkraft/TransferProxy/blob/master/core/src/main/java/be/darkkraft/transferproxy/main/Main.java#L38).
-It's a little tedious but that will quickly change.
+A demo plugin using Gradle is available [here](https://github.com/Darkkraft/TransferProxy-Demo-plugin).
 
-Here is an example of code that works:
+## 📅 What is planned for the project?
 
-```java
-final TransferProxy proxy = new TransferProxyImpl(configuration);
-
-proxy.getModuleManager().setLoginHandler(connection -> {
-    if (connection.getName().contains("potato")) { // Automatically kick players with "potato" in their name
-        connection.forceDisconnect();
-        return;
-    } else if (connection.getName().equals("Darkkraft")) { // Transfer the player to the development server if his name is "Darkkraft"
-        connection.transfer("dev.my-domain.com", 25565);
-        return;
-    }
-    connection.transfer("lobby.my-domain.com", 25565); // Transfers the player to the lobby server.
-});
-
-proxy.start();
-```
+- Integrate the cookie system added in the same version, very soon.
+- Add official plugins for the most common uses, I am open to suggestions.
+- Probably other things that will come over time.
 
 ## 📋 Requirements
 
 - Java version: 17 or higher.
 - Minecraft client version: 1.20.5 or higher, to support the transfer packet functionality.
-
-## 📥 Installation and Setup
-
-Setting up TransferProxy is straightforward:
-
-1. Download and launch the TransferProxy JAR file.
-2. A default configuration file will be created. (More information [coming soon](#)).
-3. Then choose an existing plugin or develop your own plugin. This will allow you to configure the redirection rules.
 
 ## 🔌 Contribution
 
