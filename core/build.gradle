@@ -16,3 +16,5 @@ shadowJar {
         attributes 'Main-Class': 'be.darkkraft.transferproxy.main.Main'
     }
 }
+
+build.dependsOn shadowJar
