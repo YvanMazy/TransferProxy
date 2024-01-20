@@ -15,6 +15,7 @@ shadowJar {
     manifest {
         attributes 'Main-Class': 'be.darkkraft.transferproxy.main.Main'
     }
+    archiveClassifier.set('')
 }
 
-build.dependsOn shadowJar
+assemble.dependsOn shadowJar

@@ -39,4 +39,12 @@ allprojects {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
 }
