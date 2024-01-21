@@ -41,6 +41,16 @@ public interface PlayerConnection {
 
     void forceDisconnect();
 
+    void setInformation(final @NotNull ClientInformation information);
+
+    void setProfile(final @NotNull String name, final @NotNull UUID uuid);
+
+    void setState(final @NotNull ConnectionState state);
+
+    void setProtocol(final int protocol);
+
+    void setHost(final @NotNull String hostname, final int hostPort);
+
     String getName();
 
     UUID getUUID();
@@ -57,14 +67,6 @@ public interface PlayerConnection {
 
     int getHostPort();
 
-    void setInformation(final @NotNull ClientInformation information);
-
-    void setProfile(final @NotNull String name, final @NotNull UUID uuid);
-
-    void setState(final @NotNull ConnectionState state);
-
-    void setProtocol(final int protocol);
-
-    void setHost(final @NotNull String hostname, final int hostPort);
+    boolean isFromTransfer();
 
 }

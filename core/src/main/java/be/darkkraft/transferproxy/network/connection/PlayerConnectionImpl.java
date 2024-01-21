@@ -60,6 +60,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private String name;
     private UUID uuid;
     private ClientInformation information;
+    private boolean fromTransfer;
 
     public PlayerConnectionImpl(final @NotNull Channel channel) {
         this.channel = Objects.requireNonNull(channel, "Channel cannot be null");
@@ -138,6 +139,40 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
+    public void setInformation(final @NotNull ClientInformation information) {
+        this.information = Objects.requireNonNull(information, "Information cannot be null");
+    }
+
+    @Override
+    public void setProfile(final @NotNull String name, final @NotNull UUID uuid) {
+        this.name = Objects.requireNonNull(name, "Name cannot be null");
+        this.uuid = Objects.requireNonNull(uuid, "UUID cannot be null");
+    }
+
+    @Override
+    public void setState(@NotNull ConnectionState state) {
+        if (Objects.requireNonNull(state, "State cannot be null") == ConnectionState.TRANSFER) {
+            this.fromTransfer = true;
+            state = ConnectionState.LOGIN;
+        }
+        this.state = state;
+        if (this.state == ConnectionState.CONFIG) {
+            LOGGER.info("Player {} are now connected", this.getDisplay());
+        }
+    }
+
+    @Override
+    public void setProtocol(final int protocol) {
+        this.protocol = protocol;
+    }
+
+    @Override
+    public void setHost(final @NotNull String hostname, final int hostPort) {
+        this.hostname = Objects.requireNonNull(hostname, "Hostname cannot be null");
+        this.hostPort = hostPort;
+    }
+
+    @Override
     public String getName() {
         return this.name;
     }
@@ -178,33 +213,8 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
-    public void setInformation(final @NotNull ClientInformation information) {
-        this.information = Objects.requireNonNull(information, "Information cannot be null");
-    }
-
-    @Override
-    public void setProfile(final @NotNull String name, final @NotNull UUID uuid) {
-        this.name = Objects.requireNonNull(name, "Name cannot be null");
-        this.uuid = Objects.requireNonNull(uuid, "UUID cannot be null");
-    }
-
-    @Override
-    public void setState(final @NotNull ConnectionState state) {
-        this.state = Objects.requireNonNull(state, "State cannot be null");
-        if (this.state == ConnectionState.CONFIG) {
-            LOGGER.info("Player {} are now connected", this.getDisplay());
-        }
-    }
-
-    @Override
-    public void setProtocol(final int protocol) {
-        this.protocol = protocol;
-    }
-
-    @Override
-    public void setHost(final @NotNull String hostname, final int hostPort) {
-        this.hostname = Objects.requireNonNull(hostname, "Hostname cannot be null");
-        this.hostPort = hostPort;
+    public boolean isFromTransfer() {
+        return this.fromTransfer;
     }
 
     private String getDisplay() {
