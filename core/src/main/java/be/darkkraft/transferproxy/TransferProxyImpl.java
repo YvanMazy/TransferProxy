@@ -48,7 +48,7 @@ public class TransferProxyImpl extends TransferProxy {
 
     public TransferProxyImpl(final @NotNull ProxyConfiguration configuration) {
         this.setInstance(this);
-        this.configuration = Objects.requireNonNull(configuration, "Configuration cannot be null");
+        this.configuration = Objects.requireNonNull(configuration, "configuration cannot be null");
     }
 
     @Override

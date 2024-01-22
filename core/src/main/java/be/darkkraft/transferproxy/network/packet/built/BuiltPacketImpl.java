@@ -31,6 +31,8 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import static be.darkkraft.transferproxy.util.BufUtil.writeVarInt;
 
 public class BuiltPacketImpl implements BuiltPacket {
@@ -48,7 +50,7 @@ public class BuiltPacketImpl implements BuiltPacket {
     }
 
     public BuiltPacketImpl(final byte[] data) {
-        this.data = data;
+        this.data = Objects.requireNonNull(data, "data cannot be null");
     }
 
     @Override

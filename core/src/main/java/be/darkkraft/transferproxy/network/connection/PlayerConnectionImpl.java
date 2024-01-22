@@ -74,7 +74,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private boolean fromTransfer;
 
     public PlayerConnectionImpl(final @NotNull Channel channel) {
-        this.channel = Objects.requireNonNull(channel, "Channel cannot be null");
+        this.channel = Objects.requireNonNull(channel, "channel cannot be null");
     }
 
     @Override
@@ -176,7 +176,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void sendPacket(final @NotNull Packet packet) {
-        Objects.requireNonNull(packet, "The packet cannot be sent because it is null");
+        Objects.requireNonNull(packet, "packet cannot be null");
         if (this.channel.isActive() && this.state != ConnectionState.CLOSED) {
             this.channel.writeAndFlush(ensurePacket(this.channel.alloc(), packet), this.channel.voidPromise());
         }
@@ -184,7 +184,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void sendPacketAndClose(final @NotNull Packet packet) {
-        Objects.requireNonNull(packet, "The packet cannot be sent because it is null");
+        Objects.requireNonNull(packet, "packet cannot be null");
         if (this.channel.isActive() && this.state != ConnectionState.CLOSED) {
             this.channel.writeAndFlush(ensurePacket(this.channel.alloc(), packet)).addListener(ChannelFutureListener.CLOSE);
         }
@@ -200,18 +200,18 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void setInformation(final @NotNull ClientInformation information) {
-        this.information = Objects.requireNonNull(information, "Information cannot be null");
+        this.information = Objects.requireNonNull(information, "information cannot be null");
     }
 
     @Override
     public void setProfile(final @NotNull String name, final @NotNull UUID uuid) {
-        this.name = Objects.requireNonNull(name, "Name cannot be null");
-        this.uuid = Objects.requireNonNull(uuid, "UUID cannot be null");
+        this.name = Objects.requireNonNull(name, "name cannot be null");
+        this.uuid = Objects.requireNonNull(uuid, "uuid cannot be null");
     }
 
     @Override
     public void setState(@NotNull ConnectionState state) {
-        if (Objects.requireNonNull(state, "State cannot be null") == ConnectionState.TRANSFER) {
+        if (Objects.requireNonNull(state, "state cannot be null") == ConnectionState.TRANSFER) {
             this.fromTransfer = true;
             state = ConnectionState.LOGIN;
         }
@@ -228,7 +228,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void setHost(final @NotNull String hostname, final int hostPort) {
-        this.hostname = Objects.requireNonNull(hostname, "Hostname cannot be null");
+        this.hostname = Objects.requireNonNull(hostname, "hostname cannot be null");
         this.hostPort = hostPort;
     }
 

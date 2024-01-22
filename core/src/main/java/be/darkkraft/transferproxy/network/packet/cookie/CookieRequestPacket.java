@@ -38,7 +38,7 @@ public abstract class CookieRequestPacket implements Packet {
     private final String key;
 
     public CookieRequestPacket(final @NotNull String key) {
-        this.key = Objects.requireNonNull(key, "Key cannot be null");
+        this.key = Objects.requireNonNull(key, "key cannot be null");
     }
 
     public CookieRequestPacket(final @NotNull ByteBuf buf) {

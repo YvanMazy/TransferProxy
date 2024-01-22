@@ -65,11 +65,11 @@ public class PreLoginEvent {
     }
 
     public void setUUID(final @NotNull UUID uuid) {
-        this.uuid = Objects.requireNonNull(uuid, "UUID cannot be null");
+        this.uuid = Objects.requireNonNull(uuid, "uuid cannot be null");
     }
 
     public void setUsername(final String username) {
-        this.username = Objects.requireNonNull(username, "Username cannot be null");
+        this.username = Objects.requireNonNull(username, "username cannot be null");
     }
 
     public void setCanSendSuccessPacket(final boolean canSendSuccessPacket) {

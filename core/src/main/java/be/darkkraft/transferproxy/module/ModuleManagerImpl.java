@@ -52,8 +52,8 @@ public class ModuleManagerImpl implements ModuleManager {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void call(final @NotNull EventType eventType, final @NotNull Object event) {
-        Objects.requireNonNull(eventType, "EventType cannot be null");
-        Objects.requireNonNull(event, "Event cannot be null");
+        Objects.requireNonNull(eventType, "eventType cannot be null");
+        Objects.requireNonNull(event, "event cannot be null");
         if (!eventType.getEventClass().isInstance(event)) {
             throw new IllegalArgumentException("Invalid event type for event: " + event.getClass() + "/" + eventType.getEventClass());
         }
@@ -76,14 +76,14 @@ public class ModuleManagerImpl implements ModuleManager {
 
     @Override
     public <T extends EventListener<?>> void setListener(final @NotNull EventType eventType, final @NotNull T eventListener) {
-        Objects.requireNonNull(eventType, "EventType cannot be null");
-        Objects.requireNonNull(eventListener, "EventListener cannot be null");
+        Objects.requireNonNull(eventType, "eventType cannot be null");
+        Objects.requireNonNull(eventListener, "eventListener cannot be null");
         this.listenerMap.put(eventType, eventListener);
     }
 
     @Override
     public void setPluginManager(final @NotNull PluginManager pluginManager) {
-        this.pluginManager = Objects.requireNonNull(pluginManager, "PluginManager cannot be null");
+        this.pluginManager = Objects.requireNonNull(pluginManager, "pluginManager cannot be null");
     }
 
 }
