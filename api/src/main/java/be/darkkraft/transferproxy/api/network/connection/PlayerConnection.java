@@ -35,6 +35,8 @@ public interface PlayerConnection {
 
     void transfer(final @NotNull String host, final int hostPort);
 
+    void sendLoginSuccess(final UUID uuid, final @NotNull String username);
+
     void sendPacket(final @NotNull Packet packet);
 
     void sendPacketAndClose(final @NotNull Packet packet);

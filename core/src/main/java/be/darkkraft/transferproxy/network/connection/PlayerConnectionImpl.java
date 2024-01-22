@@ -31,6 +31,7 @@ import be.darkkraft.transferproxy.api.network.packet.built.BuiltPacket;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import be.darkkraft.transferproxy.api.profile.ClientInformation;
 import be.darkkraft.transferproxy.network.packet.config.clientbound.TransferPacket;
+import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -73,12 +74,16 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void transfer(final @NotNull String host, final int hostPort) {
-        if (this.state != ConnectionState.CONFIG) {
-            throw new IllegalStateException("Connection cannot be transferred when state is not");
-        }
+        this.ensureState(ConnectionState.CONFIG, "transfer");
         this.sendPacket(new TransferPacket(host, hostPort));
         LOGGER.info("Player {} are transferred to {}:{}", this.getDisplay(), host, hostPort);
         this.state = ConnectionState.CLOSED;
+    }
+
+    @Override
+    public void sendLoginSuccess(final UUID uuid, final @NotNull String username) {
+        this.ensureState(ConnectionState.LOGIN, "sendLoginSuccess");
+        this.sendPacket(new LoginSuccessPacket(uuid, username, null));
     }
 
     @Override
@@ -228,6 +233,13 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     private static Object ensurePacket(final @NotNull ByteBufAllocator allocator, final @NotNull Object packet) {
         return packet instanceof final BuiltPacket built ? built.get(allocator) : packet;
+    }
+
+    private void ensureState(final @NotNull ConnectionState state, final String method) {
+        if (this.state != state) {
+            throw new IllegalStateException(
+                    "PlayerConnection#" + method + " must be called on " + state + " state (current=" + this.state + ")");
+        }
     }
 
 }
