@@ -34,8 +34,7 @@ import be.darkkraft.transferproxy.api.profile.MainHand;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
-import static be.darkkraft.transferproxy.util.BufUtil.readString;
-import static be.darkkraft.transferproxy.util.BufUtil.readVarInt;
+import static be.darkkraft.transferproxy.util.BufUtil.*;
 
 public record ClientInformationPacket(String locale, byte viewDistance, ChatVisibility chatVisibility, boolean chatColors,
                                       byte displayedSkinParts, MainHand mainHand, boolean enableTextFiltering,
@@ -60,7 +59,14 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
 
     @Override
     public void write(final @NotNull ByteBuf buf) {
-
+        writeString(buf, this.locale);
+        buf.writeByte(this.viewDistance);
+        writeVarInt(buf, this.chatVisibility.id());
+        buf.writeBoolean(this.chatColors);
+        buf.writeByte(this.displayedSkinParts);
+        writeVarInt(buf, this.mainHand.ordinal());
+        buf.writeBoolean(this.enableTextFiltering);
+        buf.writeBoolean(this.allowServerListing);
     }
 
     @Override
