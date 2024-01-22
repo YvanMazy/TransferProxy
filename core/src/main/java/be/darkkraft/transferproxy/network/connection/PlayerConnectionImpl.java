@@ -30,7 +30,11 @@ import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.network.packet.built.BuiltPacket;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import be.darkkraft.transferproxy.api.profile.ClientInformation;
+import be.darkkraft.transferproxy.api.util.CookieUtil;
+import be.darkkraft.transferproxy.network.packet.config.clientbound.ConfigCookieRequestPacket;
+import be.darkkraft.transferproxy.network.packet.config.clientbound.StoreCookiePacket;
 import be.darkkraft.transferproxy.network.packet.config.clientbound.TransferPacket;
+import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginCookieRequestPacket;
 import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
@@ -40,12 +44,16 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.unix.Errors;
 import io.netty.handler.timeout.ReadTimeoutException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.SocketException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayerConnectionImpl extends SimpleChannelInboundHandler<ServerboundPacket> implements PlayerConnection {
 
@@ -57,6 +65,8 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private int protocol;
     private String hostname;
     private int hostPort;
+
+    private volatile Map<String, CompletableFuture<byte[]>> pendingCookies;
 
     private String name;
     private UUID uuid;
@@ -84,6 +94,51 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     public void sendLoginSuccess(final UUID uuid, final @NotNull String username) {
         this.ensureState(ConnectionState.LOGIN, "sendLoginSuccess");
         this.sendPacket(new LoginSuccessPacket(uuid, username, null));
+    }
+
+    @Override
+    public synchronized CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey) {
+        Objects.requireNonNull(cookieKey, "Cookie key cannot be null");
+        CookieUtil.ensureCookieFormat(cookieKey);
+        if (this.state != ConnectionState.LOGIN && this.state != ConnectionState.CONFIG) {
+            throw new IllegalStateException("Invalid state to fetch cookie " + this.state + " (cookie key=" + cookieKey + ")");
+        }
+        CompletableFuture<byte[]> future;
+        if (this.pendingCookies == null) {
+            this.pendingCookies = new HashMap<>();
+            future = null;
+        } else {
+            future = this.pendingCookies.get(cookieKey);
+        }
+        if (future == null) {
+            future = new CompletableFuture<>();
+            this.pendingCookies.put(cookieKey, future);
+            this.sendPacket(this.state == ConnectionState.LOGIN ?
+                    new LoginCookieRequestPacket(cookieKey) :
+                    new ConfigCookieRequestPacket(cookieKey));
+        }
+        return future;
+    }
+
+    @Override
+    public void storeCookie(final @NotNull String cookieKey, final byte @NotNull [] payload) {
+        Objects.requireNonNull(cookieKey, "Cookie key cannot be null");
+        Objects.requireNonNull(payload, "Cookie payload cannot be null");
+        CookieUtil.ensureCookieFormat(cookieKey);
+        this.ensureState(ConnectionState.CONFIG, "storeCookie");
+        this.sendPacket(new StoreCookiePacket(cookieKey, payload));
+    }
+
+    @Override
+    public void handleCookieResponse(final @NotNull String cookieKey, final byte @Nullable [] payload) {
+        if (this.pendingCookies == null) {
+            return;
+        }
+        final CompletableFuture<byte[]> future = this.pendingCookies.get(cookieKey);
+        if (future == null) {
+            return;
+        }
+        future.complete(payload);
     }
 
     @Override

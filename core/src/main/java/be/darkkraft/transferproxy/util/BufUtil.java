@@ -66,7 +66,7 @@ public final class BufUtil {
         buf.writeLong(uuid.getLeastSignificantBits());
     }
 
-    public static void writeBytes(final @NotNull ByteBuf buf, final @NotNull byte[] payload) {
+    public static void writeBytes(final @NotNull ByteBuf buf, final byte @NotNull [] payload) {
         writeVarInt(buf, payload.length);
         buf.writeBytes(payload);
     }

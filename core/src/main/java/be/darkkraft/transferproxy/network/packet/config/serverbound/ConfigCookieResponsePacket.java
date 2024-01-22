@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class ConfigCookieResponsePacket extends CookieResponsePacket {
 
-    public ConfigCookieResponsePacket(final String key, @Nullable final byte[] payload) {
+    public ConfigCookieResponsePacket(final String key, final byte @Nullable [] payload) {
         super(key, payload);
     }
 

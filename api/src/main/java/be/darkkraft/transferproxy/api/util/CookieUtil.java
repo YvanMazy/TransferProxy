@@ -22,26 +22,21 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.network.packet.login.serverbound;
+package be.darkkraft.transferproxy.api.util;
 
-import be.darkkraft.transferproxy.network.packet.cookie.CookieResponsePacket;
-import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+public final class CookieUtil {
 
-public final class LoginCookieResponsePacket extends CookieResponsePacket {
-
-    public LoginCookieResponsePacket(final String key, final byte @Nullable [] payload) {
-        super(key, payload);
+    private CookieUtil() throws IllegalAccessException {
+        throw new IllegalAccessException("You cannot instantiate a utility class");
     }
 
-    public LoginCookieResponsePacket(final @NotNull ByteBuf buf) {
-        super(buf);
-    }
-
-    @Override
-    public int getId() {
-        return 0x04;
+    public static void ensureCookieFormat(final String cookieKey) {
+        if (cookieKey == null) {
+            throw new IllegalArgumentException("Cookie key cannot be null");
+        }
+        if (cookieKey.indexOf(':') < 0) {
+            throw new IllegalArgumentException("Cookie key format must be: namespace:key");
+        }
     }
 
 }

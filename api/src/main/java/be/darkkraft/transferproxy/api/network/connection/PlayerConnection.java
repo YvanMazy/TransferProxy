@@ -28,14 +28,22 @@ import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.profile.ClientInformation;
 import io.netty.channel.Channel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface PlayerConnection {
 
     void transfer(final @NotNull String host, final int hostPort);
 
     void sendLoginSuccess(final UUID uuid, final @NotNull String username);
+
+    CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey);
+
+    void storeCookie(final @NotNull String cookieKey, final byte @NotNull [] payload);
+
+    void handleCookieResponse(final @NotNull String cookieKey, final byte @Nullable [] payload);
 
     void sendPacket(final @NotNull Packet packet);
 

@@ -39,7 +39,7 @@ public abstract class CookieResponsePacket implements ServerboundPacket {
     private final String key;
     private final byte[] payload;
 
-    public CookieResponsePacket(final String key, @Nullable final byte[] payload) {
+    public CookieResponsePacket(final String key, final byte @Nullable [] payload) {
         this.key = Objects.requireNonNull(key, "Key cannot be null");
         this.payload = payload;
     }
@@ -50,7 +50,7 @@ public abstract class CookieResponsePacket implements ServerboundPacket {
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
-
+        connection.handleCookieResponse(this.key, this.payload);
     }
 
     @Override
@@ -68,7 +68,7 @@ public abstract class CookieResponsePacket implements ServerboundPacket {
         return this.key;
     }
 
-    public @Nullable byte[] payload() {
+    public byte @Nullable [] payload() {
         return this.payload;
     }
 
