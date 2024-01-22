@@ -24,15 +24,14 @@
 
 package be.darkkraft.transferproxy.network.packet.config.clientbound;
 
-import be.darkkraft.transferproxy.network.packet.cookie.CookieResponsePacket;
+import be.darkkraft.transferproxy.network.packet.cookie.CookieRequestPacket;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class ConfigCookieRequestPacket extends CookieResponsePacket {
+public final class ConfigCookieRequestPacket extends CookieRequestPacket {
 
-    public ConfigCookieRequestPacket(final String key, @Nullable final byte[] payload) {
-        super(key, payload);
+    public ConfigCookieRequestPacket(final String key) {
+        super(key);
     }
 
     public ConfigCookieRequestPacket(final @NotNull ByteBuf buf) {
