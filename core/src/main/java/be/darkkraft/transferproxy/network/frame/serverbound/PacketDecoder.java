@@ -28,7 +28,6 @@ import be.darkkraft.transferproxy.api.network.connection.ConnectionState;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.network.packet.provider.PacketProvider;
-import be.darkkraft.transferproxy.util.BufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -37,6 +36,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+
+import static be.darkkraft.transferproxy.util.BufUtil.readVarInt;
 
 public final class PacketDecoder extends ByteToMessageDecoder {
 
@@ -56,7 +57,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
                 return;
             }
 
-            final int packetId = BufUtil.readVarInt(in);
+            final int packetId = readVarInt(in);
             final Packet packet = PacketProvider.buildPacket(state, in, packetId);
             if (packet == null) {
                 throw new DecoderException("Bad packet id 0x" + Integer.toHexString(packetId) + " in state: " + state);

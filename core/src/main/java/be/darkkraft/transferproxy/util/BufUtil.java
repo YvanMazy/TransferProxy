@@ -31,6 +31,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 
 public final class BufUtil {
 
@@ -66,6 +69,13 @@ public final class BufUtil {
     public static void writeBytes(final @NotNull ByteBuf buf, final @NotNull byte[] payload) {
         writeVarInt(buf, payload.length);
         buf.writeBytes(payload);
+    }
+
+    public static <T> void writeArray(final @NotNull ByteBuf buf, final @NotNull T[] array, final BiConsumer<ByteBuf, T> consumer) {
+        writeVarInt(buf, array.length);
+        for (final T t : array) {
+            consumer.accept(buf, t);
+        }
     }
 
     public static int readVarInt(final @NotNull ByteBuf buf) {
@@ -117,6 +127,18 @@ public final class BufUtil {
         final byte[] bytes = new byte[length];
         buf.readBytes(bytes);
         return bytes;
+    }
+
+    public static <T> T[] readArray(final @NotNull ByteBuf buf, final @NotNull IntFunction<T[]> arrayBuilder, final @NotNull Function<ByteBuf, T> objectBuilder, final int maxLength) {
+        final int length = readVarInt(buf);
+        if (length > maxLength) {
+            throw new DecoderException("Invalid array length: " + length + "/" + maxLength);
+        }
+        final T[] array = arrayBuilder.apply(length);
+        for (int i = 0; i < length; i++) {
+            array[i] = objectBuilder.apply(buf);
+        }
+        return array;
     }
 
 }

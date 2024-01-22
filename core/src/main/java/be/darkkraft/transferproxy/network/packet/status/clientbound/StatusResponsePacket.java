@@ -26,17 +26,22 @@ package be.darkkraft.transferproxy.network.packet.status.clientbound;
 
 import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.status.response.StatusResponse;
-import be.darkkraft.transferproxy.util.BufUtil;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
+import static be.darkkraft.transferproxy.util.BufUtil.readString;
+import static be.darkkraft.transferproxy.util.BufUtil.writeString;
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 
 public record StatusResponsePacket(StatusResponse response) implements Packet {
 
+    public StatusResponsePacket(final @NotNull ByteBuf buf) {
+        this(gson().serializer().fromJson(readString(buf), StatusResponse.class));
+    }
+
     @Override
     public void write(final @NotNull ByteBuf buf) {
-        BufUtil.writeString(buf, gson().serializer().toJson(this.response));
+        writeString(buf, gson().serializer().toJson(this.response));
     }
 
     @Override

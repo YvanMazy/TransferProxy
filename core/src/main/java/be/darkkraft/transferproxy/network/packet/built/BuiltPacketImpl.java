@@ -26,11 +26,12 @@ package be.darkkraft.transferproxy.network.packet.built;
 
 import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.network.packet.built.BuiltPacket;
-import be.darkkraft.transferproxy.util.BufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import org.jetbrains.annotations.NotNull;
+
+import static be.darkkraft.transferproxy.util.BufUtil.writeVarInt;
 
 public class BuiltPacketImpl implements BuiltPacket {
 
@@ -38,7 +39,7 @@ public class BuiltPacketImpl implements BuiltPacket {
 
     public BuiltPacketImpl(final @NotNull Packet packet) {
         final ByteBuf buf = Unpooled.buffer();
-        BufUtil.writeVarInt(buf, packet.getId());
+        writeVarInt(buf, packet.getId());
         packet.write(buf);
         buf.capacity(buf.readableBytes());
 
