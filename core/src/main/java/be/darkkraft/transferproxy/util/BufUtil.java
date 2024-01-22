@@ -63,6 +63,11 @@ public final class BufUtil {
         buf.writeLong(uuid.getLeastSignificantBits());
     }
 
+    public static void writeBytes(final @NotNull ByteBuf buf, final @NotNull byte[] payload) {
+        writeVarInt(buf, payload.length);
+        buf.writeBytes(payload);
+    }
+
     public static int readVarInt(final @NotNull ByteBuf buf) {
         int value = 0;
         int length = 0;
@@ -102,6 +107,16 @@ public final class BufUtil {
 
     public static UUID readUUID(final @NotNull ByteBuf buf) {
         return new UUID(buf.readLong(), buf.readLong());
+    }
+
+    public static byte[] readBytes(final @NotNull ByteBuf buf, final int maxLength) {
+        final int length = readVarInt(buf);
+        if (length > maxLength) {
+            throw new DecoderException("Invalid bytes length: " + length + "/" + maxLength);
+        }
+        final byte[] bytes = new byte[length];
+        buf.readBytes(bytes);
+        return bytes;
     }
 
 }
