@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.status.response;
+package be.darkkraft.transferproxy.api.status;
 
 import be.darkkraft.transferproxy.api.util.IOUtil;
 import net.kyori.adventure.text.Component;

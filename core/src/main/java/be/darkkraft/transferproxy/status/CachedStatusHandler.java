@@ -24,15 +24,15 @@
 
 package be.darkkraft.transferproxy.status;
 
+import be.darkkraft.transferproxy.api.event.listener.StatusListener;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
-import be.darkkraft.transferproxy.api.status.StatusHandler;
-import be.darkkraft.transferproxy.api.status.response.StatusResponse;
+import be.darkkraft.transferproxy.api.status.StatusResponse;
 import be.darkkraft.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class CachedStatusHandler implements StatusHandler {
+public class CachedStatusHandler implements StatusListener {
 
     private final StatusResponse response;
 

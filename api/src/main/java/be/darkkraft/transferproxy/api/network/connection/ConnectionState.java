@@ -26,12 +26,12 @@ package be.darkkraft.transferproxy.api.network.connection;
 
 public enum ConnectionState {
 
-    HANDSHAKE(),
-    STATUS(),
+    HANDSHAKE,
+    STATUS,
     LOGIN(true),
     TRANSFER(true),
     CONFIG(true),
-    CLOSED();
+    CLOSED;
 
     private final boolean login;
 

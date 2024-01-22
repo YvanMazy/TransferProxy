@@ -22,33 +22,23 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.network.packet.status.serverbound;
+package be.darkkraft.transferproxy.api.event.listener;
 
-import be.darkkraft.transferproxy.api.TransferProxy;
-import be.darkkraft.transferproxy.api.event.EventType;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
-import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
-import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
-public record StatusRequestPacket() implements ServerboundPacket {
+/**
+ * The listener used to handle every connection when ready.
+ */
+@FunctionalInterface
+public interface ReadyListener extends EventListener<PlayerConnection> {
 
-    public StatusRequestPacket(final @SuppressWarnings("unused") @NotNull ByteBuf buf) {
-        this();
-    }
-
+    /**
+     * Handle the ready request
+     *
+     * @param connection The ready connection
+     */
     @Override
-    public void handle(final @NotNull PlayerConnection connection) {
-        TransferProxy.getInstance().getModuleManager().call(EventType.STATUS, connection);
-    }
-
-    @Override
-    public void write(final @NotNull ByteBuf buf) {
-    }
-
-    @Override
-    public int getId() {
-        return 0x00;
-    }
+    void handle(final @NotNull PlayerConnection connection);
 
 }

@@ -25,6 +25,7 @@
 package be.darkkraft.transferproxy.network.packet.config.serverbound;
 
 import be.darkkraft.transferproxy.api.TransferProxy;
+import be.darkkraft.transferproxy.api.event.EventType;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import be.darkkraft.transferproxy.api.profile.ChatVisibility;
@@ -54,7 +55,7 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
         connection.setInformation(this);
-        TransferProxy.getInstance().getModuleManager().getLoginHandler().handle(connection);
+        TransferProxy.getInstance().getModuleManager().call(EventType.READY, connection);
     }
 
     @Override

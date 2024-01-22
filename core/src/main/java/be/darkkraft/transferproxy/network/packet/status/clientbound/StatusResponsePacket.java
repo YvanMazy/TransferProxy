@@ -25,7 +25,7 @@
 package be.darkkraft.transferproxy.network.packet.status.clientbound;
 
 import be.darkkraft.transferproxy.api.network.packet.Packet;
-import be.darkkraft.transferproxy.api.status.response.StatusResponse;
+import be.darkkraft.transferproxy.api.status.StatusResponse;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 

@@ -22,16 +22,23 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.status;
+package be.darkkraft.transferproxy.api.event.listener;
 
-import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
+import be.darkkraft.transferproxy.api.event.login.PreLoginEvent;
 import org.jetbrains.annotations.NotNull;
 
-public final class EmptyStatusHandler implements StatusHandler {
+/**
+ * The listener used to handle every login request
+ */
+@FunctionalInterface
+public interface PreLoginListener extends EventListener<PreLoginEvent> {
 
+    /**
+     * Handle the login request
+     *
+     * @param event The called event
+     */
     @Override
-    public void handle(final @NotNull PlayerConnection connection) {
-        connection.forceDisconnect();
-    }
+    void handle(final @NotNull PreLoginEvent event);
 
 }

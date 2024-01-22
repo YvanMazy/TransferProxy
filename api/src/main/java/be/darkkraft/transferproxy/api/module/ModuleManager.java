@@ -24,24 +24,22 @@
 
 package be.darkkraft.transferproxy.api.module;
 
-import be.darkkraft.transferproxy.api.login.LoginHandler;
+import be.darkkraft.transferproxy.api.event.EventType;
+import be.darkkraft.transferproxy.api.event.listener.EventListener;
 import be.darkkraft.transferproxy.api.plugin.PluginManager;
-import be.darkkraft.transferproxy.api.status.StatusHandler;
 import org.jetbrains.annotations.NotNull;
 
 public interface ModuleManager {
 
     void initializeDefaults();
 
-    @NotNull StatusHandler getStatusHandler();
+    void call(final @NotNull EventType eventType, final @NotNull Object event);
 
-    @NotNull LoginHandler getLoginHandler();
+    @NotNull <T extends EventListener<?>> T getListener(final @NotNull EventType eventType);
 
     @NotNull PluginManager getPluginManager();
 
-    void setStatusHandler(final @NotNull StatusHandler statusHandler);
-
-    void setLoginHandler(final @NotNull LoginHandler loginHandler);
+    <T extends EventListener<?>> void setListener(final @NotNull EventType eventType, final @NotNull T eventListener);
 
     void setPluginManager(final @NotNull PluginManager pluginManager);
 

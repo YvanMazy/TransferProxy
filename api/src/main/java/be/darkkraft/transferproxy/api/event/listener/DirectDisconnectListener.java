@@ -22,14 +22,15 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.login;
+package be.darkkraft.transferproxy.api.event.listener;
 
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
+import org.jetbrains.annotations.NotNull;
 
-public final class EmptyLoginHandler implements LoginHandler {
+public final class DirectDisconnectListener implements EventListener<PlayerConnection> {
 
     @Override
-    public void handle(final PlayerConnection connection) {
+    public void handle(final @NotNull PlayerConnection connection) {
         connection.forceDisconnect();
     }
 

@@ -26,15 +26,15 @@ package be.darkkraft.transferproxy.status;
 
 import be.darkkraft.transferproxy.api.TransferProxy;
 import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
+import be.darkkraft.transferproxy.api.event.listener.StatusListener;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
-import be.darkkraft.transferproxy.api.status.StatusHandler;
-import be.darkkraft.transferproxy.api.status.response.StatusResponse;
+import be.darkkraft.transferproxy.api.status.StatusResponse;
 import be.darkkraft.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 
-public final class DefaultStatusHandler implements StatusHandler {
+public final class DefaultStatusHandler implements StatusListener {
 
     private static final int MAGIC_PROTOCOL = -256;
 

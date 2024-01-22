@@ -22,21 +22,26 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.login;
+package be.darkkraft.transferproxy.api.event;
 
+import be.darkkraft.transferproxy.api.event.login.PreLoginEvent;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * The handler used to handle every login request
- */
-@FunctionalInterface
-public interface LoginHandler {
+public enum EventType {
 
-    /**
-     * Handle the login request
-     *
-     * @param connection The {@link PlayerConnection} who request
-     */
-    void handle(final PlayerConnection connection);
+    PRE_LOGIN(PreLoginEvent.class),
+    STATUS(PlayerConnection.class),
+    READY(PlayerConnection.class);
+
+    private final Class<?> eventClass;
+
+    EventType(final @NotNull Class<?> eventClass) {
+        this.eventClass = eventClass;
+    }
+
+    public Class<?> getEventClass() {
+        return this.eventClass;
+    }
 
 }

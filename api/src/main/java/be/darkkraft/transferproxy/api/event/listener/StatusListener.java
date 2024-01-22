@@ -22,22 +22,23 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.status;
+package be.darkkraft.transferproxy.api.event.listener;
 
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The handler used to handle every status request
+ * The listener used to handle every status request
  */
 @FunctionalInterface
-public interface StatusHandler {
+public interface StatusListener extends EventListener<PlayerConnection> {
 
     /**
      * Handle the status request
      *
      * @param connection The {@link PlayerConnection} who request
      */
+    @Override
     void handle(final @NotNull PlayerConnection connection);
 
 }

@@ -24,13 +24,13 @@
 
 package be.darkkraft.transferproxy.status;
 
+import be.darkkraft.transferproxy.api.event.listener.StatusListener;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
-import be.darkkraft.transferproxy.api.status.StatusHandler;
-import be.darkkraft.transferproxy.api.status.response.StatusResponse;
+import be.darkkraft.transferproxy.api.status.StatusResponse;
 import be.darkkraft.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class DynamicStatusHandler implements StatusHandler {
+public abstract class DynamicStatusHandler implements StatusListener {
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {

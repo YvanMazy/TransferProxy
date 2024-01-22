@@ -24,9 +24,11 @@
 
 package be.darkkraft.transferproxy.network.packet.login.serverbound;
 
+import be.darkkraft.transferproxy.api.TransferProxy;
+import be.darkkraft.transferproxy.api.event.EventType;
+import be.darkkraft.transferproxy.api.event.login.PreLoginEvent;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
-import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +45,11 @@ public record LoginStartPacket(String name, UUID uuid) implements ServerboundPac
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
         connection.setProfile(this.name, this.uuid);
-        connection.sendPacket(new LoginSuccessPacket(this.uuid, this.name, null));
+        final PreLoginEvent event = new PreLoginEvent(connection, this.uuid, this.name);
+        TransferProxy.getInstance().getModuleManager().call(EventType.PRE_LOGIN, event);
+        if (event.canSendSuccessPacket()) {
+            connection.sendLoginSuccess(event.getUUID(), event.getUsername());
+        }
     }
 
     @Override
