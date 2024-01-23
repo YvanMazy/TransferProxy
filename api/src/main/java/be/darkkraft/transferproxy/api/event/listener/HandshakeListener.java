@@ -22,27 +22,23 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.event;
+package be.darkkraft.transferproxy.api.event.listener;
 
-import be.darkkraft.transferproxy.api.event.login.PreLoginEvent;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
-public enum EventType {
+/**
+ * The listener used to handle every handshake request
+ */
+@FunctionalInterface
+public interface HandshakeListener extends EventListener<PlayerConnection> {
 
-    HANDSHAKE(PlayerConnection.class),
-    PRE_LOGIN(PreLoginEvent.class),
-    STATUS(PlayerConnection.class),
-    READY(PlayerConnection.class);
-
-    private final Class<?> eventClass;
-
-    EventType(final @NotNull Class<?> eventClass) {
-        this.eventClass = eventClass;
-    }
-
-    public Class<?> getEventClass() {
-        return this.eventClass;
-    }
+    /**
+     * Handle the handshake request
+     *
+     * @param event The called event
+     */
+    @Override
+    void handle(final @NotNull PlayerConnection event);
 
 }

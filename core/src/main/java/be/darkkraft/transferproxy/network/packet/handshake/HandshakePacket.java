@@ -24,6 +24,8 @@
 
 package be.darkkraft.transferproxy.network.packet.handshake;
 
+import be.darkkraft.transferproxy.api.TransferProxy;
+import be.darkkraft.transferproxy.api.event.EventType;
 import be.darkkraft.transferproxy.api.network.connection.ConnectionState;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
@@ -43,6 +45,7 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
         connection.setProtocol(this.protocol);
         connection.setHost(this.hostname, this.hostPort);
         connection.setState(this.nextState);
+        TransferProxy.getInstance().getModuleManager().call(EventType.HANDSHAKE, connection);
     }
 
     @Override
