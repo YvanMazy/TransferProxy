@@ -30,6 +30,8 @@ import be.darkkraft.transferproxy.api.plugin.exception.PluginInitializationExcep
 import be.darkkraft.transferproxy.api.plugin.info.PluginInfo;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -76,6 +78,19 @@ public class PluginClassloaderImpl extends URLClassLoader implements PluginClass
             this.classes.put(name, clazz = super.findClass(name));
         }
         return clazz;
+    }
+
+    @Override
+    public InputStream getResourceAsStream(final String name) {
+        final URL url = this.findResource(name);
+        if (url != null) {
+            try {
+                return url.openStream();
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return super.getResourceAsStream(name);
     }
 
     @Override
