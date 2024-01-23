@@ -25,8 +25,14 @@
 package be.darkkraft.transferproxy.api.plugin;
 
 import be.darkkraft.transferproxy.api.TransferProxy;
+import be.darkkraft.transferproxy.api.module.ModuleManager;
 import be.darkkraft.transferproxy.api.plugin.classloader.PluginClassloader;
 import be.darkkraft.transferproxy.api.plugin.info.PluginInfo;
+import be.darkkraft.transferproxy.api.util.ResourceUtil;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.nio.file.Path;
 
 public interface Plugin {
 
@@ -35,11 +41,28 @@ public interface Plugin {
     default void onDisable() {
     }
 
+    default <T> T makeConfiguration(final @NotNull Class<T> confiurationClass) {
+        return this.makeConfiguration("config.yml", confiurationClass);
+    }
+
+    default <T> T makeConfiguration(final @NotNull String fileName, final @NotNull Class<T> confiurationClass) {
+        final Path path = Path.of("plugins").resolve(this.getInfo().getName()).resolve(fileName);
+        try {
+            return ResourceUtil.copyAndReadYaml(path, confiurationClass);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     default PluginInfo getInfo() {
         if (this.getClass().getClassLoader() instanceof final PluginClassloader classloader) {
             return classloader.getInfo();
         }
-        return null;
+        throw new IllegalStateException("Invalid plugin classloader");
+    }
+
+    default ModuleManager getModuleManager() {
+        return this.getProxy().getModuleManager();
     }
 
     default TransferProxy getProxy() {
