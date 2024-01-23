@@ -12,7 +12,7 @@ Here are the project features:
 - 🌎 **Community**: The project aims to be community and collaborative, suggestions are appreciated.
 - 📚 **Wiki**: Documentation can be found [here](https://github.com/Darkkraft/TransferProxy/wiki), if any information is missing feel free to make an issue.
  
-## ⚙️ How to use ?
+## ⚙️ How to use
 
 TransferProxy works with a system of plugins, it is thanks to these that you can configure the redirection rules or the motd.
 There are several ways to set up TransferProxy. The simplest use is to download it in the "release" section and set up a plugin or develop one.
@@ -21,7 +21,7 @@ If you want to learn more about plugin development with TransferProxy, click thi
 
 A demo plugin using Gradle is available [here](https://github.com/Darkkraft/TransferProxy-Demo-plugin).
 
-## 📅 What is planned for the project?
+## 📅 What is planned for the project
 
 - Add official plugins for the most common uses, I am open to suggestions.
 - Probably other things that will come over time.
