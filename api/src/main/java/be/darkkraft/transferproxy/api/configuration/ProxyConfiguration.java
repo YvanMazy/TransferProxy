@@ -32,6 +32,8 @@ public interface ProxyConfiguration {
 
     Status getStatus();
 
+    Miscellaneous getMiscellaneous();
+
     interface Network {
 
         String getBindAddress();
@@ -57,6 +59,14 @@ public interface ProxyConfiguration {
         String getDescription();
 
         String getProtocol();
+
+    }
+
+    interface Miscellaneous {
+
+        boolean isKickOldProtocol();
+
+        String getKickOldProtocolMessage();
 
     }
 

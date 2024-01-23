@@ -32,15 +32,21 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
 
     private YamlNetwork network;
     private YamlStatus status;
+    private YamlMiscellaneous miscellaneous;
 
     @Override
-    public Network getNetwork() {
+    public ProxyConfiguration.Network getNetwork() {
         return this.network;
     }
 
     @Override
     public ProxyConfiguration.Status getStatus() {
         return this.status;
+    }
+
+    @Override
+    public ProxyConfiguration.Miscellaneous getMiscellaneous() {
+        return this.miscellaneous;
     }
 
     private static class YamlNetwork implements ProxyConfiguration.Network {
@@ -125,6 +131,28 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         @Override
         public String getProtocol() {
             return this.protocol;
+        }
+
+    }
+
+    private static class YamlMiscellaneous implements ProxyConfiguration.Miscellaneous {
+
+        private final boolean kickOldProtocol;
+        private final String kickOldProtocolMessage;
+
+        public YamlMiscellaneous() {
+            this.kickOldProtocol = true;
+            this.kickOldProtocolMessage = "<red>Outdated client";
+        }
+
+        @Override
+        public boolean isKickOldProtocol() {
+            return this.kickOldProtocol;
+        }
+
+        @Override
+        public String getKickOldProtocolMessage() {
+            return this.kickOldProtocolMessage;
         }
 
     }

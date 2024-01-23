@@ -11,3 +11,7 @@ status:
   name: "TransferProxy"
   description: "<green>A TransferProxy server"
   protocol: "AUTO"
+
+miscellaneous:
+  kick-old-protocol: true
+  kick-old-protocol-message: "<red>Outdated client"

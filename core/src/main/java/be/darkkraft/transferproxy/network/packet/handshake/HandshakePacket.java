@@ -25,16 +25,24 @@
 package be.darkkraft.transferproxy.network.packet.handshake;
 
 import be.darkkraft.transferproxy.api.TransferProxy;
+import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.event.EventType;
 import be.darkkraft.transferproxy.api.network.connection.ConnectionState;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
+import be.darkkraft.transferproxy.api.network.packet.built.BuiltPacket;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
+import be.darkkraft.transferproxy.network.packet.built.BuiltPacketImpl;
+import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import io.netty.buffer.ByteBuf;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 
 import static be.darkkraft.transferproxy.util.BufUtil.*;
 
 public record HandshakePacket(int protocol, String hostname, int hostPort, ConnectionState nextState) implements ServerboundPacket {
+
+    private static final BuiltPacket KICK_PACKET = new BuiltPacketImpl(new LoginDisconnectPacket(MiniMessage.miniMessage()
+            .deserialize(TransferProxy.getInstance().getConfiguration().getMiscellaneous().getKickOldProtocolMessage())));
 
     public HandshakePacket(final @NotNull ByteBuf buf) {
         this(readVarInt(buf), readString(buf), buf.readShort(), ConnectionState.fromId(readVarInt(buf)));
@@ -45,7 +53,15 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
         connection.setProtocol(this.protocol);
         connection.setHost(this.hostname, this.hostPort);
         connection.setState(this.nextState);
-        TransferProxy.getInstance().getModuleManager().call(EventType.HANDSHAKE, connection);
+        final TransferProxy proxy = TransferProxy.getInstance();
+        if (this.protocol < 766) {
+            final ProxyConfiguration.Miscellaneous config = proxy.getConfiguration().getMiscellaneous();
+            if (config.isKickOldProtocol()) {
+                connection.sendPacketAndClose(KICK_PACKET);
+                return;
+            }
+        }
+        proxy.getModuleManager().call(EventType.HANDSHAKE, connection);
     }
 
     @Override
