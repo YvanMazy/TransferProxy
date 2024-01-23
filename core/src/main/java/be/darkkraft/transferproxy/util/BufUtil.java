@@ -25,17 +25,29 @@
 package be.darkkraft.transferproxy.util;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagType;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
+import static net.kyori.adventure.nbt.BinaryTagTypes.*;
+
 public final class BufUtil {
+
+    @SuppressWarnings("unchecked")
+    private static final BinaryTagType<? extends BinaryTag>[] BINARY_TAG_TYPES =
+            new BinaryTagType[] {END, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, BYTE_ARRAY, STRING, LIST, COMPOUND, INT_ARRAY, LONG_ARRAY};
 
     private BufUtil() throws IllegalAccessException {
         throw new IllegalAccessException("You cannot instantiate a utility class");
@@ -75,6 +87,17 @@ public final class BufUtil {
         writeVarInt(buf, array.length);
         for (final T t : array) {
             consumer.accept(buf, t);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends BinaryTag> void writeTag(final @NotNull ByteBuf buf, final @NotNull T tag) {
+        final BinaryTagType<T> type = (BinaryTagType<T>) tag.type();
+        buf.writeByte(type.id());
+        try {
+            type.write(tag, new ByteBufOutputStream(buf));
+        } catch (final IOException e) {
+            throw new EncoderException(e);
         }
     }
 
@@ -139,6 +162,15 @@ public final class BufUtil {
             array[i] = objectBuilder.apply(buf);
         }
         return array;
+    }
+
+    public static BinaryTag readBinaryTag(final @NotNull ByteBuf buf) {
+        final BinaryTagType<? extends BinaryTag> type = BINARY_TAG_TYPES[buf.readByte()];
+        try {
+            return type.read(new ByteBufInputStream(buf));
+        } catch (final IOException e) {
+            throw new DecoderException(e);
+        }
     }
 
 }

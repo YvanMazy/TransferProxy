@@ -33,9 +33,11 @@ import be.darkkraft.transferproxy.api.profile.ClientInformation;
 import be.darkkraft.transferproxy.api.status.StatusResponse;
 import be.darkkraft.transferproxy.api.util.CookieUtil;
 import be.darkkraft.transferproxy.network.packet.config.clientbound.ConfigCookieRequestPacket;
+import be.darkkraft.transferproxy.network.packet.config.clientbound.ConfigDisconnectPacket;
 import be.darkkraft.transferproxy.network.packet.config.clientbound.StoreCookiePacket;
 import be.darkkraft.transferproxy.network.packet.config.clientbound.TransferPacket;
 import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginCookieRequestPacket;
+import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
 import be.darkkraft.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import io.netty.buffer.ByteBufAllocator;
@@ -45,6 +47,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.unix.Errors;
 import io.netty.handler.timeout.ReadTimeoutException;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -150,6 +153,17 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
             return;
         }
         future.complete(payload);
+    }
+
+    @Override
+    public void disconnect(final @NotNull Component reason) {
+        Objects.requireNonNull(reason, "reason cannot be null");
+        if (this.state != ConnectionState.LOGIN && this.state != ConnectionState.CONFIG) {
+            throw new IllegalStateException("Invalid state to disconnect: " + this.state);
+        }
+        this.sendPacketAndClose(this.state == ConnectionState.LOGIN ?
+                new LoginDisconnectPacket(reason) :
+                new ConfigDisconnectPacket(reason));
     }
 
     @Override

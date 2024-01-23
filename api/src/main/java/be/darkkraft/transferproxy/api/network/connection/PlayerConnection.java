@@ -28,6 +28,7 @@ import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.profile.ClientInformation;
 import be.darkkraft.transferproxy.api.status.StatusResponse;
 import io.netty.channel.Channel;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +48,12 @@ public interface PlayerConnection {
     void storeCookie(final @NotNull String cookieKey, final byte @NotNull [] payload);
 
     void handleCookieResponse(final @NotNull String cookieKey, final byte @Nullable [] payload);
+
+    default void disconnect(final @NotNull String reason) {
+        this.disconnect(Component.text(reason));
+    }
+
+    void disconnect(final @NotNull Component reason);
 
     void sendPacket(final @NotNull Packet packet);
 
