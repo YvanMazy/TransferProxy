@@ -6,10 +6,11 @@ Whether it's for large-scale server networks or small private servers, TransferP
 efficient solution for Minecraft server management.
 
 Here are the project features:
-- **Performance**: The project was designed to be lightweight and inexpensive in terms of resources. It is capable of supporting thousands of requests simultaneously.
-- **Plugins**: The project works with plugins, which allows you to create your own redirection rules.
-- **Community**: The project aims to be community and collaborative, suggestions are appreciated.
-- **Wiki**: Documentation can be found [here](https://github.com/Darkkraft/TransferProxy/wiki), if any information is missing feel free to make an issue.
+- ⚡ **Performance**: The project was designed to be lightweight and inexpensive in terms of resources. It is capable of supporting thousands of requests simultaneously.
+- ⚙️ **Plugins**: The project works with plugins, which allows you to create your own redirection rules.
+- 🍪 **Cookie**: The cookie system added in the same snapshot is also implemented.
+- 🌎 **Community**: The project aims to be community and collaborative, suggestions are appreciated.
+- 📚 **Wiki**: Documentation can be found [here](https://github.com/Darkkraft/TransferProxy/wiki), if any information is missing feel free to make an issue.
  
 ## ⚙️ How to use ?
 
@@ -22,7 +23,6 @@ A demo plugin using Gradle is available [here](https://github.com/Darkkraft/Tran
 
 ## 📅 What is planned for the project?
 
-- Integrate the cookie system added in the same version, very soon.
 - Add official plugins for the most common uses, I am open to suggestions.
 - Probably other things that will come over time.
 
