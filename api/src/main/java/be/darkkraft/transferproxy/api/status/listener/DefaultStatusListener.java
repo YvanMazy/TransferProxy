@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.status;
+package be.darkkraft.transferproxy.api.status.listener;
 
 import be.darkkraft.transferproxy.api.TransferProxy;
 import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.event.listener.StatusListener;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.status.StatusResponse;
-import be.darkkraft.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 
-public final class DefaultStatusHandler implements StatusListener {
+public final class DefaultStatusListener implements StatusListener {
 
     private static final int MAGIC_PROTOCOL = -256;
 
@@ -42,7 +41,7 @@ public final class DefaultStatusHandler implements StatusListener {
     private final Component description;
     private final int protocol;
 
-    public DefaultStatusHandler() {
+    public DefaultStatusListener() {
         final ProxyConfiguration.Status config = TransferProxy.getInstance().getConfiguration().getStatus();
         this.name = config.getName();
         this.description = MiniMessage.miniMessage().deserialize(config.getDescription());
@@ -51,11 +50,11 @@ public final class DefaultStatusHandler implements StatusListener {
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
-        connection.sendPacket(new StatusResponsePacket(StatusResponse.builder()
+        connection.sendStatusResponse(StatusResponse.builder()
                 .name(this.name)
                 .description(this.description)
                 .protocol(this.protocol == -256 ? connection.getProtocol() : this.protocol)
-                .build()));
+                .build());
     }
 
     private static int parseProtocol(final @NotNull String rawProtocol) {

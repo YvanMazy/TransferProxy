@@ -29,7 +29,7 @@ import be.darkkraft.transferproxy.api.event.listener.EventListener;
 import be.darkkraft.transferproxy.api.module.ModuleManager;
 import be.darkkraft.transferproxy.api.plugin.PluginManager;
 import be.darkkraft.transferproxy.plugin.PluginManagerImpl;
-import be.darkkraft.transferproxy.status.DefaultStatusHandler;
+import be.darkkraft.transferproxy.api.status.listener.DefaultStatusListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -43,7 +43,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
     @Override
     public void initializeDefaults() {
-        this.listenerMap.computeIfAbsent(EventType.STATUS, ignored -> new DefaultStatusHandler());
+        this.listenerMap.computeIfAbsent(EventType.STATUS, ignored -> new DefaultStatusListener());
         if (this.pluginManager == null) {
             this.pluginManager = new PluginManagerImpl();
         }

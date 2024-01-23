@@ -22,23 +22,18 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.status;
+package be.darkkraft.transferproxy.api.status.listener;
 
 import be.darkkraft.transferproxy.api.event.listener.StatusListener;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.status.StatusResponse;
-import be.darkkraft.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class DynamicStatusHandler implements StatusListener {
+public abstract class DynamicStatusListener implements StatusListener {
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
-        connection.sendPacket(this.buildPacket(connection));
-    }
-
-    protected StatusResponsePacket buildPacket(final @NotNull PlayerConnection connection) {
-        return new StatusResponsePacket(this.buildResponse(connection));
+        connection.sendStatusResponse(this.buildResponse(connection));
     }
 
     protected abstract StatusResponse buildResponse(final @NotNull PlayerConnection connection);

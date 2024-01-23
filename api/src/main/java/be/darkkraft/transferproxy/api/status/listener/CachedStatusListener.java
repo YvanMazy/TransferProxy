@@ -22,27 +22,26 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.status;
+package be.darkkraft.transferproxy.api.status.listener;
 
 import be.darkkraft.transferproxy.api.event.listener.StatusListener;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.status.StatusResponse;
-import be.darkkraft.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class CachedStatusHandler implements StatusListener {
+public final class CachedStatusListener implements StatusListener {
 
     private final StatusResponse response;
 
-    public CachedStatusHandler(final StatusResponse response) {
+    public CachedStatusListener(final StatusResponse response) {
         this.response = Objects.requireNonNull(response, "response cannot be null");
     }
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
-        connection.sendPacket(new StatusResponsePacket(this.response));
+        connection.sendStatusResponse(this.response);
     }
 
 }

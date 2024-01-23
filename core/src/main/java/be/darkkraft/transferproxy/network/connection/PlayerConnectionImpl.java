@@ -30,12 +30,14 @@ import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.network.packet.built.BuiltPacket;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import be.darkkraft.transferproxy.api.profile.ClientInformation;
+import be.darkkraft.transferproxy.api.status.StatusResponse;
 import be.darkkraft.transferproxy.api.util.CookieUtil;
 import be.darkkraft.transferproxy.network.packet.config.clientbound.ConfigCookieRequestPacket;
 import be.darkkraft.transferproxy.network.packet.config.clientbound.StoreCookiePacket;
 import be.darkkraft.transferproxy.network.packet.config.clientbound.TransferPacket;
 import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginCookieRequestPacket;
 import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
+import be.darkkraft.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -91,9 +93,18 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
-    public void sendLoginSuccess(final UUID uuid, final @NotNull String username) {
+    public void sendLoginSuccess(final @NotNull UUID uuid, final @NotNull String username) {
         this.ensureState(ConnectionState.LOGIN, "sendLoginSuccess");
+        Objects.requireNonNull(uuid, "uuid cannot be null");
+        Objects.requireNonNull(username, "username cannot be null");
         this.sendPacket(new LoginSuccessPacket(uuid, username, null));
+    }
+
+    @Override
+    public void sendStatusResponse(final @NotNull StatusResponse response) {
+        this.ensureState(ConnectionState.STATUS, "sendStatusResponse");
+        Objects.requireNonNull(response, "response cannot be null");
+        this.sendPacket(new StatusResponsePacket(response));
     }
 
     @Override

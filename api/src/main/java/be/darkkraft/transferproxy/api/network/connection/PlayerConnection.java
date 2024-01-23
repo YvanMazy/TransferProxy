@@ -26,6 +26,7 @@ package be.darkkraft.transferproxy.api.network.connection;
 
 import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.profile.ClientInformation;
+import be.darkkraft.transferproxy.api.status.StatusResponse;
 import io.netty.channel.Channel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,9 @@ public interface PlayerConnection {
 
     void transfer(final @NotNull String host, final int hostPort);
 
-    void sendLoginSuccess(final UUID uuid, final @NotNull String username);
+    void sendLoginSuccess(final @NotNull UUID uuid, final @NotNull String username);
+
+    void sendStatusResponse(final @NotNull StatusResponse response);
 
     CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey);
 

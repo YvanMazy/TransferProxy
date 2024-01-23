@@ -79,12 +79,4 @@ public interface PacketProvider {
         };
     }
 
-    private static ProviderSupplier of(final int id, final @NotNull PacketProvider provider) {
-        return new ProviderSupplier(id, provider);
-    }
-
-    record ProviderSupplier(int id, @NotNull PacketProvider provider) {
-
-    }
-
 }
