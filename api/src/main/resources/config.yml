@@ -1,5 +1,5 @@
 network:
-  bind-address: "localhost"
+  bind-address: "0.0.0.0"
   bind-port: 25565
   # Sets the netty resource leak detection level. 'DISABLED' turns it off for performance.
   resource-leak-detector-level: "DISABLED"
