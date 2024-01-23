@@ -32,7 +32,8 @@ public interface Plugin {
 
     void onEnable();
 
-    void onDisable();
+    default void onDisable() {
+    }
 
     default PluginInfo getInfo() {
         if (this.getClass().getClassLoader() instanceof final PluginClassloader classloader) {
