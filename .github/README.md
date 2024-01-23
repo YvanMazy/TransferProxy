@@ -1,6 +1,6 @@
 ## 🌐 Overview
 
-**TransferProxy** is a proxy for Minecraft, harnessing the power of the new transfer packet feature introduced in Minecraft 24w03a
+**TransferProxy** is a proxy for Minecraft **Java Edition**, harnessing the power of the new transfer packet feature introduced in Minecraft **24w03a**
 (release in 1.20.5). This feature allows server-to-server transfers, opening up a myriad of possibilities for server networks.
 Whether it's for large-scale server networks or small private servers, TransferProxy aims to provide a versatile and
 efficient solution for Minecraft server management.
