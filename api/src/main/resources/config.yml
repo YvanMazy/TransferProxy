@@ -1,17 +1,29 @@
 network:
   bind-address: "localhost"
   bind-port: 25565
+  # Sets the netty resource leak detection level. 'DISABLED' turns it off for performance.
   resource-leak-detector-level: "DISABLED"
+  # Enables 'epoll' for enhanced network performance on Linux-based systems.
   use-epoll: true
+  # Number of threads for handling new network connections.
   boss-threads: 1
+  # Number of threads for handling ongoing network activity.
   worker-threads: 3
+  # Disables Nagle's algorithm if set to true. False can increase latency but reduce network chatter.
   use-tcp-no-delay: false
 
 status:
+  # Server name displayed in server list.
   name: "TransferProxy"
+  # Server description (MiniMessage supported)
+  # Documentation available here: https://docs.advntr.dev/minimessage/format.html
   description: "<green>A TransferProxy server"
+  # Sets server protocol version. 'AUTO' automatically matches client's version.
+  # You can also directly specify the protocol number, such as 766.
   protocol: "AUTO"
 
 miscellaneous:
+  # Enables kicking players with outdated Minecraft versions.
   kick-old-protocol: true
+  # Message displayed to players kicked for outdated client version. (MiniMessage supported)
   kick-old-protocol-message: "<red>Outdated client"
