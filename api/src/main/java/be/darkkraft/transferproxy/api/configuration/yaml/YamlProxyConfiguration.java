@@ -36,17 +36,17 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
 
     @Override
     public ProxyConfiguration.Network getNetwork() {
-        return this.network;
+        return this.network != null ? this.network : (this.network = new YamlNetwork());
     }
 
     @Override
     public ProxyConfiguration.Status getStatus() {
-        return this.status;
+        return this.status != null ? this.status : (this.status = new YamlStatus());
     }
 
     @Override
     public ProxyConfiguration.Miscellaneous getMiscellaneous() {
-        return this.miscellaneous;
+        return this.miscellaneous != null ? this.miscellaneous : (this.miscellaneous = new YamlMiscellaneous());
     }
 
     private static class YamlNetwork implements ProxyConfiguration.Network {
