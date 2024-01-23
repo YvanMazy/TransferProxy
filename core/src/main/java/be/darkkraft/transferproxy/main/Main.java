@@ -28,18 +28,11 @@ import be.darkkraft.transferproxy.TransferProxyImpl;
 import be.darkkraft.transferproxy.api.TransferProxy;
 import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.configuration.yaml.YamlProxyConfiguration;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.jetbrains.annotations.Nullable;
+import be.darkkraft.transferproxy.api.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class Main {
@@ -50,7 +43,7 @@ public final class Main {
     public static void main(final String[] args) {
         final ProxyConfiguration configuration;
         try {
-            configuration = loadConfiguration();
+            configuration = ResourceUtil.copyAndReadYaml(CONFIG_PATH, YamlProxyConfiguration.class);
         } catch (final IOException e) {
             LOGGER.error("Failed to load configuration", e);
             return;
@@ -63,26 +56,6 @@ public final class Main {
         final TransferProxy proxy = new TransferProxyImpl(configuration);
 
         proxy.start();
-    }
-
-    private static @Nullable ProxyConfiguration loadConfiguration() throws IOException {
-        if (Files.notExists(CONFIG_PATH)) {
-            final InputStream stream = ProxyConfiguration.class.getClassLoader().getResourceAsStream(CONFIG_PATH.getFileName().toString());
-            if (stream != null) {
-                try (stream) {
-                    Files.copy(stream, CONFIG_PATH);
-                }
-            } else {
-                return null;
-            }
-        }
-
-        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        try (final BufferedReader reader = Files.newBufferedReader(CONFIG_PATH)) {
-            return mapper.readValue(reader, YamlProxyConfiguration.class);
-        }
     }
 
 }
