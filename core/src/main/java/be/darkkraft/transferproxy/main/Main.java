@@ -28,6 +28,7 @@ import be.darkkraft.transferproxy.TransferProxyImpl;
 import be.darkkraft.transferproxy.api.TransferProxy;
 import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.configuration.yaml.YamlProxyConfiguration;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -76,7 +77,8 @@ public final class Main {
             }
         }
 
-        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
+        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         try (final BufferedReader reader = Files.newBufferedReader(CONFIG_PATH)) {
             return mapper.readValue(reader, YamlProxyConfiguration.class);
