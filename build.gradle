@@ -12,6 +12,9 @@ allprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
 
+    group = 'be.darkkraft.transferproxy'
+    version = '1.0.2'
+
     repositories {
         mavenCentral()
     }
