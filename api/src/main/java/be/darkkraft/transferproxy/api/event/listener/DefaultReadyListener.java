@@ -33,7 +33,7 @@ public final class DefaultReadyListener implements ReadyListener {
 
     private final Component reason = Component.text("No redirection rules have been defined.", NamedTextColor.RED)
             .appendNewline()
-            .append(Component.text("You can find the information on the github “wiki” page."));
+            .append(Component.text("You can find the information on the github \"wiki\", page."));
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
