@@ -25,6 +25,7 @@
 package be.darkkraft.transferproxy.module;
 
 import be.darkkraft.transferproxy.api.event.EventType;
+import be.darkkraft.transferproxy.api.event.listener.DefaultReadyListener;
 import be.darkkraft.transferproxy.api.event.listener.EventListener;
 import be.darkkraft.transferproxy.api.module.ModuleManager;
 import be.darkkraft.transferproxy.api.plugin.PluginManager;
@@ -43,6 +44,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
     @Override
     public void initializeDefaults() {
+        this.listenerMap.computeIfAbsent(EventType.READY, ignored -> new DefaultReadyListener());
         this.listenerMap.computeIfAbsent(EventType.STATUS, ignored -> new DefaultStatusListener());
         if (this.pluginManager == null) {
             this.pluginManager = new PluginManagerImpl();
