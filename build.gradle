@@ -9,6 +9,7 @@ buildscript {
 
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'maven-publish'
 
     repositories {
@@ -17,14 +18,14 @@ allprojects {
 
     dependencies {
         // Logging
-        implementation 'org.tinylog:slf4j-tinylog:2.6.2'
-        implementation 'org.tinylog:tinylog-impl:2.6.2'
+        api 'org.tinylog:slf4j-tinylog:2.6.2'
+        api 'org.tinylog:tinylog-impl:2.6.2'
 
         // Networking
-        implementation 'io.netty:netty-all:4.1.104.Final'
+        api 'io.netty:netty-all:4.1.104.Final'
 
         // Annotations
-        implementation 'org.jetbrains:annotations:24.1.0'
+        api 'org.jetbrains:annotations:24.1.0'
 
         testImplementation platform('org.junit:junit-bom:5.10.1')
         testImplementation 'org.junit.jupiter:junit-jupiter'
