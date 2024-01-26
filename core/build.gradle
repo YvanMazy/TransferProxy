@@ -8,6 +8,9 @@ version = '1.0.2'
 dependencies {
     // Project API
     api project(":api")
+
+    // Logging
+    api 'org.fusesource.jansi:jansi:2.4.1'
 }
 
 shadowJar {
