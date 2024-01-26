@@ -71,6 +71,9 @@ public class PluginManagerImpl implements PluginManager {
         } catch (final IOException e) {
             LOGGER.error("Plugins cannot be loaded", e);
         }
+        if (this.plugins.isEmpty()) {
+            LOGGER.warn("No plugins were found, so there are no redirection rules defined.");
+        }
     }
 
     @Override
