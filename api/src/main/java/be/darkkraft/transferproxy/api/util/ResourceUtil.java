@@ -126,7 +126,7 @@ public final class ResourceUtil {
         }
     }
 
-    private static @NotNull ObjectMapper getDefaultYamlMapper() {
+    public static @NotNull ObjectMapper getDefaultYamlMapper() {
         return DEFAULT_MAPPER;
     }
 

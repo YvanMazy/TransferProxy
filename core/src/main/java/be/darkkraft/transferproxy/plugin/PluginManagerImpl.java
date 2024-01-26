@@ -28,10 +28,8 @@ import be.darkkraft.transferproxy.api.plugin.Plugin;
 import be.darkkraft.transferproxy.api.plugin.PluginManager;
 import be.darkkraft.transferproxy.api.plugin.classloader.PluginClassloader;
 import be.darkkraft.transferproxy.api.plugin.info.PluginInfo;
+import be.darkkraft.transferproxy.api.util.ResourceUtil;
 import be.darkkraft.transferproxy.plugin.classloader.PluginClassloaderImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +50,6 @@ public class PluginManagerImpl implements PluginManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginManagerImpl.class);
     private static final Path ROOT_PATH = Path.of("plugins");
 
-    private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
     private final List<Plugin> plugins = new CopyOnWriteArrayList<>();
 
     @Override
@@ -116,7 +113,7 @@ public class PluginManagerImpl implements PluginManager {
             final JarEntry entry = jarFile.getJarEntry("plugin.yml");
             if (entry != null) {
                 try (final InputStream input = jarFile.getInputStream(entry)) {
-                    return this.mapper.readValue(input, PluginInfo.class);
+                    return ResourceUtil.getDefaultYamlMapper().readValue(input, PluginInfo.class);
                 }
             }
         }
