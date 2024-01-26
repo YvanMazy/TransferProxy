@@ -14,8 +14,17 @@ shadowJar {
     manifest {
         attributes 'Main-Class': 'be.darkkraft.transferproxy.main.Main'
     }
-    archiveBaseName = 'TransferProxy'
     archiveClassifier.set('')
 }
 
 assemble.dependsOn shadowJar
+
+task copyJar(type: Copy) {
+    dependsOn shadowJar
+
+    from shadowJar.archiveFile
+    into project.parent.buildDir
+    rename { "${project.parent.name}-${project.parent.version}.jar" }
+}
+
+tasks.shadowJar.finalizedBy(copyJar)
