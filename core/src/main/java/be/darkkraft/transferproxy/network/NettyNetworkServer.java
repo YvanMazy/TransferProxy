@@ -98,7 +98,13 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
         }
 
         // Bind the server
-        this.channel = bootstrap.bind().syncUninterruptibly().channel();
+        try {
+            this.channel = bootstrap.bind().syncUninterruptibly().channel();
+        } catch (final Exception exception) {
+            LOGGER.error("Failed to bind server", exception);
+            System.exit(-1);
+            return;
+        }
         LOGGER.info("Listening on " + address.getAddress().getHostAddress() + ":" + address.getPort());
     }
 
