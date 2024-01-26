@@ -20,6 +20,7 @@ shadowJar {
 assemble.dependsOn shadowJar
 
 task copyJar(type: Copy) {
+    onlyIf { !gradle.startParameter.taskNames.contains('assemble') }
     dependsOn shadowJar
 
     from shadowJar.archiveFile
