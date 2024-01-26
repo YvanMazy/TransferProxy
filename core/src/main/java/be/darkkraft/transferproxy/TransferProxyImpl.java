@@ -58,10 +58,12 @@ public class TransferProxyImpl extends TransferProxy {
         this.startedTime = System.currentTimeMillis();
 
         this.moduleManager.initializeDefaults();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop, "Proxy Shutdown Thread"));
+
         this.moduleManager.getPluginManager().start();
         (this.networkServer = new NettyNetworkServer()).start();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::stop, "Proxy Shutdown Thread"));
         LOGGER.info("Server started successfully in {}ms", System.currentTimeMillis() - this.startedTime);
     }
 
