@@ -25,6 +25,7 @@
 package be.darkkraft.transferproxy.api.plugin;
 
 import be.darkkraft.transferproxy.api.TransferProxy;
+import be.darkkraft.transferproxy.api.event.EventManager;
 import be.darkkraft.transferproxy.api.module.ModuleManager;
 import be.darkkraft.transferproxy.api.plugin.classloader.PluginClassloader;
 import be.darkkraft.transferproxy.api.plugin.info.PluginInfo;
@@ -54,11 +55,12 @@ public interface Plugin {
         }
     }
 
-    default PluginInfo getInfo() {
-        if (this.getClass().getClassLoader() instanceof final PluginClassloader classloader) {
-            return classloader.getInfo();
-        }
-        throw new IllegalStateException("Invalid plugin classloader");
+    default EventManager getEventManager() {
+        return this.getModuleManager().getEventManager();
+    }
+
+    default PluginManager getPluginManager() {
+        return this.getModuleManager().getPluginManager();
     }
 
     default ModuleManager getModuleManager() {
@@ -67,6 +69,13 @@ public interface Plugin {
 
     default TransferProxy getProxy() {
         return TransferProxy.getInstance();
+    }
+
+    default PluginInfo getInfo() {
+        if (this.getClass().getClassLoader() instanceof final PluginClassloader classloader) {
+            return classloader.getInfo();
+        }
+        throw new IllegalStateException("Invalid plugin classloader");
     }
 
 }
