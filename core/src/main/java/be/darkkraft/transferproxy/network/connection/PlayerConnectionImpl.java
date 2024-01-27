@@ -242,7 +242,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
         }
         this.state = state;
         if (this.state == ConnectionState.CONFIG) {
-            LOGGER.info("Player {} are now connected", this.getDisplay());
+            if (this.isFromTransfer()) {
+                LOGGER.info("Player {} is now connected and comes from transfer", this.getDisplay());
+                return;
+            }
+            LOGGER.info("Player {} is now connected", this.getDisplay());
         }
     }
 
