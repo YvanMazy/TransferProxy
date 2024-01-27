@@ -33,6 +33,7 @@ import be.darkkraft.transferproxy.network.NettyNetworkServer;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tinylog.provider.ProviderRegistry;
 
 import java.util.Objects;
 
@@ -83,6 +84,10 @@ public class TransferProxyImpl extends TransferProxy {
         }
 
         LOGGER.info("Server is successfully stopped!");
+        try {
+            ProviderRegistry.getLoggingProvider().shutdown();
+        } catch (final InterruptedException ignored) {
+        }
     }
 
     @Override
