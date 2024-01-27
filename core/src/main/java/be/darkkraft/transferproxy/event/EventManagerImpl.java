@@ -26,9 +26,7 @@ package be.darkkraft.transferproxy.event;
 
 import be.darkkraft.transferproxy.api.event.EventManager;
 import be.darkkraft.transferproxy.api.event.EventType;
-import be.darkkraft.transferproxy.api.event.listener.DefaultReadyListener;
 import be.darkkraft.transferproxy.api.event.listener.EventListener;
-import be.darkkraft.transferproxy.api.status.listener.DefaultStatusListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -38,11 +36,7 @@ import java.util.Objects;
 public final class EventManagerImpl implements EventManager {
 
     private final Map<EventType, EventListener<?>[]> listenerMap = new EnumMap<>(EventType.class);
-
-    public EventManagerImpl() {
-        this.addListener(EventType.READY, new DefaultReadyListener());
-        this.addListener(EventType.STATUS, new DefaultStatusListener());
-    }
+    private final Map<EventType, EventListener<?>> defaultListenerMap = new EnumMap<>(EventType.class);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
@@ -57,7 +51,9 @@ public final class EventManagerImpl implements EventManager {
             for (final EventListener listener : listeners) {
                 listener.handle(event);
             }
+            return;
         }
+        ((EventListener) this.defaultListenerMap.computeIfAbsent(eventType, EventType::buildDefaultListener)).handle(event);
     }
 
     @Override

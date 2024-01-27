@@ -24,25 +24,37 @@
 
 package be.darkkraft.transferproxy.api.event;
 
+import be.darkkraft.transferproxy.api.event.listener.DefaultReadyListener;
+import be.darkkraft.transferproxy.api.event.listener.EmptyListener;
+import be.darkkraft.transferproxy.api.event.listener.EventListener;
 import be.darkkraft.transferproxy.api.event.login.PreLoginEvent;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
+import be.darkkraft.transferproxy.api.status.listener.DefaultStatusListener;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 public enum EventType {
 
-    HANDSHAKE(PlayerConnection.class),
-    PRE_LOGIN(PreLoginEvent.class),
-    STATUS(PlayerConnection.class),
-    READY(PlayerConnection.class);
+    HANDSHAKE(PlayerConnection.class, EmptyListener::getInstance),
+    PRE_LOGIN(PreLoginEvent.class, EmptyListener::getInstance),
+    STATUS(PlayerConnection.class, DefaultStatusListener::new),
+    READY(PlayerConnection.class, DefaultReadyListener::new);
 
     private final Class<?> eventClass;
+    private final Supplier<@NotNull EventListener<?>> defaultListener;
 
-    EventType(final @NotNull Class<?> eventClass) {
+    EventType(final @NotNull Class<?> eventClass, final @NotNull Supplier<@NotNull EventListener<?>> defaultListener) {
         this.eventClass = eventClass;
+        this.defaultListener = defaultListener;
     }
 
     public Class<?> getEventClass() {
         return this.eventClass;
+    }
+
+    public @NotNull EventListener<?> buildDefaultListener() {
+        return this.defaultListener.get();
     }
 
 }
