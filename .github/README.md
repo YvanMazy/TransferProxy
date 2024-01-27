@@ -1,16 +1,21 @@
 ## 🌐 Overview
 
-**TransferProxy** is a proxy for Minecraft **Java Edition**, harnessing the power of the new transfer packet feature introduced in Minecraft **24w03a**
-(release in 1.20.5). This feature allows server-to-server transfers, opening up a myriad of possibilities for server networks.
+**TransferProxy** is a proxy for Minecraft **Java Edition**, harnessing the power of the new transfer packet feature
+introduced in Minecraft **24w03a**
+(release in 1.20.5). This feature allows server-to-server transfers, opening up a myriad of possibilities for server
+networks.
 Whether it's for large-scale server networks or small private servers, TransferProxy aims to provide a versatile and
 efficient solution for Minecraft server management.
 
 Here are the project features:
-- ⚡ **Performance**: The project was designed to be lightweight and inexpensive in terms of resources. It is capable of supporting thousands of requests simultaneously.
+
+- ⚡ **Performance**: The project was designed to be lightweight and inexpensive in terms of resources. It is capable of
+  supporting thousands of requests simultaneously.
 - ⚙️ **Plugins**: The project works with plugins, which allows you to create your own redirection rules.
 - 🍪 **Cookie**: The cookie system added in the same snapshot is also implemented.
 - 🌎 **Community**: The project aims to be community and collaborative, suggestions are appreciated.
-- 📚 **Wiki**: Documentation can be found [here](https://github.com/Darkkraft/TransferProxy/wiki), if any information is missing feel free to make an issue.
+- 📚 **Wiki**: Documentation can be found [here](https://github.com/Darkkraft/TransferProxy/wiki), if any information is
+  missing feel free to make an issue.
 
 ## 📥️ Installation and Setup
 
@@ -21,16 +26,21 @@ Here are the project features:
 
 #### ➡️ Now what's next?
 
-When your server is correctly installed, you must install a plugin to define the redirection rules and customize the motd if necessary. You have two options :
-- Download an official plugin [here](https://github.com/Darkkraft/TransferProxy/wiki#official-plugins), if you want to do tests or if your project is small.
+When your server is correctly installed, you must install a plugin to define the redirection rules and customize the
+motd if necessary. You have two options :
+
+- Download an official plugin [here](https://github.com/Darkkraft/TransferProxy/wiki#official-plugins), if you want to
+  do tests or if your project is small.
 - Develop your own plugin, documentation is available [here](https://github.com/Darkkraft/TransferProxy/wiki/Plugins).
 
-In case you want to develop your own plugin, a demo repository is available [here](https://github.com/Darkkraft/TransferProxy-Demo-plugin). It uses Gradle.
+In case you want to develop your own plugin, a demo repository is
+available [here](https://github.com/Darkkraft/TransferProxy-Demo-plugin). It uses Gradle.
 
 #### 🆘 Troubleshooting
 
-If you have any problems using TransferProxy, the first thing to do is to check that you haven't missed anything in the [official wiki](https://github.com/Darkkraft/TransferProxy/wiki).
-<br>If you can't find a solution, then you can create a github issue. She should get an answer quickly.
+If you have any problems using TransferProxy, the first thing to do is to check that you haven't missed anything in
+the [official wiki](https://github.com/Darkkraft/TransferProxy/wiki).
+<br>If you can't find a solution, then you can create a GitHub issue. She should get an answer quickly.
 
 ## 📋 Requirements
 
