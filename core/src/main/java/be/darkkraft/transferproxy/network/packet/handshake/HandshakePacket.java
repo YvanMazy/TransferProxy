@@ -61,7 +61,7 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
                 return;
             }
         }
-        proxy.getModuleManager().call(EventType.HANDSHAKE, connection);
+        proxy.getModuleManager().getEventManager().call(EventType.HANDSHAKE, connection);
     }
 
     @Override

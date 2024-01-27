@@ -24,51 +24,34 @@
 
 package be.darkkraft.transferproxy.module;
 
-import be.darkkraft.transferproxy.api.event.EventType;
-import be.darkkraft.transferproxy.api.event.listener.DefaultReadyListener;
-import be.darkkraft.transferproxy.api.event.listener.EventListener;
+import be.darkkraft.transferproxy.api.event.EventManager;
 import be.darkkraft.transferproxy.api.module.ModuleManager;
 import be.darkkraft.transferproxy.api.plugin.PluginManager;
+import be.darkkraft.transferproxy.event.EventManagerImpl;
 import be.darkkraft.transferproxy.plugin.PluginManagerImpl;
-import be.darkkraft.transferproxy.api.status.listener.DefaultStatusListener;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class ModuleManagerImpl implements ModuleManager {
 
-    private final Map<EventType, EventListener<?>> listenerMap = new EnumMap<>(EventType.class);
+    private EventManager eventManager;
     private PluginManager pluginManager;
 
     @Override
     public void initializeDefaults() {
-        this.listenerMap.computeIfAbsent(EventType.READY, ignored -> new DefaultReadyListener());
-        this.listenerMap.computeIfAbsent(EventType.STATUS, ignored -> new DefaultStatusListener());
+        if (this.eventManager == null) {
+            this.eventManager = new EventManagerImpl();
+        }
         if (this.pluginManager == null) {
             this.pluginManager = new PluginManagerImpl();
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @NotNull
     @Override
-    public void call(final @NotNull EventType eventType, final @NotNull Object event) {
-        Objects.requireNonNull(eventType, "eventType cannot be null");
-        Objects.requireNonNull(event, "event cannot be null");
-        if (!eventType.getEventClass().isInstance(event)) {
-            throw new IllegalArgumentException("Invalid event type for event: " + event.getClass() + "/" + eventType.getEventClass());
-        }
-        final EventListener listener = this.listenerMap.get(eventType);
-        if (listener != null) {
-            listener.handle(event);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public @NotNull <T extends EventListener<?>> T getListener(final @NotNull EventType eventType) {
-        return (T) this.listenerMap.get(eventType);
+    public EventManager getEventManager() {
+        return this.eventManager;
     }
 
     @Override
@@ -77,15 +60,13 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     @Override
-    public <T extends EventListener<?>> void setListener(final @NotNull EventType eventType, final @NotNull T eventListener) {
-        Objects.requireNonNull(eventType, "eventType cannot be null");
-        Objects.requireNonNull(eventListener, "eventListener cannot be null");
-        this.listenerMap.put(eventType, eventListener);
+    public void setPluginManager(final @NotNull PluginManager pluginManager) {
+        this.pluginManager = Objects.requireNonNull(pluginManager, "pluginManager cannot be null");
     }
 
     @Override
-    public void setPluginManager(final @NotNull PluginManager pluginManager) {
-        this.pluginManager = Objects.requireNonNull(pluginManager, "pluginManager cannot be null");
+    public void setEventManager(final @NotNull EventManager eventManager) {
+        this.eventManager = Objects.requireNonNull(eventManager, "eventManager cannot be null");
     }
 
 }

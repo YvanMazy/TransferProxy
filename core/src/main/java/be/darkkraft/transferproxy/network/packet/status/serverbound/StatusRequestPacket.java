@@ -39,7 +39,7 @@ public record StatusRequestPacket() implements ServerboundPacket {
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
-        TransferProxy.getInstance().getModuleManager().call(EventType.STATUS, connection);
+        TransferProxy.getInstance().getModuleManager().getEventManager().call(EventType.STATUS, connection);
     }
 
     @Override

@@ -46,7 +46,7 @@ public record LoginStartPacket(String name, UUID uuid) implements ServerboundPac
     public void handle(final @NotNull PlayerConnection connection) {
         connection.setProfile(this.name, this.uuid);
         final PreLoginEvent event = new PreLoginEvent(connection, this.uuid, this.name);
-        TransferProxy.getInstance().getModuleManager().call(EventType.PRE_LOGIN, event);
+        TransferProxy.getInstance().getModuleManager().getEventManager().call(EventType.PRE_LOGIN, event);
         if (event.canSendSuccessPacket()) {
             connection.sendLoginSuccess(event.getUUID(), event.getUsername());
         }

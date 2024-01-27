@@ -54,7 +54,7 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
         connection.setInformation(this);
-        TransferProxy.getInstance().getModuleManager().call(EventType.READY, connection);
+        TransferProxy.getInstance().getModuleManager().getEventManager().call(EventType.READY, connection);
     }
 
     @Override

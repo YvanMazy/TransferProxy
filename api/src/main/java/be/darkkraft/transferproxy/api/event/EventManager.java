@@ -22,22 +22,19 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.module;
+package be.darkkraft.transferproxy.api.event;
 
-import be.darkkraft.transferproxy.api.event.EventManager;
-import be.darkkraft.transferproxy.api.plugin.PluginManager;
+import be.darkkraft.transferproxy.api.event.listener.EventListener;
 import org.jetbrains.annotations.NotNull;
 
-public interface ModuleManager {
+public interface EventManager {
 
-    void initializeDefaults();
+    void call(final @NotNull EventType eventType, final @NotNull Object event);
 
-    @NotNull EventManager getEventManager();
+    <T extends EventListener<?>> void addListener(final @NotNull EventType eventType, final @NotNull T eventListener);
 
-    @NotNull PluginManager getPluginManager();
+    <T extends EventListener<?>> boolean removeListener(final @NotNull EventType eventType, final @NotNull T eventListener);
 
-    void setEventManager(final @NotNull EventManager eventManager);
-
-    void setPluginManager(final @NotNull PluginManager pluginManager);
+    @NotNull <T extends EventListener<?>> T[] getListeners(final @NotNull EventType eventType);
 
 }
