@@ -11,20 +11,26 @@ Here are the project features:
 - 🍪 **Cookie**: The cookie system added in the same snapshot is also implemented.
 - 🌎 **Community**: The project aims to be community and collaborative, suggestions are appreciated.
 - 📚 **Wiki**: Documentation can be found [here](https://github.com/Darkkraft/TransferProxy/wiki), if any information is missing feel free to make an issue.
- 
-## ⚙️ How to use
 
-TransferProxy works with a system of plugins, it is thanks to these that you can configure the redirection rules or the motd.
-There are several ways to set up TransferProxy. The simplest use is to download it in the "release" section and set up a plugin or develop one.
+## 📥️ Installation and Setup
 
-If you want to learn more about plugin development with TransferProxy, click this [wiki link](https://github.com/Darkkraft/TransferProxy/wiki/Plugins).
+1. Download the latest version of TransferProxy by clicking [here](https://github.com/Darkkraft/TransferProxy/releases).
+2. Drag and drop the jar file into a folder.
+3. Start the server with ``java -jar TransferProxy-version.jar``
+4. The configuration and plugins folder should be created.
 
-A demo plugin using Gradle is available [here](https://github.com/Darkkraft/TransferProxy-Demo-plugin).
+#### ➡️ Now what's next?
 
-## 📅 What is planned for the project
+When your server is correctly installed, you must install a plugin to define the redirection rules and customize the motd if necessary. You have two options :
+- Download an official plugin [here](https://github.com/Darkkraft/TransferProxy/wiki#official-plugins), if you want to do tests or if your project is small.
+- Develop your own plugin, documentation is available [here](https://github.com/Darkkraft/TransferProxy/wiki/Plugins).
 
-- Add official plugins for the most common uses, I am open to suggestions.
-- Probably other things that will come over time.
+In case you want to develop your own plugin, a demo repository is available [here](https://github.com/Darkkraft/TransferProxy-Demo-plugin). It uses Gradle.
+
+#### 🆘 Troubleshooting
+
+If you have any problems using TransferProxy, the first thing to do is to check that you haven't missed anything in the [official wiki](https://github.com/Darkkraft/TransferProxy/wiki).
+<br>If you can't find a solution, then you can create a github issue. She should get an answer quickly.
 
 ## 📋 Requirements
 
