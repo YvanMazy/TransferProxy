@@ -61,7 +61,7 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
     public void write(final @NotNull ByteBuf buf) {
         writeString(buf, this.locale);
         buf.writeByte(this.viewDistance);
-        writeVarInt(buf, this.chatVisibility.id());
+        writeVarInt(buf, this.chatVisibility.getId());
         buf.writeBoolean(this.chatColors);
         buf.writeByte(this.displayedSkinParts);
         writeVarInt(buf, this.mainHand.ordinal());

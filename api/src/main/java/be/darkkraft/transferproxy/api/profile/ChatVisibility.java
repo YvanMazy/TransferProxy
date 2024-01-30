@@ -36,7 +36,7 @@ public enum ChatVisibility {
         this.id = (byte) this.ordinal();
     }
 
-    public byte id() {
+    public byte getId() {
         return this.id;
     }
 
