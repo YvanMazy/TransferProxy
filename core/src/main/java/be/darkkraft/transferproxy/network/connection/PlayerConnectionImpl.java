@@ -156,6 +156,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
+    public Map<String, CompletableFuture<byte[]>> getPendingCookies() {
+        return this.pendingCookies != null ? Map.copyOf(this.pendingCookies) : Map.of();
+    }
+
+    @Override
     public void disconnect(final @NotNull Component reason) {
         Objects.requireNonNull(reason, "reason cannot be null");
         if (this.state != ConnectionState.LOGIN && this.state != ConnectionState.CONFIG) {

@@ -32,6 +32,7 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -48,6 +49,8 @@ public interface PlayerConnection {
     void storeCookie(final @NotNull String cookieKey, final byte @NotNull [] payload);
 
     void handleCookieResponse(final @NotNull String cookieKey, final byte @Nullable [] payload);
+
+    Map<String, CompletableFuture<byte[]>> getPendingCookies();
 
     default void disconnect(final @NotNull String reason) {
         this.disconnect(Component.text(reason));
