@@ -110,10 +110,12 @@ public class ColoredConsoleWriter extends AbstractFormatPatternWriter {
 
     @Override
     public void flush() {
+        // do nothing
     }
 
     @Override
     public void close() {
+        // do nothing
     }
 
 }

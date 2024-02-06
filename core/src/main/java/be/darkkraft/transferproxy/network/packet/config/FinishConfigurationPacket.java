@@ -37,11 +37,12 @@ public record FinishConfigurationPacket() implements ServerboundPacket {
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
+        // do nothing
     }
 
     @Override
     public void write(final @NotNull ByteBuf buf) {
-
+        // nothing to read
     }
 
     @Override

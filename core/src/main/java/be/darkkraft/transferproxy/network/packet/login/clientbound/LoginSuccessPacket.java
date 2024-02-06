@@ -29,6 +29,8 @@ import be.darkkraft.transferproxy.api.profile.Property;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 import static be.darkkraft.transferproxy.util.BufUtil.*;
@@ -68,6 +70,32 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
     @Override
     public int getId() {
         return 0x02;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final LoginSuccessPacket that = (LoginSuccessPacket) o;
+        return Objects.equals(this.uuid, that.uuid) && Objects.equals(this.username, that.username) &&
+                Arrays.equals(this.properties, that.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(this.uuid, this.username);
+        result = 31 * result + Arrays.hashCode(this.properties);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginSuccessPacket{uuid=" + this.uuid + ", username='" + this.username + "', properties=" +
+                Arrays.toString(this.properties) + '}';
     }
 
 }

@@ -35,7 +35,7 @@ public final class EmptyListener implements EventListener<Object> {
 
     @Override
     public void handle(@NotNull final Object event) {
-
+        // do nothing in empty listener
     }
 
     public static EventListener<?> getInstance() {

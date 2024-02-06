@@ -47,6 +47,7 @@ public record LoginAcknowledgedPacket() implements ServerboundPacket {
 
     @Override
     public void write(final @NotNull ByteBuf buf) {
+        // nothing to read
     }
 
     @Override

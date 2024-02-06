@@ -3,7 +3,7 @@ dependencies {
     api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.1'
 
     // Adventure library
-    api ('net.kyori:adventure-api:4.15.0') {
+    api('net.kyori:adventure-api:4.15.0') {
         exclude module: 'gson'
     }
     api 'net.kyori:adventure-nbt:4.15.0'

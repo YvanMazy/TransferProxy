@@ -29,9 +29,7 @@ import net.kyori.adventure.text.Component;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public record StatusResponse(Component description, Players players, Version version, String favicon) {
 
@@ -47,6 +45,30 @@ public record StatusResponse(Component description, Players players, Version ver
 
         public record SampleEntry(String name, UUID id) {
 
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || this.getClass() != o.getClass()) {
+                return false;
+            }
+            final Players players = (Players) o;
+            return this.max == players.max && this.online == players.online && Arrays.equals(this.sample, players.sample);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(this.max, this.online);
+            result = 31 * result + Arrays.hashCode(this.sample);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Players{max=" + this.max + ", online=" + this.online + ", sample=" + Arrays.toString(this.sample) + '}';
         }
 
     }

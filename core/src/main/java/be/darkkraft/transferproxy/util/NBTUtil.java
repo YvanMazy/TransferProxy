@@ -47,18 +47,18 @@ public final class NBTUtil {
             if (primitive.isNumber()) {
                 final Number number = json.getAsNumber();
 
-                if (number instanceof Byte) {
-                    return ByteBinaryTag.byteBinaryTag((Byte) number);
-                } else if (number instanceof Short) {
-                    return ShortBinaryTag.shortBinaryTag((Short) number);
-                } else if (number instanceof Integer) {
-                    return IntBinaryTag.intBinaryTag((Integer) number);
-                } else if (number instanceof Long) {
-                    return LongBinaryTag.longBinaryTag((Long) number);
-                } else if (number instanceof Float) {
-                    return FloatBinaryTag.floatBinaryTag((Float) number);
-                } else if (number instanceof Double) {
-                    return DoubleBinaryTag.doubleBinaryTag((Double) number);
+                if (number instanceof final Byte b) {
+                    return ByteBinaryTag.byteBinaryTag(b);
+                } else if (number instanceof final Short s) {
+                    return ShortBinaryTag.shortBinaryTag(s);
+                } else if (number instanceof final Integer i) {
+                    return IntBinaryTag.intBinaryTag(i);
+                } else if (number instanceof final Long l) {
+                    return LongBinaryTag.longBinaryTag(l);
+                } else if (number instanceof final Float f) {
+                    return FloatBinaryTag.floatBinaryTag(f);
+                } else if (number instanceof final Double d) {
+                    return DoubleBinaryTag.doubleBinaryTag(d);
                 } else if (number instanceof LazilyParsedNumber) {
                     return IntBinaryTag.intBinaryTag(number.intValue());
                 }
@@ -131,6 +131,7 @@ public final class NBTUtil {
                         }
                     });
                     break;
+                default: throw new IllegalStateException("Unsupported tag: " + listType.id());
             }
 
             return ListBinaryTag.listBinaryTag(listType, items);

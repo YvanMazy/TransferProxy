@@ -39,12 +39,12 @@ public abstract class CookieResponsePacket implements ServerboundPacket {
     private final String key;
     private final byte[] payload;
 
-    public CookieResponsePacket(final String key, final byte @Nullable [] payload) {
+    protected CookieResponsePacket(final String key, final byte @Nullable [] payload) {
         this.key = Objects.requireNonNull(key, "key cannot be null");
         this.payload = payload;
     }
 
-    public CookieResponsePacket(final @NotNull ByteBuf buf) {
+    protected CookieResponsePacket(final @NotNull ByteBuf buf) {
         this(readString(buf), buf.readBoolean() ? readBytes(buf, 5120) : null);
     }
 

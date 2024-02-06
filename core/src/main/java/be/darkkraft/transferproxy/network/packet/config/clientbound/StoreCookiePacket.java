@@ -28,6 +28,9 @@ import be.darkkraft.transferproxy.api.network.packet.Packet;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static be.darkkraft.transferproxy.util.BufUtil.*;
 
 public record StoreCookiePacket(String key, byte[] payload) implements Packet {
@@ -45,6 +48,30 @@ public record StoreCookiePacket(String key, byte[] payload) implements Packet {
     @Override
     public int getId() {
         return 0x09;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        final StoreCookiePacket that = (StoreCookiePacket) o;
+        return Objects.equals(this.key, that.key) && Arrays.equals(this.payload, that.payload);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(this.key);
+        result = 31 * result + Arrays.hashCode(this.payload);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "StoreCookiePacket{key='" + this.key + "', payload=" + Arrays.toString(this.payload) + '}';
     }
 
 }
