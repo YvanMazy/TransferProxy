@@ -27,3 +27,8 @@ miscellaneous:
   kick-old-protocol: true
   # Message displayed to players kicked for outdated client version. (MiniMessage supported)
   kick-old-protocol-message: "<red>Outdated client"
+  # Automatically send keep-alive packets to players in CONFIG state.
+  # Useful if you make the player wait for a long time.
+  keep-alive: false
+  # Interval between each sending. (In milliseconds)
+  keep-alive-delay: 5000

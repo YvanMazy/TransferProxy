@@ -139,10 +139,14 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
 
         private final boolean kickOldProtocol;
         private final String kickOldProtocolMessage;
+        private final boolean keepAlive;
+        private final long keepAliveDelay;
 
         public YamlMiscellaneous() {
             this.kickOldProtocol = true;
             this.kickOldProtocolMessage = "<red>Outdated client";
+            this.keepAlive = false;
+            this.keepAliveDelay = 5_000L;
         }
 
         @Override
@@ -153,6 +157,16 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         @Override
         public String getKickOldProtocolMessage() {
             return this.kickOldProtocolMessage;
+        }
+
+        @Override
+        public boolean isKeepAlive() {
+            return this.keepAlive;
+        }
+
+        @Override
+        public long getKeepAliveDelay() {
+            return this.keepAliveDelay;
         }
 
     }

@@ -68,6 +68,10 @@ public interface ProxyConfiguration {
 
         String getKickOldProtocolMessage();
 
+        boolean isKeepAlive();
+
+        long getKeepAliveDelay();
+
     }
 
 }

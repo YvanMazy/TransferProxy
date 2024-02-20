@@ -28,6 +28,7 @@ import be.darkkraft.transferproxy.api.TransferProxy;
 import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.module.ModuleManager;
 import be.darkkraft.transferproxy.api.network.NetworkServer;
+import be.darkkraft.transferproxy.keepalive.KeepAliveTask;
 import be.darkkraft.transferproxy.module.ModuleManagerImpl;
 import be.darkkraft.transferproxy.network.NettyNetworkServer;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,9 @@ import org.slf4j.LoggerFactory;
 import org.tinylog.provider.ProviderRegistry;
 
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TransferProxyImpl extends TransferProxy {
 
@@ -44,6 +48,7 @@ public class TransferProxyImpl extends TransferProxy {
     private final ProxyConfiguration configuration;
     private final ModuleManager moduleManager = new ModuleManagerImpl();
     private NetworkServer networkServer;
+    private ScheduledExecutorService keepAliveExecutor;
 
     private long startedTime;
 
@@ -65,6 +70,12 @@ public class TransferProxyImpl extends TransferProxy {
         this.moduleManager.getPluginManager().start();
         (this.networkServer = new NettyNetworkServer()).start();
 
+        if (this.configuration.getMiscellaneous().isKeepAlive()) {
+            this.keepAliveExecutor = Executors.newSingleThreadScheduledExecutor();
+            final long delay = this.configuration.getMiscellaneous().getKeepAliveDelay();
+            this.keepAliveExecutor.scheduleAtFixedRate(new KeepAliveTask(), delay, delay, TimeUnit.MILLISECONDS);
+        }
+
         LOGGER.info("Server started successfully in {}ms", System.currentTimeMillis() - this.startedTime);
     }
 
@@ -76,6 +87,10 @@ public class TransferProxyImpl extends TransferProxy {
         }
         this.started = false;
         LOGGER.info("Server is shutting down...");
+
+        if (this.keepAliveExecutor != null) {
+            this.keepAliveExecutor.shutdownNow();
+        }
 
         this.moduleManager.getPluginManager().stop();
 
