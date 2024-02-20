@@ -26,6 +26,7 @@ package be.darkkraft.transferproxy.api;
 
 import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.module.ModuleManager;
+import be.darkkraft.transferproxy.api.network.NetworkServer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -50,6 +51,8 @@ public abstract class TransferProxy {
     public abstract @NotNull ProxyConfiguration getConfiguration();
 
     public abstract @NotNull ModuleManager getModuleManager();
+
+    public abstract NetworkServer getNetworkServer();
 
     public abstract long getStartedTime();
 

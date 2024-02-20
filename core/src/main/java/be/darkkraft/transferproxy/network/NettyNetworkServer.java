@@ -37,11 +37,14 @@ import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.netty.util.concurrent.GlobalEventExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +57,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
     private static final ChannelHandler FRAME_ENCODER = new VarIntFrameEncoder();
     private static final ChannelHandler PACKET_ENCODER = new PacketEncoder();
 
+    private final ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     private Channel channel;
 
     @Override
@@ -121,6 +125,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
 
     @Override
     protected void initChannel(final Channel channel) {
+        this.group.add(channel);
         final PlayerConnectionImpl connection = new PlayerConnectionImpl(channel);
         final ChannelPipeline pipeline = channel.pipeline();
 
@@ -129,6 +134,16 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
                 .addLast("decoder", new PacketDecoder(connection))
                 .addLast("prepender", FRAME_ENCODER);
         pipeline.addLast("encoder", PACKET_ENCODER).addLast("handler", connection);
+    }
+
+    @Override
+    public Channel getChannel() {
+        return this.channel;
+    }
+
+    @Override
+    public ChannelGroup getGroup() {
+        return this.group;
     }
 
 }

@@ -24,10 +24,17 @@
 
 package be.darkkraft.transferproxy.api.network;
 
+import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
+
 public interface NetworkServer {
 
     void start();
 
     void stop();
+
+    Channel getChannel();
+
+    ChannelGroup getGroup();
 
 }

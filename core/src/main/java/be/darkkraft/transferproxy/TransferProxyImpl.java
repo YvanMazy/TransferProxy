@@ -101,6 +101,11 @@ public class TransferProxyImpl extends TransferProxy {
     }
 
     @Override
+    public NetworkServer getNetworkServer() {
+        return this.networkServer;
+    }
+
+    @Override
     public long getStartedTime() {
         return this.startedTime;
     }
