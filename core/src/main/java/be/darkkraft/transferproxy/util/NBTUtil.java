@@ -131,7 +131,6 @@ public final class NBTUtil {
                         }
                     });
                     break;
-                default: throw new IllegalStateException("Unsupported tag: " + listType.id());
             }
 
             return ListBinaryTag.listBinaryTag(listType, items);
