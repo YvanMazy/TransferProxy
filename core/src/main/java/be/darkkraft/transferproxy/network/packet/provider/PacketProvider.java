@@ -27,6 +27,7 @@ package be.darkkraft.transferproxy.network.packet.provider;
 import be.darkkraft.transferproxy.api.network.connection.ConnectionState;
 import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.network.packet.config.FinishConfigurationPacket;
+import be.darkkraft.transferproxy.network.packet.config.KeepAlivePacket;
 import be.darkkraft.transferproxy.network.packet.config.PluginMessagePacket;
 import be.darkkraft.transferproxy.network.packet.config.serverbound.ClientInformationPacket;
 import be.darkkraft.transferproxy.network.packet.config.serverbound.ConfigCookieResponsePacket;
@@ -46,7 +47,7 @@ public interface PacketProvider {
     PacketProvider[] HANDSHAKE = {HandshakePacket::new};
     PacketProvider[] STATUS = {StatusRequestPacket::new, PingPongPacket::new};
     PacketProvider[] LOGIN = {LoginStartPacket::new, null, null, LoginAcknowledgedPacket::new, LoginCookieResponsePacket::new};
-    PacketProvider[] CONFIG = {ClientInformationPacket::new, ConfigCookieResponsePacket::new, PluginMessagePacket::from, FinishConfigurationPacket::new, null, null, ResourcePackResponsePacket::new};
+    PacketProvider[] CONFIG = {ClientInformationPacket::new, ConfigCookieResponsePacket::new, PluginMessagePacket::from, FinishConfigurationPacket::new, KeepAlivePacket::new, null, ResourcePackResponsePacket::new};
 
     Packet provide(final @NotNull ByteBuf buf);
 
