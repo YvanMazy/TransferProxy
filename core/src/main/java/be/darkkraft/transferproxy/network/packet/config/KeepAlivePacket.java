@@ -24,14 +24,20 @@
 
 package be.darkkraft.transferproxy.network.packet.config;
 
-import be.darkkraft.transferproxy.api.network.packet.Packet;
+import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
+import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
-public record KeepAlivePacket(long payload) implements Packet {
+public record KeepAlivePacket(long payload) implements ServerboundPacket {
 
     public KeepAlivePacket(final @NotNull ByteBuf buf) {
         this(buf.readLong());
+    }
+
+    @Override
+    public void handle(final @NotNull PlayerConnection connection) {
+        // do nothing
     }
 
     @Override
