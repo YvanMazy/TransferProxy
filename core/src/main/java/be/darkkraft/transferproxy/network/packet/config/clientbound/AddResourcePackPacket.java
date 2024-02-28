@@ -42,7 +42,7 @@ public record AddResourcePackPacket(UUID uuid, String url, String hash, boolean 
                 readString(buf, 32767),
                 readString(buf, 40),
                 buf.readBoolean(),
-                buf.readBoolean() ? GsonComponentSerializer.gson().deserializeFromTree(NBTUtil.deserialize(readBinaryTag(buf))) : null);
+                buf.readBoolean() ? GsonComponentSerializer.gson().deserializeFromTree(NBTUtil.deserialize(readTag(buf))) : null);
     }
 
     @Override

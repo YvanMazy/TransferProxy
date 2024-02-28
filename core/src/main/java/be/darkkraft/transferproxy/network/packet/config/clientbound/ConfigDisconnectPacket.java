@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 public record ConfigDisconnectPacket(Component component) implements Packet {
 
     public ConfigDisconnectPacket(final @NotNull ByteBuf buf) {
-        this(GsonComponentSerializer.gson().deserializeFromTree(NBTUtil.deserialize(BufUtil.readBinaryTag(buf))));
+        this(GsonComponentSerializer.gson().deserializeFromTree(NBTUtil.deserialize(BufUtil.readTag(buf))));
     }
 
     @Override

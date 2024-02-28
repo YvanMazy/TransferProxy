@@ -164,8 +164,12 @@ public final class BufUtil {
         return array;
     }
 
-    public static BinaryTag readBinaryTag(final @NotNull ByteBuf buf) {
-        final BinaryTagType<? extends BinaryTag> type = BINARY_TAG_TYPES[buf.readByte()];
+    public static BinaryTag readTag(final @NotNull ByteBuf buf) {
+        final byte id = buf.readByte();
+        if (id >= BINARY_TAG_TYPES.length) {
+            throw new DecoderException("Invalid binary tag id: " + id);
+        }
+        final BinaryTagType<? extends BinaryTag> type = BINARY_TAG_TYPES[id];
         try {
             return type.read(new ByteBufInputStream(buf));
         } catch (final IOException e) {
