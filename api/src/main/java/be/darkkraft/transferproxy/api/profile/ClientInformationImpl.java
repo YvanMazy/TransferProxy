@@ -24,8 +24,7 @@
 
 package be.darkkraft.transferproxy.api.profile;
 
-record ClientInformationImpl(String locale, byte viewDistance, ChatVisibility chatVisibility, boolean chatColors,
-                                    byte displayedSkinParts, MainHand mainHand, boolean enableTextFiltering,
-                                    boolean allowServerListing) implements ClientInformation {
+record ClientInformationImpl(String locale, byte viewDistance, ChatVisibility chatVisibility, boolean chatColors, byte displayedSkinParts,
+                             MainHand mainHand, boolean enableTextFiltering, boolean allowServerListing) implements ClientInformation {
 
 }

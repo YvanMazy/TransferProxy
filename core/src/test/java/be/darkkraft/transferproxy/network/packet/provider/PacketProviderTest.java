@@ -22,32 +22,25 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.resourcepack;
+package be.darkkraft.transferproxy.network.packet.provider;
 
+import be.darkkraft.transferproxy.api.network.connection.ConnectionState;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-class ResourcePackResultTest {
+class PacketProviderTest {
 
     @Test
-    void testIdEqualsOrdinal() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertEquals(result.ordinal(), result.getId());
+    void testAlwaysFoundProvidersForConnectionState() {
+        for (final ConnectionState state : ConnectionState.values()) {
+            if (state == ConnectionState.CLOSED) {
+                assertNull(PacketProvider.getProviders(ConnectionState.CLOSED));
+                return;
+            }
+            assertNotNull(PacketProvider.getProviders(state), "No provider found for state: " + state);
         }
-    }
-
-    @Test
-    void testEqualityWithFromId() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertSame(result, ResourcePackResult.fromId(result.getId()));
-        }
-    }
-
-    @Test
-    void testInvalidFromId() {
-        final int badIndex = ResourcePackResult.values().length;
-        assertThrows(IllegalArgumentException.class, () -> ResourcePackResult.fromId(badIndex));
     }
 
 }

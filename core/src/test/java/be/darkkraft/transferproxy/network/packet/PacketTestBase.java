@@ -22,32 +22,36 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.resourcepack;
+package be.darkkraft.transferproxy.network.packet;
 
-import org.junit.jupiter.api.Test;
+import be.darkkraft.transferproxy.api.network.packet.Packet;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.function.Function;
 
-class ResourcePackResultTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    @Test
-    void testIdEqualsOrdinal() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertEquals(result.ordinal(), result.getId());
-        }
+public class PacketTestBase {
+
+    private ByteBuf buf;
+
+    @BeforeEach
+    void setUp() {
+        this.buf = Unpooled.buffer();
     }
 
-    @Test
-    void testEqualityWithFromId() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertSame(result, ResourcePackResult.fromId(result.getId()));
-        }
+    protected <T extends Packet> void test(final T packet, final Function<ByteBuf, T> builder) {
+        packet.write(this.buf);
+        assertEquals(packet, builder.apply(this.buf));
+        assertEquals(0, this.buf.readableBytes());
     }
 
-    @Test
-    void testInvalidFromId() {
-        final int badIndex = ResourcePackResult.values().length;
-        assertThrows(IllegalArgumentException.class, () -> ResourcePackResult.fromId(badIndex));
+    @AfterEach
+    void tearDown() {
+        this.buf.release();
     }
 
 }

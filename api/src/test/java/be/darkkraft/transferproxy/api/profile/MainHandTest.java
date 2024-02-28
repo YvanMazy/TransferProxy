@@ -32,15 +32,15 @@ class MainHandTest {
 
     @Test
     void testIdEqualsOrdinal() {
-        for (final MainHand result : MainHand.values()) {
-            assertEquals(result.ordinal(), result.getId());
+        for (final MainHand hand : MainHand.values()) {
+            assertEquals(hand.ordinal(), hand.getId());
         }
     }
 
     @Test
     void testEqualityWithFromId() {
-        for (final MainHand result : MainHand.values()) {
-            assertSame(MainHand.fromId(result.getId()), result);
+        for (final MainHand hand : MainHand.values()) {
+            assertSame(hand, MainHand.fromId(hand.getId()));
         }
     }
 

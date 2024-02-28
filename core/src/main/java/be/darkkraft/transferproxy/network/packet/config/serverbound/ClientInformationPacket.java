@@ -40,6 +40,17 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
                                       byte displayedSkinParts, MainHand mainHand, boolean enableTextFiltering,
                                       boolean allowServerListing) implements ServerboundPacket, ClientInformation {
 
+    public ClientInformationPacket(final @NotNull ClientInformation information) {
+        this(information.locale(),
+                information.viewDistance(),
+                information.chatVisibility(),
+                information.chatColors(),
+                information.displayedSkinParts(),
+                information.mainHand(),
+                information.enableTextFiltering(),
+                information.allowServerListing());
+    }
+
     public ClientInformationPacket(final @NotNull ByteBuf buf) {
         this(readString(buf, 16),
                 buf.readByte(),

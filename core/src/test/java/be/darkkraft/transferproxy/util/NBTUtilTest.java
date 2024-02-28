@@ -24,18 +24,19 @@
 
 package be.darkkraft.transferproxy.util;
 
-import be.darkkraft.transferproxy.util.test.NBTTestUtil;
+import be.darkkraft.transferproxy.util.test.TestGenerationUtil;
 import com.google.gson.JsonElement;
 import net.kyori.adventure.nbt.BinaryTag;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NBTUtilTest {
 
     @Test
     void testDeserializationSerializationEquality() {
-        final BinaryTag original = NBTTestUtil.generateComplexCompoundTag();
+        final BinaryTag original = TestGenerationUtil.generateComplexCompoundTag();
         assertDoesNotThrow(() -> {
             final JsonElement json = NBTUtil.deserialize(original);
             assertEquals(original, NBTUtil.serialize(json));

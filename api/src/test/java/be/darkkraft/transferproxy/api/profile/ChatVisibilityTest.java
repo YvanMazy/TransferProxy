@@ -32,15 +32,15 @@ class ChatVisibilityTest {
 
     @Test
     void testIdEqualsOrdinal() {
-        for (final ChatVisibility result : ChatVisibility.values()) {
-            assertEquals(result.ordinal(), result.getId());
+        for (final ChatVisibility visibility : ChatVisibility.values()) {
+            assertEquals(visibility.ordinal(), visibility.getId());
         }
     }
 
     @Test
     void testEqualityWithFromId() {
-        for (final ChatVisibility result : ChatVisibility.values()) {
-            assertSame(ChatVisibility.fromId(result.getId()), result);
+        for (final ChatVisibility visibility : ChatVisibility.values()) {
+            assertSame(visibility, ChatVisibility.fromId(visibility.getId()));
         }
     }
 

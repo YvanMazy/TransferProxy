@@ -27,10 +27,12 @@ package be.darkkraft.transferproxy.util.test;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.IntBinaryTag;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
-public final class NBTTestUtil {
+public final class TestGenerationUtil {
 
-    private NBTTestUtil() throws IllegalAccessException {
+    private TestGenerationUtil() throws IllegalAccessException {
         throw new IllegalAccessException("You cannot instantiate a utility class");
     }
 
@@ -49,6 +51,11 @@ public final class NBTTestUtil {
                 .putIntArray("int_array", new int[] {Integer.MAX_VALUE})
                 .putLongArray("long_array", new long[] {Long.MAX_VALUE})
                 .build();
+    }
+
+    public static Component generateComplexComponent() {
+        return MiniMessage.miniMessage()
+                .deserialize("<color:#FF5555>This is a <color:#55FF55>test! <rainbow:!2>||||||||||||||||||||||||</rainbow>");
     }
 
 }

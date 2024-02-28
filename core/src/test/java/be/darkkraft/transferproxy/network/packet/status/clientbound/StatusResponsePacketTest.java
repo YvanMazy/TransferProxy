@@ -22,32 +22,29 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.resourcepack;
+package be.darkkraft.transferproxy.network.packet.status.clientbound;
 
+import be.darkkraft.transferproxy.api.status.StatusResponse;
+import be.darkkraft.transferproxy.network.packet.PacketTestBase;
+import be.darkkraft.transferproxy.util.test.TestGenerationUtil;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.UUID;
 
-class ResourcePackResultTest {
-
-    @Test
-    void testIdEqualsOrdinal() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertEquals(result.ordinal(), result.getId());
-        }
-    }
+class StatusResponsePacketTest extends PacketTestBase {
 
     @Test
-    void testEqualityWithFromId() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertSame(result, ResourcePackResult.fromId(result.getId()));
-        }
-    }
-
-    @Test
-    void testInvalidFromId() {
-        final int badIndex = ResourcePackResult.values().length;
-        assertThrows(IllegalArgumentException.class, () -> ResourcePackResult.fromId(badIndex));
+    void testWriteReadConsistency() {
+        this.test(new StatusResponsePacket(StatusResponse.builder()
+                .description(TestGenerationUtil.generateComplexComponent())
+                .addEntry("Darkkraft", UUID.fromString("169033d6-0967-49dc-828e-a6c48665e08f"))
+                .addEntry("Random", UUID.randomUUID())
+                .max(Integer.MAX_VALUE)
+                .online(Integer.MIN_VALUE)
+                .online(0)
+                .protocol(-1)
+                .favicon("base64")
+                .build()), StatusResponsePacket::new);
     }
 
 }

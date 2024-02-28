@@ -22,32 +22,16 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.resourcepack;
+package be.darkkraft.transferproxy.network.packet.config.clientbound;
 
+import be.darkkraft.transferproxy.network.packet.PacketTestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ResourcePackResultTest {
+class ConfigCookieRequestPacketTest extends PacketTestBase {
 
     @Test
-    void testIdEqualsOrdinal() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertEquals(result.ordinal(), result.getId());
-        }
-    }
-
-    @Test
-    void testEqualityWithFromId() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertSame(result, ResourcePackResult.fromId(result.getId()));
-        }
-    }
-
-    @Test
-    void testInvalidFromId() {
-        final int badIndex = ResourcePackResult.values().length;
-        assertThrows(IllegalArgumentException.class, () -> ResourcePackResult.fromId(badIndex));
+    void testWriteReadConsistency() {
+        this.test(new ConfigCookieRequestPacket("minecraft:cookie_key"), ConfigCookieRequestPacket::new);
     }
 
 }

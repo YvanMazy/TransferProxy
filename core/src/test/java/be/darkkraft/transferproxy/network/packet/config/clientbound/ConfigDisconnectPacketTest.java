@@ -22,32 +22,17 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.resourcepack;
+package be.darkkraft.transferproxy.network.packet.config.clientbound;
 
+import be.darkkraft.transferproxy.network.packet.PacketTestBase;
+import be.darkkraft.transferproxy.util.test.TestGenerationUtil;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ResourcePackResultTest {
+class ConfigDisconnectPacketTest extends PacketTestBase {
 
     @Test
-    void testIdEqualsOrdinal() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertEquals(result.ordinal(), result.getId());
-        }
-    }
-
-    @Test
-    void testEqualityWithFromId() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertSame(result, ResourcePackResult.fromId(result.getId()));
-        }
-    }
-
-    @Test
-    void testInvalidFromId() {
-        final int badIndex = ResourcePackResult.values().length;
-        assertThrows(IllegalArgumentException.class, () -> ResourcePackResult.fromId(badIndex));
+    void testWriteReadConsistency() {
+        this.test(new ConfigDisconnectPacket(TestGenerationUtil.generateComplexComponent()), ConfigDisconnectPacket::new);
     }
 
 }

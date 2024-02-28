@@ -47,7 +47,8 @@ public interface PacketProvider {
     PacketProvider[] HANDSHAKE = {HandshakePacket::new};
     PacketProvider[] STATUS = {StatusRequestPacket::new, PingPongPacket::new};
     PacketProvider[] LOGIN = {LoginStartPacket::new, null, null, LoginAcknowledgedPacket::new, LoginCookieResponsePacket::new};
-    PacketProvider[] CONFIG = {ClientInformationPacket::new, ConfigCookieResponsePacket::new, PluginMessagePacket::from, FinishConfigurationPacket::new, KeepAlivePacket::new, null, ResourcePackResponsePacket::new};
+    PacketProvider[] CONFIG =
+            {ClientInformationPacket::new, ConfigCookieResponsePacket::new, PluginMessagePacket::from, FinishConfigurationPacket::new, KeepAlivePacket::new, null, ResourcePackResponsePacket::new};
 
     Packet provide(final @NotNull ByteBuf buf);
 
@@ -71,7 +72,7 @@ public interface PacketProvider {
         return packet;
     }
 
-    private static PacketProvider[] getProviders(final @NotNull ConnectionState state) {
+    static PacketProvider[] getProviders(final @NotNull ConnectionState state) {
         return switch (state) {
             case HANDSHAKE -> HANDSHAKE;
             case STATUS -> STATUS;

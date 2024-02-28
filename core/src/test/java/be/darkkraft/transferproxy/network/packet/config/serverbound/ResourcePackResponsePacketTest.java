@@ -22,32 +22,21 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.resourcepack;
+package be.darkkraft.transferproxy.network.packet.config.serverbound;
 
+import be.darkkraft.transferproxy.api.resourcepack.ResourcePackResult;
+import be.darkkraft.transferproxy.network.packet.PacketTestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.UUID;
 
-class ResourcePackResultTest {
+class ResourcePackResponsePacketTest extends PacketTestBase {
 
     @Test
-    void testIdEqualsOrdinal() {
+    void testWriteReadConsistency() {
         for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertEquals(result.ordinal(), result.getId());
+            this.test(new ResourcePackResponsePacket(UUID.randomUUID(), result), ResourcePackResponsePacket::new);
         }
-    }
-
-    @Test
-    void testEqualityWithFromId() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertSame(result, ResourcePackResult.fromId(result.getId()));
-        }
-    }
-
-    @Test
-    void testInvalidFromId() {
-        final int badIndex = ResourcePackResult.values().length;
-        assertThrows(IllegalArgumentException.class, () -> ResourcePackResult.fromId(badIndex));
     }
 
 }

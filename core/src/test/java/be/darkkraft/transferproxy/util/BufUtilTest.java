@@ -24,7 +24,7 @@
 
 package be.darkkraft.transferproxy.util;
 
-import be.darkkraft.transferproxy.util.test.NBTTestUtil;
+import be.darkkraft.transferproxy.util.test.TestGenerationUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.DecoderException;
@@ -158,7 +158,7 @@ class BufUtilTest {
                 StringBinaryTag.stringBinaryTag("test"),
                 CompoundBinaryTag.empty(),
                 CompoundBinaryTag.from(Map.of("key", IntBinaryTag.intBinaryTag(5), "key2", LongBinaryTag.longBinaryTag(100L))),
-                NBTTestUtil.generateComplexCompoundTag());
+                TestGenerationUtil.generateComplexCompoundTag());
     }
 
 }

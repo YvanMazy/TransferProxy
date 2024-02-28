@@ -22,32 +22,23 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.resourcepack;
+package be.darkkraft.transferproxy.network.packet.login.clientbound;
 
+import be.darkkraft.transferproxy.api.profile.Property;
+import be.darkkraft.transferproxy.network.packet.PacketTestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.UUID;
 
-class ResourcePackResultTest {
-
-    @Test
-    void testIdEqualsOrdinal() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertEquals(result.ordinal(), result.getId());
-        }
-    }
+class LoginSuccessPacketTest extends PacketTestBase {
 
     @Test
-    void testEqualityWithFromId() {
-        for (final ResourcePackResult result : ResourcePackResult.values()) {
-            assertSame(result, ResourcePackResult.fromId(result.getId()));
-        }
-    }
-
-    @Test
-    void testInvalidFromId() {
-        final int badIndex = ResourcePackResult.values().length;
-        assertThrows(IllegalArgumentException.class, () -> ResourcePackResult.fromId(badIndex));
+    void testWriteReadConsistency() {
+        final UUID uuid = UUID.fromString("169033d6-0967-49dc-828e-a6c48665e08f");
+        final String username = "Darkkraft";
+        final Property[] properties = {new Property("name", "value", "signature")};
+        this.test(new LoginSuccessPacket(uuid, username, new Property[0]), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, properties), LoginSuccessPacket::new);
     }
 
 }
