@@ -76,7 +76,7 @@ public interface PacketProvider {
         return switch (state) {
             case HANDSHAKE -> HANDSHAKE;
             case STATUS -> STATUS;
-            case LOGIN -> LOGIN;
+            case LOGIN, TRANSFER -> LOGIN;
             case CONFIG -> CONFIG;
             default -> null;
         };

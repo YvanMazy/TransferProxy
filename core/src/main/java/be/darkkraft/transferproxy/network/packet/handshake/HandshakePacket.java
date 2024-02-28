@@ -29,6 +29,7 @@ import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.event.EventType;
 import be.darkkraft.transferproxy.api.network.connection.ConnectionState;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
+import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.network.packet.built.BuiltPacket;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import be.darkkraft.transferproxy.network.packet.built.BuiltPacketImpl;
@@ -41,8 +42,7 @@ import static be.darkkraft.transferproxy.util.BufUtil.*;
 
 public record HandshakePacket(int protocol, String hostname, int hostPort, ConnectionState nextState) implements ServerboundPacket {
 
-    private static final BuiltPacket KICK_PACKET = new BuiltPacketImpl(new LoginDisconnectPacket(MiniMessage.miniMessage()
-            .deserialize(TransferProxy.getInstance().getConfiguration().getMiscellaneous().getKickOldProtocolMessage())));
+    private static BuiltPacket kickPacket;
 
     public HandshakePacket(final @NotNull ByteBuf buf) {
         this(readVarInt(buf), readString(buf), buf.readShort(), ConnectionState.fromId(readVarInt(buf)));
@@ -57,7 +57,7 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
         if (this.protocol < 766) {
             final ProxyConfiguration.Miscellaneous config = proxy.getConfiguration().getMiscellaneous();
             if (config.isKickOldProtocol()) {
-                connection.sendPacketAndClose(KICK_PACKET);
+                connection.sendPacketAndClose(getKickPacket());
                 return;
             }
         }
@@ -75,6 +75,14 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
     @Override
     public int getId() {
         return 0x00;
+    }
+
+    private static Packet getKickPacket() {
+        if (kickPacket != null) {
+            return kickPacket;
+        }
+        return kickPacket = new BuiltPacketImpl(new LoginDisconnectPacket(MiniMessage.miniMessage()
+                .deserialize(TransferProxy.getInstance().getConfiguration().getMiscellaneous().getKickOldProtocolMessage())));
     }
 
 }
