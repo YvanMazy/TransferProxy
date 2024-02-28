@@ -53,7 +53,7 @@ public final class DefaultStatusListener implements StatusListener {
         connection.sendStatusResponse(StatusResponse.builder()
                 .name(this.name)
                 .description(this.description)
-                .protocol(this.protocol == -256 ? connection.getProtocol() : this.protocol)
+                .protocol(this.protocol == MAGIC_PROTOCOL ? connection.getProtocol() : this.protocol)
                 .build());
     }
 
