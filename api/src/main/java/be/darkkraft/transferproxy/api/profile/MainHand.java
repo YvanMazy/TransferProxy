@@ -29,6 +29,16 @@ public enum MainHand {
     LEFT,
     RIGHT;
 
+    public byte getId() {
+        if (this == LEFT) {
+            return 0;
+        } else if (this == RIGHT) {
+            return 1;
+        }
+        // A third hand??
+        throw new UnsupportedOperationException("This MainHand is not implemented: " + this);
+    }
+
     public static MainHand fromId(final int id) {
         if (id == 0) {
             return LEFT;
