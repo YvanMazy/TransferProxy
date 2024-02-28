@@ -42,9 +42,10 @@ public enum ChatVisibility {
 
     public static ChatVisibility fromId(final int id) {
         return switch (id) {
+            case 0 -> FULL;
             case 1 -> SYSTEM;
             case 2 -> HIDDEN;
-            default -> FULL;
+            default -> throw new IllegalArgumentException("Invalid ChatVisibility id: " + id);
         };
     }
 

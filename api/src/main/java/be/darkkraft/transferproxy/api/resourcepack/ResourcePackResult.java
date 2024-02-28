@@ -51,7 +51,7 @@ public enum ResourcePackResult {
             case 5 -> INVALID_URL;
             case 6 -> FAILED_TO_RELOAD;
             case 7 -> DISCARDED;
-            default -> throw new IllegalStateException("Unexpected value: " + id);
+            default -> throw new IllegalArgumentException("Invalid ResourcePackResult id: " + id);
         };
     }
 

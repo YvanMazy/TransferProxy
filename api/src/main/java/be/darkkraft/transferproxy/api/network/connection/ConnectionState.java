@@ -48,7 +48,7 @@ public enum ConnectionState {
             case 1 -> STATUS;
             case 2 -> LOGIN;
             case 3 -> TRANSFER;
-            default -> throw new IllegalArgumentException("Invalid state id: " + id);
+            default -> throw new IllegalArgumentException("Invalid ConnectionState id: " + id);
         };
     }
 

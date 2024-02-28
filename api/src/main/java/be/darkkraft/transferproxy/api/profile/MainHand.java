@@ -30,7 +30,12 @@ public enum MainHand {
     RIGHT;
 
     public static MainHand fromId(final int id) {
-        return id == 0 ? LEFT : RIGHT;
+        if (id == 0) {
+            return LEFT;
+        } else if (id == 1) {
+            return RIGHT;
+        }
+        throw new IllegalArgumentException("Invalid MainHand id: " + id);
     }
 
 }
