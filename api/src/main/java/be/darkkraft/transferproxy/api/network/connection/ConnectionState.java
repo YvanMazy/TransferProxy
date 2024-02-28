@@ -43,6 +43,10 @@ public enum ConnectionState {
         this.login = login;
     }
 
+    public boolean isLogin() {
+        return this.login;
+    }
+
     public static ConnectionState fromId(final int id) {
         return switch (id) {
             case 1 -> STATUS;
@@ -50,10 +54,6 @@ public enum ConnectionState {
             case 3 -> TRANSFER;
             default -> throw new IllegalArgumentException("Invalid ConnectionState id: " + id);
         };
-    }
-
-    public boolean isLogin() {
-        return this.login;
     }
 
 }
