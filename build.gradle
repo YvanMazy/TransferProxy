@@ -21,16 +21,16 @@ allprojects {
 
     dependencies {
         // Logging
-        api 'org.tinylog:slf4j-tinylog:2.6.2'
-        api 'org.tinylog:tinylog-impl:2.6.2'
+        api 'org.tinylog:slf4j-tinylog:2.7.0'
+        api 'org.tinylog:tinylog-impl:2.7.0'
 
         // Networking
-        api 'io.netty:netty-all:4.1.104.Final'
+        api 'io.netty:netty-all:4.1.107.Final'
 
         // Annotations
         api 'org.jetbrains:annotations:24.1.0'
 
-        testImplementation platform('org.junit:junit-bom:5.10.1')
+        testImplementation platform('org.junit:junit-bom:5.10.2')
         testImplementation 'org.junit.jupiter:junit-jupiter'
         testImplementation 'org.mockito:mockito-core:5.10.0'
     }

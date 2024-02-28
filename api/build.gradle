@@ -3,13 +3,13 @@ dependencies {
     api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.1'
 
     // Adventure library
-    api('net.kyori:adventure-api:4.15.0') {
+    api('net.kyori:adventure-api:4.16.0') {
         exclude module: 'gson'
     }
-    api 'net.kyori:adventure-nbt:4.15.0'
-    api 'net.kyori:adventure-text-serializer-gson:4.15.0'
-    api 'net.kyori:adventure-text-logger-slf4j:4.15.0'
-    api 'net.kyori:adventure-text-minimessage:4.15.0'
+    api 'net.kyori:adventure-nbt:4.16.0'
+    api 'net.kyori:adventure-text-serializer-gson:4.16.0'
+    api 'net.kyori:adventure-text-logger-slf4j:4.16.0'
+    api 'net.kyori:adventure-text-minimessage:4.16.0'
 
     api 'com.google.code.gson:gson:2.10.1'
 }
