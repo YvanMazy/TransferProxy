@@ -32,10 +32,7 @@ import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPack
 import be.darkkraft.transferproxy.api.profile.ClientInformation;
 import be.darkkraft.transferproxy.api.status.StatusResponse;
 import be.darkkraft.transferproxy.api.util.CookieUtil;
-import be.darkkraft.transferproxy.network.packet.config.clientbound.ConfigCookieRequestPacket;
-import be.darkkraft.transferproxy.network.packet.config.clientbound.ConfigDisconnectPacket;
-import be.darkkraft.transferproxy.network.packet.config.clientbound.StoreCookiePacket;
-import be.darkkraft.transferproxy.network.packet.config.clientbound.TransferPacket;
+import be.darkkraft.transferproxy.network.packet.config.clientbound.*;
 import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginCookieRequestPacket;
 import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import be.darkkraft.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
@@ -161,6 +158,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     @Override
     public Map<String, CompletableFuture<byte[]>> getPendingCookies() {
         return this.pendingCookies != null ? Map.copyOf(this.pendingCookies) : Map.of();
+    }
+
+    @Override
+    public void removeResourcePack(final @Nullable UUID uuid) {
+        this.sendPacket(new RemoveResourcePackPacket(Objects.requireNonNull(uuid, "uuid cannot be null")));
     }
 
     @Override

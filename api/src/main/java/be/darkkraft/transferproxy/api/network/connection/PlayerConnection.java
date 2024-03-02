@@ -52,6 +52,8 @@ public interface PlayerConnection {
 
     Map<String, CompletableFuture<byte[]>> getPendingCookies();
 
+    void removeResourcePack(final @Nullable UUID uuid);
+
     default void disconnect(final @NotNull String reason) {
         this.disconnect(Component.text(reason));
     }
