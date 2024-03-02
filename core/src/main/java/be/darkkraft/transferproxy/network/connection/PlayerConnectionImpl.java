@@ -68,6 +68,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private String hostname;
     private int hostPort;
 
+    // This is the field that must be volatile and not the entries
     private volatile Map<String, CompletableFuture<byte[]>> pendingCookies;
 
     private String name;

@@ -28,6 +28,7 @@ import be.darkkraft.transferproxy.util.test.TestGenerationUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
 import net.kyori.adventure.nbt.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,6 +116,28 @@ class BufUtilTest {
         final String longString = "a".repeat(5);
         assertDoesNotThrow(() -> BufUtil.writeString(this.buf, longString));
         assertThrows(DecoderException.class, () -> BufUtil.readString(this.buf, 4));
+    }
+
+    @Test
+    void testReadStringWithTooSmallSize() {
+        BufUtil.writeVarInt(this.buf, -1);
+        assertThrows(DecoderException.class, () -> BufUtil.readString(this.buf));
+    }
+
+    @Test
+    void testReadStringWithMalformedData() {
+        BufUtil.writeVarInt(this.buf, 10);
+        assertThrows(DecoderException.class, () -> BufUtil.readString(this.buf));
+    }
+
+    @Test
+    void testWriteStringWithNullValue() {
+        assertThrows(EncoderException.class, () -> BufUtil.writeString(this.buf, null));
+    }
+
+    @Test
+    void testWriteStringTooLong() {
+        assertThrows(EncoderException.class, () -> BufUtil.writeString(this.buf, "aa", 1));
     }
 
     @Test
