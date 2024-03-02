@@ -43,7 +43,7 @@ public record StoreCookiePacket(String key, byte[] payload) implements Packet {
     @Override
     public void write(final @NotNull ByteBuf buf) {
         writeString(buf, this.key);
-        writeBytes(buf, this.payload);
+        writeBytes(buf, this.payload, CookieUtil.getMaxCookieSize());
     }
 
     @Override

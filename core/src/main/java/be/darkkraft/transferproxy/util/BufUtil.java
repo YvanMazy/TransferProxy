@@ -101,7 +101,10 @@ public final class BufUtil {
         buf.writeLong(uuid.getLeastSignificantBits());
     }
 
-    public static void writeBytes(final @NotNull ByteBuf buf, final byte @NotNull [] payload) {
+    public static void writeBytes(final @NotNull ByteBuf buf, final byte @NotNull [] payload, final int maxLength) {
+        if (payload.length > maxLength) {
+            throw new EncoderException("Invalid bytes length: " + payload.length + " > " + maxLength);
+        }
         writeVarInt(buf, payload.length);
         buf.writeBytes(payload);
     }

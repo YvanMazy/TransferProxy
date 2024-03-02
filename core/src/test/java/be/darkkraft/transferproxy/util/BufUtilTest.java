@@ -89,7 +89,7 @@ class BufUtilTest {
     @ParameterizedTest
     @MethodSource("generateBytes")
     void testBytesWriteReadConsistency(final byte[] value) {
-        assertDoesNotThrow(() -> BufUtil.writeBytes(this.buf, value));
+        assertDoesNotThrow(() -> BufUtil.writeBytes(this.buf, value, value.length));
         assertArrayEquals(value, BufUtil.readBytes(this.buf, value.length));
         assertEquals(0, this.buf.readableBytes());
     }
@@ -143,7 +143,7 @@ class BufUtilTest {
     @Test
     void testReadBytesTooLong() {
         final byte[] bytes = new byte[5];
-        assertDoesNotThrow(() -> BufUtil.writeBytes(this.buf, bytes));
+        assertDoesNotThrow(() -> BufUtil.writeBytes(this.buf, bytes, bytes.length));
         assertThrows(DecoderException.class, () -> BufUtil.readBytes(this.buf, 4));
     }
 

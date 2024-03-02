@@ -60,7 +60,7 @@ public abstract class CookieResponsePacket implements ServerboundPacket {
         writeString(buf, this.key);
         if (this.payload != null) {
             buf.writeBoolean(true);
-            writeBytes(buf, this.payload);
+            writeBytes(buf, this.payload, CookieUtil.getMaxCookieSize());
             return;
         }
         buf.writeBoolean(false);
