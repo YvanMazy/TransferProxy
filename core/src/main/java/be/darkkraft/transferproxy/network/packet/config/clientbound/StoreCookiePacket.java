@@ -25,6 +25,7 @@
 package be.darkkraft.transferproxy.network.packet.config.clientbound;
 
 import be.darkkraft.transferproxy.api.network.packet.Packet;
+import be.darkkraft.transferproxy.api.util.CookieUtil;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +37,7 @@ import static be.darkkraft.transferproxy.util.BufUtil.*;
 public record StoreCookiePacket(String key, byte[] payload) implements Packet {
 
     public StoreCookiePacket(final @NotNull ByteBuf buf) {
-        this(readString(buf), readBytes(buf, 5120));
+        this(readString(buf), readBytes(buf, CookieUtil.getMaxCookieSize()));
     }
 
     @Override

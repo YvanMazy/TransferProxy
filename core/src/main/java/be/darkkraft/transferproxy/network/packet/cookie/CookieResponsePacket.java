@@ -26,6 +26,7 @@ package be.darkkraft.transferproxy.network.packet.cookie;
 
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.network.packet.serverbound.ServerboundPacket;
+import be.darkkraft.transferproxy.api.util.CookieUtil;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +47,7 @@ public abstract class CookieResponsePacket implements ServerboundPacket {
     }
 
     protected CookieResponsePacket(final @NotNull ByteBuf buf) {
-        this(readString(buf), buf.readBoolean() ? readBytes(buf, 5120) : null);
+        this(readString(buf), buf.readBoolean() ? readBytes(buf, CookieUtil.getMaxCookieSize()) : null);
     }
 
     @Override

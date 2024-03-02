@@ -140,6 +140,9 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
         Objects.requireNonNull(payload, "Cookie payload cannot be null");
         CookieUtil.ensureCookieFormat(cookieKey);
         this.ensureState(ConnectionState.CONFIG, "storeCookie");
+        if (payload.length > CookieUtil.getMaxCookieSize()) {
+            throw new IllegalArgumentException("The cookie to store is too big: " + payload.length + " > " + CookieUtil.getMaxCookieSize());
+        }
         this.sendPacket(new StoreCookiePacket(cookieKey, payload));
     }
 

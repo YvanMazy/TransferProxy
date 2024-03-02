@@ -26,6 +26,8 @@ package be.darkkraft.transferproxy.api.util;
 
 public final class CookieUtil {
 
+    private static final int MAX_COOKIE_SIZE = 5120; // 5 kiB
+
     private CookieUtil() throws IllegalAccessException {
         throw new IllegalAccessException("You cannot instantiate a utility class");
     }
@@ -37,6 +39,10 @@ public final class CookieUtil {
         if (cookieKey.indexOf(':') < 0) {
             throw new IllegalArgumentException("Cookie key format must be: namespace:key");
         }
+    }
+
+    public static int getMaxCookieSize() { // Maybe that changes in future versions?
+        return MAX_COOKIE_SIZE;
     }
 
 }
