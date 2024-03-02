@@ -26,7 +26,7 @@ package be.darkkraft.transferproxy.network.packet.config.clientbound;
 
 import be.darkkraft.transferproxy.network.packet.PacketTestBase;
 import be.darkkraft.transferproxy.util.test.TestGenerationUtil;
-import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.CodecException;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -43,7 +43,7 @@ class AddResourcePackPacketTest extends PacketTestBase {
 
     @Test
     void testWriteTooLongUrl() {
-        assertThrows(DecoderException.class,
+        assertThrows(CodecException.class,
                 () -> this.test(new AddResourcePackPacket(UUID.randomUUID(),
                         "a".repeat(Short.MAX_VALUE + 1),
                         "hash",
@@ -53,7 +53,7 @@ class AddResourcePackPacketTest extends PacketTestBase {
 
     @Test
     void testWriteTooLongHash() {
-        assertThrows(DecoderException.class,
+        assertThrows(CodecException.class,
                 () -> this.test(new AddResourcePackPacket(UUID.randomUUID(),
                         "url",
                         "a".repeat(41),
