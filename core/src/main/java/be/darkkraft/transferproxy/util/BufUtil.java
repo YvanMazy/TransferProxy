@@ -68,11 +68,14 @@ public final class BufUtil {
         buf.writeByte(value);
     }
 
-    public static void writeString(final ByteBuf buf, final CharSequence string) {
+    public static void writeString(final @NotNull ByteBuf buf, final @NotNull CharSequence string) {
         writeString(buf, string, Short.MAX_VALUE);
     }
 
-    public static void writeString(final ByteBuf buf, final CharSequence string, final int length) {
+    public static void writeString(final @NotNull ByteBuf buf, final @NotNull CharSequence string, final int length) {
+        if (string == null) {
+            throw new EncoderException("Input string cannot be null");
+        }
         if (string.length() > length) {
             throw new EncoderException("Invalid string length: " + string.length() + " > " + length);
         }
@@ -103,7 +106,7 @@ public final class BufUtil {
         buf.writeBytes(payload);
     }
 
-    public static <T> void writeArray(final @NotNull ByteBuf buf, final @NotNull T[] array, final BiConsumer<ByteBuf, T> consumer) {
+    public static <T> void writeArray(final @NotNull ByteBuf buf, final @NotNull T[] array, final @NotNull BiConsumer<ByteBuf, T> consumer) {
         writeVarInt(buf, array.length);
         for (final T t : array) {
             consumer.accept(buf, t);
