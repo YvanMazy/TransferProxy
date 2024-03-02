@@ -68,9 +68,29 @@ public final class BufUtil {
         buf.writeByte(value);
     }
 
-    public static void writeString(final @NotNull ByteBuf buf, final @NotNull String string) {
-        writeVarInt(buf, ByteBufUtil.utf8Bytes(string));
-        ByteBufUtil.writeUtf8(buf, string);
+    public static void writeString(final ByteBuf buf, final CharSequence string) {
+        writeString(buf, string, Short.MAX_VALUE);
+    }
+
+    public static void writeString(final ByteBuf buf, final CharSequence string, final int length) {
+        if (string.length() > length) {
+            throw new EncoderException("Invalid string length: " + string.length() + " > " + length);
+        }
+
+        final ByteBuf temp = buf.alloc().buffer(ByteBufUtil.utf8MaxBytes(string));
+        try {
+            final int realBytes = ByteBufUtil.writeUtf8(temp, string);
+            final int maxForLength = ByteBufUtil.utf8MaxBytes(length);
+
+            if (realBytes > maxForLength) {
+                throw new EncoderException("Invalid encoded string length: " + realBytes + " > " + maxForLength);
+            }
+
+            writeVarInt(buf, realBytes);
+            buf.writeBytes(temp);
+        } finally {
+            temp.release();
+        }
     }
 
     public static void writeUUID(final @NotNull ByteBuf buf, final @NotNull UUID uuid) {
@@ -121,18 +141,24 @@ public final class BufUtil {
 
     public static String readString(final @NotNull ByteBuf buf, final int maxLength) {
         final int length = readVarInt(buf);
-        if (length > maxLength * 3) {
-            throw new DecoderException("Invalid String length (" + length + " > " + (maxLength * 3) + ")");
-        } else if (length < 0) {
-            throw new DecoderException("String with zero length is not valid");
+        if (length < 0) {
+            throw new DecoderException("Invalid received string length: " + length);
+        }
+
+        final int maxBytes = ByteBufUtil.utf8MaxBytes(maxLength);
+        if (length > maxBytes) {
+            throw new DecoderException("Invalid received string length: " + length + " > " + maxBytes);
+        }
+
+        final int readable = buf.readableBytes();
+        if (length > readable) {
+            throw new DecoderException("Invalid received string in buffer: " + length + " > " + readable);
         }
 
         final String string = buf.toString(buf.readerIndex(), length, StandardCharsets.UTF_8);
-
         buf.readerIndex(buf.readerIndex() + length);
-
         if (string.length() > maxLength) {
-            throw new DecoderException("Invalid String length (" + string.length() + " > " + maxLength + ")");
+            throw new DecoderException("Invalid read string length: " + string.length() + " > " + maxLength);
         }
 
         return string;

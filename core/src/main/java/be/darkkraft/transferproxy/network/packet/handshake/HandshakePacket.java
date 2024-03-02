@@ -45,7 +45,7 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
     private static BuiltPacket kickPacket;
 
     public HandshakePacket(final @NotNull ByteBuf buf) {
-        this(readVarInt(buf), readString(buf), buf.readShort(), ConnectionState.fromId(readVarInt(buf)));
+        this(readVarInt(buf), readString(buf, 255), buf.readShort(), ConnectionState.fromId(readVarInt(buf)));
     }
 
     @Override
@@ -67,7 +67,7 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
     @Override
     public void write(final @NotNull ByteBuf buf) {
         writeVarInt(buf, this.protocol);
-        writeString(buf, this.hostname);
+        writeString(buf, this.hostname, 255);
         buf.writeShort(this.hostPort);
         writeVarInt(buf, this.nextState.ordinal());
     }

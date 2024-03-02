@@ -39,7 +39,7 @@ public record AddResourcePackPacket(UUID uuid, String url, String hash, boolean 
 
     public AddResourcePackPacket(final @NotNull ByteBuf buf) {
         this(readUUID(buf),
-                readString(buf, 32767),
+                readString(buf),
                 readString(buf, 40),
                 buf.readBoolean(),
                 buf.readBoolean() ? GsonComponentSerializer.gson().deserializeFromTree(NBTUtil.deserialize(readTag(buf))) : null);
@@ -49,7 +49,7 @@ public record AddResourcePackPacket(UUID uuid, String url, String hash, boolean 
     public void write(final @NotNull ByteBuf buf) {
         writeUUID(buf, this.uuid);
         writeString(buf, this.url);
-        writeString(buf, this.hash);
+        writeString(buf, this.hash, 40);
         buf.writeBoolean(this.forced);
         if (this.promptMessage != null) {
             buf.writeBoolean(true);
