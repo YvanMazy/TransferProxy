@@ -24,6 +24,7 @@
 
 package be.darkkraft.transferproxy.network.packet.config.serverbound;
 
+import be.darkkraft.transferproxy.api.util.CookieUtil;
 import be.darkkraft.transferproxy.network.packet.PacketTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,23 @@ class ConfigCookieResponsePacketTest extends PacketTestBase {
     @Test
     void testWriteReadConsistency() {
         this.test(new ConfigCookieResponsePacket("minecraft:cookie_key", new byte[] {1, 2, 3}), ConfigCookieResponsePacket::new);
+    }
+
+    @Test
+    void testWriteReadConsistencyWithNoValue() {
+        this.test(new ConfigCookieResponsePacket("minecraft:cookie_key", null), ConfigCookieResponsePacket::new);
+    }
+
+    @Test
+    void testWriteReadWithTooLongKey() {
+        this.testFail(new ConfigCookieResponsePacket("minecraft:" + "a".repeat(Short.MAX_VALUE - 9), new byte[5]),
+                ConfigCookieResponsePacket::new);
+    }
+
+    @Test
+    void testWriteReadWithTooLongData() {
+        this.testFail(new ConfigCookieResponsePacket("minecraft:cookie_key", new byte[CookieUtil.getMaxCookieSize() + 1]),
+                ConfigCookieResponsePacket::new);
     }
 
 }

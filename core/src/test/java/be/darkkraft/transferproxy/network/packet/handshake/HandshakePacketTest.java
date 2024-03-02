@@ -35,4 +35,9 @@ class HandshakePacketTest extends PacketTestBase {
         this.test(new HandshakePacket(-1, "localhost", 25565, ConnectionState.LOGIN), HandshakePacket::new);
     }
 
+    @Test
+    void testWriteReadWithTooLongHostname() {
+        this.testFail(new HandshakePacket(-1, "a".repeat(256), 25565, ConnectionState.LOGIN), HandshakePacket::new);
+    }
+
 }

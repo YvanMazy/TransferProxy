@@ -33,6 +33,10 @@ class PluginMessagePacketTest extends PacketTestBase {
     @Test
     void testWriteReadConsistency() {
         this.test(new PluginMessagePacket("minecraft:brand", new BrandPayload("vanilla")), PluginMessagePacket::from);
+    }
+
+    @Test
+    void testWriteReadConsistencyWithNullPayload() {
         this.test(new PluginMessagePacket("minecraft:unknown", null), PluginMessagePacket::from);
     }
 

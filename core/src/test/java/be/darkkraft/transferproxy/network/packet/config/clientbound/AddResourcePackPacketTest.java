@@ -26,12 +26,9 @@ package be.darkkraft.transferproxy.network.packet.config.clientbound;
 
 import be.darkkraft.transferproxy.network.packet.PacketTestBase;
 import be.darkkraft.transferproxy.util.test.TestGenerationUtil;
-import io.netty.handler.codec.CodecException;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AddResourcePackPacketTest extends PacketTestBase {
 
@@ -43,22 +40,20 @@ class AddResourcePackPacketTest extends PacketTestBase {
 
     @Test
     void testWriteTooLongUrl() {
-        assertThrows(CodecException.class,
-                () -> this.test(new AddResourcePackPacket(UUID.randomUUID(),
-                        "a".repeat(Short.MAX_VALUE + 1),
-                        "hash",
-                        true,
-                        TestGenerationUtil.generateComplexComponent()), AddResourcePackPacket::new));
+        this.testFail(new AddResourcePackPacket(UUID.randomUUID(),
+                "a".repeat(Short.MAX_VALUE + 1),
+                "hash",
+                true,
+                TestGenerationUtil.generateComplexComponent()), AddResourcePackPacket::new);
     }
 
     @Test
     void testWriteTooLongHash() {
-        assertThrows(CodecException.class,
-                () -> this.test(new AddResourcePackPacket(UUID.randomUUID(),
-                        "url",
-                        "a".repeat(41),
-                        true,
-                        TestGenerationUtil.generateComplexComponent()), AddResourcePackPacket::new));
+        this.testFail(new AddResourcePackPacket(UUID.randomUUID(),
+                "url",
+                "a".repeat(41),
+                true,
+                TestGenerationUtil.generateComplexComponent()), AddResourcePackPacket::new);
     }
 
 }

@@ -72,18 +72,18 @@ public final class BufUtil {
         writeString(buf, string, Short.MAX_VALUE);
     }
 
-    public static void writeString(final @NotNull ByteBuf buf, final @NotNull CharSequence string, final int length) {
+    public static void writeString(final @NotNull ByteBuf buf, final @NotNull CharSequence string, final int maxLength) {
         if (string == null) {
             throw new EncoderException("Input string cannot be null");
         }
-        if (string.length() > length) {
-            throw new EncoderException("Invalid string length: " + string.length() + " > " + length);
+        if (string.length() > maxLength) {
+            throw new EncoderException("Invalid string length: " + string.length() + " > " + maxLength);
         }
 
         final ByteBuf temp = buf.alloc().buffer(ByteBufUtil.utf8MaxBytes(string));
         try {
             final int realBytes = ByteBufUtil.writeUtf8(temp, string);
-            final int maxForLength = ByteBufUtil.utf8MaxBytes(length);
+            final int maxForLength = ByteBufUtil.utf8MaxBytes(maxLength);
 
             if (realBytes > maxForLength) {
                 throw new EncoderException("Invalid encoded string length: " + realBytes + " > " + maxForLength);
