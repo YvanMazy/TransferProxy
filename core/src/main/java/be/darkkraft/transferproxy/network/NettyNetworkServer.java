@@ -109,7 +109,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
             System.exit(-1);
             return;
         }
-        LOGGER.info("Listening on " + address.getAddress().getHostAddress() + ":" + address.getPort());
+        LOGGER.info("Listening on {}:{}", address.getAddress().getHostAddress(), address.getPort());
     }
 
     @Override

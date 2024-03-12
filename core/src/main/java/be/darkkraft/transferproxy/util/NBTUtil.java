@@ -30,6 +30,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.LazilyParsedNumber;
 import net.kyori.adventure.nbt.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,31 +45,7 @@ public final class NBTUtil {
 
     public static BinaryTag serialize(final JsonElement json) {
         if (json instanceof final JsonPrimitive primitive) {
-            if (primitive.isNumber()) {
-                final Number number = json.getAsNumber();
-
-                if (number instanceof final Byte b) {
-                    return ByteBinaryTag.byteBinaryTag(b);
-                } else if (number instanceof final Short s) {
-                    return ShortBinaryTag.shortBinaryTag(s);
-                } else if (number instanceof final Integer i) {
-                    return IntBinaryTag.intBinaryTag(i);
-                } else if (number instanceof final Long l) {
-                    return LongBinaryTag.longBinaryTag(l);
-                } else if (number instanceof final Float f) {
-                    return FloatBinaryTag.floatBinaryTag(f);
-                } else if (number instanceof final Double d) {
-                    return DoubleBinaryTag.doubleBinaryTag(d);
-                } else if (number instanceof LazilyParsedNumber) {
-                    return IntBinaryTag.intBinaryTag(number.intValue());
-                }
-            } else if (primitive.isString()) {
-                return StringBinaryTag.stringBinaryTag(primitive.getAsString());
-            } else if (primitive.isBoolean()) {
-                return ByteBinaryTag.byteBinaryTag((byte) (primitive.getAsBoolean() ? 1 : 0));
-            } else {
-                throw new IllegalArgumentException("Unknown json primitive: " + primitive);
-            }
+            return serializePrimitive(json, primitive);
         } else if (json instanceof final JsonObject object) {
             final CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
 
@@ -81,62 +58,87 @@ public final class NBTUtil {
             if (array.isEmpty()) {
                 return ListBinaryTag.empty();
             }
-
-            final List<BinaryTag> items = new ArrayList<>(array.size());
-            BinaryTagType<? extends BinaryTag> listType = null;
-
-            for (final JsonElement element : array) {
-                final BinaryTag tag = serialize(element);
-                items.add(tag);
-
-                if (listType == null) {
-                    listType = tag.type();
-                } else if (listType != tag.type()) {
-                    listType = BinaryTagTypes.COMPOUND;
-                }
-            }
-
-            if (listType == null) {
-                return EndBinaryTag.endBinaryTag();
-            }
-
-            switch (listType.id()) {
-                case 1:
-                    final byte[] bytes = new byte[array.size()];
-                    for (int i = 0; i < bytes.length; i++) {
-                        bytes[i] = (Byte) array.get(i).getAsNumber();
-                    }
-
-                    return ByteArrayBinaryTag.byteArrayBinaryTag(bytes);
-                case 3:
-                    final int[] ints = new int[array.size()];
-                    for (int i = 0; i < ints.length; i++) {
-                        ints[i] = (Integer) array.get(i).getAsNumber();
-                    }
-
-                    return IntArrayBinaryTag.intArrayBinaryTag(ints);
-                case 4:
-                    final long[] longs = new long[array.size()];
-                    for (int i = 0; i < longs.length; i++) {
-                        longs[i] = (Long) array.get(i).getAsNumber();
-                    }
-
-                    return LongArrayBinaryTag.longArrayBinaryTag(longs);
-                case 10:
-                    items.replaceAll(tag -> {
-                        if (tag.type() == BinaryTagTypes.COMPOUND) {
-                            return tag;
-                        } else {
-                            return CompoundBinaryTag.builder().put("", tag).build();
-                        }
-                    });
-                    break;
-            }
-
-            return ListBinaryTag.listBinaryTag(listType, items);
+            return serializeArray(array);
         }
 
         return EndBinaryTag.endBinaryTag();
+    }
+
+    private static @NotNull BinaryTag serializeArray(final @NotNull JsonArray array) {
+        final List<BinaryTag> items = new ArrayList<>(array.size());
+        BinaryTagType<? extends BinaryTag> listType = null;
+
+        for (final JsonElement element : array) {
+            final BinaryTag tag = serialize(element);
+            items.add(tag);
+
+            if (listType == null) {
+                listType = tag.type();
+            } else if (listType != tag.type()) {
+                listType = BinaryTagTypes.COMPOUND;
+            }
+        }
+
+        if (listType == null) {
+            return EndBinaryTag.endBinaryTag();
+        }
+
+        switch (listType.id()) {
+            case 1:
+                final byte[] bytes = new byte[array.size()];
+                for (int i = 0; i < bytes.length; i++) {
+                    bytes[i] = (Byte) array.get(i).getAsNumber();
+                }
+
+                return ByteArrayBinaryTag.byteArrayBinaryTag(bytes);
+            case 3:
+                final int[] ints = new int[array.size()];
+                for (int i = 0; i < ints.length; i++) {
+                    ints[i] = (Integer) array.get(i).getAsNumber();
+                }
+
+                return IntArrayBinaryTag.intArrayBinaryTag(ints);
+            case 4:
+                final long[] longs = new long[array.size()];
+                for (int i = 0; i < longs.length; i++) {
+                    longs[i] = (Long) array.get(i).getAsNumber();
+                }
+
+                return LongArrayBinaryTag.longArrayBinaryTag(longs);
+            case 10:
+                items.replaceAll(tag -> tag.type() == BinaryTagTypes.COMPOUND ? tag : CompoundBinaryTag.builder().put("", tag).build());
+                break;
+            default: break;
+        }
+
+        return ListBinaryTag.listBinaryTag(listType, items);
+    }
+
+    private static @NotNull BinaryTag serializePrimitive(final @NotNull JsonElement json, final @NotNull JsonPrimitive primitive) {
+        if (primitive.isNumber()) {
+            final Number number = json.getAsNumber();
+
+            if (number instanceof final Byte b) {
+                return ByteBinaryTag.byteBinaryTag(b);
+            } else if (number instanceof final Short s) {
+                return ShortBinaryTag.shortBinaryTag(s);
+            } else if (number instanceof final Integer i) {
+                return IntBinaryTag.intBinaryTag(i);
+            } else if (number instanceof final Long l) {
+                return LongBinaryTag.longBinaryTag(l);
+            } else if (number instanceof final Float f) {
+                return FloatBinaryTag.floatBinaryTag(f);
+            } else if (number instanceof final Double d) {
+                return DoubleBinaryTag.doubleBinaryTag(d);
+            } else if (number instanceof LazilyParsedNumber) {
+                return IntBinaryTag.intBinaryTag(number.intValue());
+            }
+        } else if (primitive.isString()) {
+            return StringBinaryTag.stringBinaryTag(primitive.getAsString());
+        } else if (primitive.isBoolean()) {
+            return ByteBinaryTag.byteBinaryTag((byte) (primitive.getAsBoolean() ? 1 : 0));
+        }
+        throw new IllegalArgumentException("Unknown json primitive: " + primitive);
     }
 
     public static JsonElement deserialize(final BinaryTag tag) {

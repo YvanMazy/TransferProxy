@@ -42,6 +42,7 @@ public record ResourcePackResponsePacket(UUID uuid, ResourcePackResult result) i
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
+        // do nothing
     }
 
     @Override

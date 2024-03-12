@@ -55,15 +55,15 @@ public class PluginClassloaderImpl extends URLClassLoader implements PluginClass
         } catch (final ClassNotFoundException e) {
             throw new PluginInitializationException("Failed to find main class '" + mainClass + '\'', e);
         }
-        final Class<? extends Plugin> plugin;
+        final Class<? extends Plugin> pluginClass;
         try {
-            plugin = main.asSubclass(Plugin.class);
+            pluginClass = main.asSubclass(Plugin.class);
         } catch (final ClassCastException e) {
             throw new PluginInitializationException('\'' + mainClass + "' does not implements Plugin", e);
         }
 
         try {
-            this.plugin = plugin.getDeclaredConstructor().newInstance();
+            this.plugin = pluginClass.getDeclaredConstructor().newInstance();
         } catch (final NoSuchMethodException e) {
             throw new PluginInitializationException("Failed to find a public constructor for '" + mainClass + '\'', e);
         } catch (final InstantiationException | InvocationTargetException | IllegalAccessException e) {
@@ -75,7 +75,8 @@ public class PluginClassloaderImpl extends URLClassLoader implements PluginClass
     protected Class<?> findClass(final String name) throws ClassNotFoundException {
         Class<?> clazz = this.classes.get(name);
         if (clazz == null) {
-            this.classes.put(name, clazz = super.findClass(name));
+            clazz = super.findClass(name);
+            this.classes.put(name, clazz);
         }
         return clazz;
     }
@@ -87,7 +88,7 @@ public class PluginClassloaderImpl extends URLClassLoader implements PluginClass
             try {
                 return url.openStream();
             } catch (final IOException e) {
-                throw new RuntimeException(e);
+                return null;
             }
         }
         return super.getResourceAsStream(name);

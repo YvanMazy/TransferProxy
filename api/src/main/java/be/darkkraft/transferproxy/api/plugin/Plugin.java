@@ -28,6 +28,7 @@ import be.darkkraft.transferproxy.api.TransferProxy;
 import be.darkkraft.transferproxy.api.event.EventManager;
 import be.darkkraft.transferproxy.api.module.ModuleManager;
 import be.darkkraft.transferproxy.api.plugin.classloader.PluginClassloader;
+import be.darkkraft.transferproxy.api.plugin.exception.PluginInitializationException;
 import be.darkkraft.transferproxy.api.plugin.info.PluginInfo;
 import be.darkkraft.transferproxy.api.util.ResourceUtil;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +52,7 @@ public interface Plugin {
         try {
             return ResourceUtil.copyAndReadYaml(path, confiurationClass);
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new PluginInitializationException("Fail to load configuration '" + fileName + "'", e);
         }
     }
 
