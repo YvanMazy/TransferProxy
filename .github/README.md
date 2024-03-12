@@ -27,7 +27,7 @@ Here are the project features:
 #### ➡️ Now what's next?
 
 When your server is correctly installed, you must install a plugin to define the redirection rules and customize the
-motd if necessary. You have two options :
+motd if necessary. You have two options:
 
 - Download an official plugin [here](https://github.com/Darkkraft/TransferProxy/wiki#official-plugins), if you want to
   do tests or if your project is small.
@@ -40,7 +40,7 @@ available [here](https://github.com/Darkkraft/TransferProxy-Demo-plugin). It use
 
 If you have any problems using TransferProxy, the first thing to do is to check that you haven't missed anything in
 the [official wiki](https://github.com/Darkkraft/TransferProxy/wiki).
-<br>If you can't find a solution, then you can create a GitHub issue. She should get an answer quickly.
+<br>If you can't find a solution, then you can create a GitHub issue. It should get an answer quickly.
 
 ## 📋 Requirements
 
