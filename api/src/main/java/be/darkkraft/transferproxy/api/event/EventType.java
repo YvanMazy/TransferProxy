@@ -32,6 +32,7 @@ import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.status.listener.DefaultStatusListener;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public enum EventType {
@@ -45,11 +46,11 @@ public enum EventType {
     private final Supplier<@NotNull EventListener<?>> defaultListener;
 
     EventType(final @NotNull Class<?> eventClass, final @NotNull Supplier<@NotNull EventListener<?>> defaultListener) {
-        this.eventClass = eventClass;
-        this.defaultListener = defaultListener;
+        this.eventClass = Objects.requireNonNull(eventClass, "eventClass must not be null");
+        this.defaultListener = Objects.requireNonNull(defaultListener, "defaultListener must not be null");
     }
 
-    public Class<?> getEventClass() {
+    public @NotNull Class<?> getEventClass() {
         return this.eventClass;
     }
 

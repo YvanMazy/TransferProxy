@@ -72,9 +72,10 @@ public final class EventManagerImpl implements EventManager {
     }
 
     @Override
-    public synchronized <T extends EventListener<?>> boolean removeListener(final @NotNull EventType eventType, @NotNull final T eventListener) {
-        Objects.requireNonNull(eventType, "eventType cannot be null");
-        Objects.requireNonNull(eventListener, "eventListener cannot be null");
+    public synchronized <T extends EventListener<?>> boolean removeListener(final EventType eventType, final T eventListener) {
+        if (eventType == null || eventListener == null) {
+            return false;
+        }
         final EventListener<?>[] listeners = this.listenerMap.get(eventType);
         if (listeners == null) {
             return false;
@@ -112,8 +113,8 @@ public final class EventManagerImpl implements EventManager {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull <T extends EventListener<?>> T[] getListeners(final @NotNull EventType eventType) {
-        return (T[]) this.listenerMap.get(eventType);
+    public <T extends EventListener<?>> T[] getListeners(final EventType eventType) {
+        return eventType != null ? (T[]) this.listenerMap.get(eventType) : null;
     }
 
 }

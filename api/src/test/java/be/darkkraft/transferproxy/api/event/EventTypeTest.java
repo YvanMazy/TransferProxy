@@ -24,20 +24,25 @@
 
 package be.darkkraft.transferproxy.api.event;
 
-import be.darkkraft.transferproxy.api.event.listener.EventListener;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import be.darkkraft.transferproxy.api.util.test.MockedTransferProxy;
+import be.darkkraft.transferproxy.api.util.test.TestUtil;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
-public interface EventManager {
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    void call(final @NotNull EventType eventType, final @NotNull Object event);
+class EventTypeTest {
 
-    <T extends EventListener<?>> void addListener(final @NotNull EventType eventType, final @NotNull T eventListener);
+    @BeforeAll
+    static void setUp() {
+        MockedTransferProxy.mock();
+    }
 
-    @Contract("null, _ -> false; _, null -> false; _, _ -> _")
-    <T extends EventListener<?>> boolean removeListener(final EventType eventType, final T eventListener);
-
-    @Contract("null -> null; !null -> _")
-    <T extends EventListener<?>> T[] getListeners(final EventType eventType);
+    @ParameterizedTest
+    @EnumSource(EventType.class)
+    void testClassOfDefaultListener(final EventType type) throws ClassNotFoundException {
+        assertTrue(TestUtil.getGenericType(type.buildDefaultListener().getClass()).isAssignableFrom(type.getEventClass()));
+    }
 
 }

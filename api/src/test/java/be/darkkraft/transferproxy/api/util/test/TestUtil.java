@@ -22,22 +22,31 @@
  * SOFTWARE.
  */
 
-package be.darkkraft.transferproxy.api.event;
+package be.darkkraft.transferproxy.api.util.test;
 
-import be.darkkraft.transferproxy.api.event.listener.EventListener;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public interface EventManager {
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
-    void call(final @NotNull EventType eventType, final @NotNull Object event);
+public class TestUtil {
 
-    <T extends EventListener<?>> void addListener(final @NotNull EventType eventType, final @NotNull T eventListener);
+    private TestUtil() throws IllegalAccessException {
+        throw new IllegalAccessException("You cannot instantiate a utility class");
+    }
 
-    @Contract("null, _ -> false; _, null -> false; _, _ -> _")
-    <T extends EventListener<?>> boolean removeListener(final EventType eventType, final T eventListener);
-
-    @Contract("null -> null; !null -> _")
-    <T extends EventListener<?>> T[] getListeners(final EventType eventType);
+    public static @NotNull Class<?> getGenericType(final Class<?> clazz) throws ClassNotFoundException {
+        for (final Type type : clazz.getGenericInterfaces()) {
+            if (type instanceof final ParameterizedType paramType) {
+                final Type[] arguments = paramType.getActualTypeArguments();
+                if (arguments.length >= 1) {
+                    return Class.forName(arguments[0].getTypeName());
+                }
+            } else {
+                return getGenericType(Class.forName(type.getTypeName()));
+            }
+        }
+        throw new IllegalArgumentException("No generic type found");
+    }
 
 }

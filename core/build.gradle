@@ -5,6 +5,7 @@ plugins {
 dependencies {
     // Project API
     api project(":api")
+    testImplementation project(path: ':api', configuration: 'testClasses')
 
     // Logging
     api 'org.fusesource.jansi:jansi:2.4.1'

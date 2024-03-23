@@ -13,3 +13,18 @@ dependencies {
 
     api 'com.google.code.gson:gson:2.10.1'
 }
+
+configurations {
+    testClasses {
+        extendsFrom(testImplementation)
+    }
+}
+
+tasks.register('testJar', Jar) {
+    archiveClassifier.set('test')
+    from sourceSets.test.output
+}
+
+artifacts {
+    testClasses testJar
+}
