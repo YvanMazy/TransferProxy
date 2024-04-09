@@ -33,6 +33,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
     private YamlNetwork network;
     private YamlStatus status;
     private YamlMiscellaneous miscellaneous;
+    private YamlLogging logging;
 
     @Override
     public ProxyConfiguration.Network getNetwork() {
@@ -49,6 +50,11 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         return this.miscellaneous != null ? this.miscellaneous : (this.miscellaneous = new YamlMiscellaneous());
     }
 
+    @Override
+    public ProxyConfiguration.Logging getLogging() {
+        return this.logging != null ? this.logging : (this.logging = new YamlLogging());
+    }
+
     private static class YamlNetwork implements ProxyConfiguration.Network {
 
         private final String bindAddress;
@@ -59,7 +65,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         private final int workerThreads;
         private final boolean useTcpNoDelay;
 
-        public YamlNetwork() {
+        private YamlNetwork() {
             this.bindAddress = "localhost";
             this.bindPort = 25565;
             this.resourceLeakDetectorLevel = ResourceLeakDetector.Level.DISABLED;
@@ -112,7 +118,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         private final String description;
         private final String protocol;
 
-        public YamlStatus() {
+        private YamlStatus() {
             this.name = "TransferProxy";
             this.description = "<green>A TransferProxy server";
             this.protocol = "AUTO";
@@ -142,7 +148,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         private final boolean keepAlive;
         private final long keepAliveDelay;
 
-        public YamlMiscellaneous() {
+        private YamlMiscellaneous() {
             this.kickOldProtocol = true;
             this.kickOldProtocolMessage = "<red>Outdated client";
             this.keepAlive = false;
@@ -167,6 +173,56 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         @Override
         public long getKeepAliveDelay() {
             return this.keepAliveDelay;
+        }
+
+    }
+
+    private static class YamlLogging implements ProxyConfiguration.Logging {
+
+        private final boolean logConnect;
+        private final boolean logDisconnect;
+        private final boolean logTimeout;
+        private final boolean logDisconnectForException;
+        private final boolean logTransfer;
+        private final boolean logCompleteDisconnectException;
+
+        private YamlLogging() {
+            this.logConnect = true;
+            this.logDisconnect = true;
+            this.logTimeout = true;
+            this.logDisconnectForException = true;
+            this.logTransfer = true;
+            this.logCompleteDisconnectException = false;
+        }
+
+        @Override
+        public boolean isLogConnect() {
+            return this.logConnect;
+        }
+
+        @Override
+        public boolean isLogDisconnect() {
+            return this.logDisconnect;
+        }
+
+        @Override
+        public boolean isLogTimeout() {
+            return this.logTimeout;
+        }
+
+        @Override
+        public boolean isLogDisconnectForException() {
+            return this.logDisconnectForException;
+        }
+
+        @Override
+        public boolean isLogTransfer() {
+            return this.logTransfer;
+        }
+
+        @Override
+        public boolean isLogCompleteDisconnectException() {
+            return this.logCompleteDisconnectException;
         }
 
     }

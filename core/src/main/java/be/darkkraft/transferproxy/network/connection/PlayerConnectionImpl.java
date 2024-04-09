@@ -24,6 +24,8 @@
 
 package be.darkkraft.transferproxy.network.connection;
 
+import be.darkkraft.transferproxy.api.TransferProxy;
+import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.network.connection.ConnectionState;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.network.packet.Packet;
@@ -89,7 +91,9 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     public void transfer(final @NotNull String host, final int hostPort) {
         this.ensureState(ConnectionState.CONFIG, "transfer");
         this.sendPacket(new TransferPacket(host, hostPort));
-        LOGGER.info("Player {} are transferred to {}:{}", this.getDisplay(), host, hostPort);
+        if (TransferProxy.getInstance().getConfiguration().getLogging().isLogTransfer()) {
+            LOGGER.info("Player {} are transferred to {}:{}", this.getDisplay(), host, hostPort);
+        }
         this.state = ConnectionState.CLOSED;
     }
 
@@ -178,7 +182,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void channelInactive(final ChannelHandlerContext ctx) {
-        if (this.state.isLogin()) {
+        if (this.state.isLogin() && TransferProxy.getInstance().getConfiguration().getLogging().isLogDisconnect()) {
             LOGGER.info("Player {} disconnected on state {}", this.getDisplay(), this.state);
         }
     }
@@ -191,8 +195,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
         this.forceDisconnect();
 
+        final ProxyConfiguration.Logging logging = TransferProxy.getInstance().getConfiguration().getLogging();
         if (cause instanceof ReadTimeoutException) {
-            LOGGER.info("Player {} has timed out", this.getDisplay());
+            if (logging.isLogTimeout()) {
+                LOGGER.info("Player {} has timed out", this.getDisplay());
+            }
             return;
         }
 
@@ -202,10 +209,12 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
             return;
         }
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.error("Player {} disconnect for exception: {}", this.getDisplay(), cause.getMessage(), cause);
-        } else {
-            LOGGER.info("Player {} disconnect for exception: {}", this.getDisplay(), cause.getMessage());
+        if (logging.isLogDisconnectForException()) {
+            if (logging.isLogCompleteDisconnectException()) {
+                LOGGER.error("Player {} disconnect for exception: {}", this.getDisplay(), cause.getMessage(), cause);
+            } else {
+                LOGGER.info("Player {} disconnect for exception: {}", this.getDisplay(), cause.getMessage());
+            }
         }
     }
 
@@ -251,7 +260,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
             state = ConnectionState.LOGIN;
         }
         this.state = state;
-        if (this.state == ConnectionState.CONFIG) {
+        if (this.state == ConnectionState.CONFIG && TransferProxy.getInstance().getConfiguration().getLogging().isLogConnect()) {
             if (this.isFromTransfer()) {
                 LOGGER.info("Player {} is now connected and comes from transfer", this.getDisplay());
                 return;

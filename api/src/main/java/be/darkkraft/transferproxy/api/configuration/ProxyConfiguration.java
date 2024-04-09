@@ -34,6 +34,8 @@ public interface ProxyConfiguration {
 
     Miscellaneous getMiscellaneous();
 
+    Logging getLogging();
+
     interface Network {
 
         String getBindAddress();
@@ -71,6 +73,22 @@ public interface ProxyConfiguration {
         boolean isKeepAlive();
 
         long getKeepAliveDelay();
+
+    }
+
+    interface Logging {
+
+        boolean isLogConnect();
+
+        boolean isLogDisconnect();
+
+        boolean isLogTimeout();
+
+        boolean isLogDisconnectForException();
+
+        boolean isLogTransfer();
+
+        boolean isLogCompleteDisconnectException();
 
     }
 

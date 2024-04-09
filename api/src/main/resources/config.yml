@@ -32,3 +32,18 @@ miscellaneous:
   keep-alive: false
   # Interval between each sending. (In milliseconds)
   keep-alive-delay: 5000
+
+logging:
+  # Enable logging of connection establishment events.
+  log-connect: true
+  # Enable logging of connection disconnect events.
+  log-disconnect: true
+  # Enable logging of connection timeout events.
+  log-timeout: true
+  # Enable logging when a disconnection is caused by an exception.
+  log-disconnect-for-exception: true
+  # Enable logging of connection transfer events to another server.
+  log-transfer: true
+  # Displays the full exception when a connection is terminated by an exception.
+  # Only works when the "log-disconnect-for-exception" option is enabled.
+  log-complete-disconnect-exception: false
