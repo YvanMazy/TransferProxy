@@ -55,7 +55,9 @@ public record PluginMessagePacket(String channel, @Nullable PayloadData payload)
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
-        // do nothing
+        if (this.payload != null) {
+            this.payload.handle(connection);
+        }
     }
 
     @Override

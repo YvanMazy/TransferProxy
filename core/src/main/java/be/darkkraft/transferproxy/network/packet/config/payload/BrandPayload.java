@@ -24,6 +24,7 @@
 
 package be.darkkraft.transferproxy.network.packet.config.payload;
 
+import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +35,11 @@ public record BrandPayload(String brand) implements PayloadData {
 
     public BrandPayload(final @NotNull ByteBuf buf) {
         this(readString(buf));
+    }
+
+    @Override
+    public void handle(final @NotNull PlayerConnection connection) {
+        connection.setBrand(this.brand);
     }
 
     @Override

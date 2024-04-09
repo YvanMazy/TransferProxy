@@ -76,6 +76,8 @@ public interface PlayerConnection {
 
     void setHost(final @NotNull String hostname, final int hostPort);
 
+    void setBrand(final @Nullable String brand);
+
     String getName();
 
     UUID getUUID();
@@ -94,6 +96,13 @@ public interface PlayerConnection {
     String getHostname();
 
     int getHostPort();
+
+    default boolean hasBrand() {
+        return this.getBrand() != null;
+    }
+
+    @Nullable
+    String getBrand();
 
     boolean isFromTransfer();
 

@@ -77,6 +77,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private UUID uuid;
     private ClientInformation information;
     private boolean fromTransfer;
+    private String brand;
 
     public PlayerConnectionImpl(final @NotNull Channel channel) {
         this.channel = Objects.requireNonNull(channel, "channel must not be null");
@@ -281,6 +282,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
+    public void setBrand(final @Nullable String brand) {
+        this.brand = brand;
+    }
+
+    @Override
     public String getName() {
         return this.name;
     }
@@ -318,6 +324,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     @Override
     public int getHostPort() {
         return this.hostPort;
+    }
+
+    @Override
+    public @Nullable String getBrand() {
+        return this.brand;
     }
 
     @Override
