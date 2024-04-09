@@ -39,7 +39,7 @@ import static be.darkkraft.transferproxy.util.BufUtil.*;
 public record LoginStartPacket(String name, UUID uuid) implements ServerboundPacket {
 
     public LoginStartPacket(final @NotNull ByteBuf buf) {
-        this(readString(buf), readUUID(buf));
+        this(readString(buf, 16), readUUID(buf));
     }
 
     @Override
@@ -54,7 +54,7 @@ public record LoginStartPacket(String name, UUID uuid) implements ServerboundPac
 
     @Override
     public void write(final @NotNull ByteBuf buf) {
-        writeString(buf, this.name);
+        writeString(buf, this.name, 16);
         writeUUID(buf, this.uuid);
     }
 

@@ -39,7 +39,7 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
 
     public LoginSuccessPacket(final @NotNull ByteBuf buf) {
         this(readUUID(buf),
-                readString(buf),
+                readString(buf, 16),
                 readArray(buf,
                         Property[]::new,
                         sub -> new Property(readString(sub), readString(sub), sub.readBoolean() ? readString(buf) : null),
@@ -49,7 +49,7 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
     @Override
     public void write(final @NotNull ByteBuf buf) {
         writeUUID(buf, this.uuid);
-        writeString(buf, this.username);
+        writeString(buf, this.username, 16);
         if (this.properties == null) {
             writeVarInt(buf, 0);
             return;
