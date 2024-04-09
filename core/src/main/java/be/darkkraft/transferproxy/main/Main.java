@@ -38,7 +38,7 @@ import java.nio.file.Path;
 public final class Main {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    private static final Path CONFIG_PATH = Path.of("config.yml");
+    private static final Path CONFIG_PATH = Path.of("./config.yml");
 
     public static void main(final String[] args) {
         final ProxyConfiguration configuration;
