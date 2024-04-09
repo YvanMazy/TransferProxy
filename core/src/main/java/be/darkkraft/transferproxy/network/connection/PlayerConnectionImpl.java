@@ -77,7 +77,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private boolean fromTransfer;
 
     public PlayerConnectionImpl(final @NotNull Channel channel) {
-        this.channel = Objects.requireNonNull(channel, "channel cannot be null");
+        this.channel = Objects.requireNonNull(channel, "channel must not be null");
     }
 
     @Override
@@ -96,21 +96,21 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     @Override
     public void sendLoginSuccess(final @NotNull UUID uuid, final @NotNull String username) {
         this.ensureState(ConnectionState.LOGIN, "sendLoginSuccess");
-        Objects.requireNonNull(uuid, "uuid cannot be null");
-        Objects.requireNonNull(username, "username cannot be null");
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(username, "username must not be null");
         this.sendPacket(new LoginSuccessPacket(uuid, username, null));
     }
 
     @Override
     public void sendStatusResponse(final @NotNull StatusResponse response) {
         this.ensureState(ConnectionState.STATUS, "sendStatusResponse");
-        Objects.requireNonNull(response, "response cannot be null");
+        Objects.requireNonNull(response, "response must not be null");
         this.sendPacket(new StatusResponsePacket(response));
     }
 
     @Override
     public synchronized CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey) {
-        Objects.requireNonNull(cookieKey, "Cookie key cannot be null");
+        Objects.requireNonNull(cookieKey, "Cookie key must not be null");
         CookieUtil.ensureCookieFormat(cookieKey);
         if (this.state != ConnectionState.LOGIN && this.state != ConnectionState.CONFIG) {
             throw new IllegalStateException("Invalid state to fetch cookie " + this.state + " (cookie key=" + cookieKey + ")");
@@ -134,8 +134,8 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void storeCookie(final @NotNull String cookieKey, final byte @NotNull [] payload) {
-        Objects.requireNonNull(cookieKey, "Cookie key cannot be null");
-        Objects.requireNonNull(payload, "Cookie payload cannot be null");
+        Objects.requireNonNull(cookieKey, "Cookie key must not be null");
+        Objects.requireNonNull(payload, "Cookie payload must not be null");
         CookieUtil.ensureCookieFormat(cookieKey);
         this.ensureState(ConnectionState.CONFIG, "storeCookie");
         if (payload.length > CookieUtil.getMaxCookieSize()) {
@@ -163,18 +163,17 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void removeResourcePack(final @Nullable UUID uuid) {
-        this.sendPacket(new RemoveResourcePackPacket(Objects.requireNonNull(uuid, "uuid cannot be null")));
+        this.sendPacket(new RemoveResourcePackPacket(Objects.requireNonNull(uuid, "uuid must not be null")));
     }
 
     @Override
     public void disconnect(final @NotNull Component reason) {
-        Objects.requireNonNull(reason, "reason cannot be null");
+        Objects.requireNonNull(reason, "reason must not be null");
         if (this.state != ConnectionState.LOGIN && this.state != ConnectionState.CONFIG) {
             throw new IllegalStateException("Invalid state to disconnect: " + this.state);
         }
-        this.sendPacketAndClose(this.state == ConnectionState.LOGIN ?
-                new LoginDisconnectPacket(reason) :
-                new ConfigDisconnectPacket(reason));
+        this.sendPacketAndClose(
+                this.state == ConnectionState.LOGIN ? new LoginDisconnectPacket(reason) : new ConfigDisconnectPacket(reason));
     }
 
     @Override
@@ -212,7 +211,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void sendPacket(final @NotNull Packet packet) {
-        Objects.requireNonNull(packet, "packet cannot be null");
+        Objects.requireNonNull(packet, "packet must not be null");
         if (this.channel.isActive() && this.state != ConnectionState.CLOSED) {
             this.channel.writeAndFlush(ensurePacket(this.channel.alloc(), packet), this.channel.voidPromise());
         }
@@ -220,7 +219,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void sendPacketAndClose(final @NotNull Packet packet) {
-        Objects.requireNonNull(packet, "packet cannot be null");
+        Objects.requireNonNull(packet, "packet must not be null");
         if (this.channel.isActive() && this.state != ConnectionState.CLOSED) {
             this.channel.writeAndFlush(ensurePacket(this.channel.alloc(), packet)).addListener(ChannelFutureListener.CLOSE);
         }
@@ -236,18 +235,18 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void setInformation(final @NotNull ClientInformation information) {
-        this.information = Objects.requireNonNull(information, "information cannot be null");
+        this.information = Objects.requireNonNull(information, "information must not be null");
     }
 
     @Override
     public void setProfile(final @NotNull String name, final @NotNull UUID uuid) {
-        this.name = Objects.requireNonNull(name, "name cannot be null");
-        this.uuid = Objects.requireNonNull(uuid, "uuid cannot be null");
+        this.name = Objects.requireNonNull(name, "name must not be null");
+        this.uuid = Objects.requireNonNull(uuid, "uuid must not be null");
     }
 
     @Override
     public void setState(@NotNull ConnectionState state) {
-        if (Objects.requireNonNull(state, "state cannot be null") == ConnectionState.TRANSFER) {
+        if (Objects.requireNonNull(state, "state must not be null") == ConnectionState.TRANSFER) {
             this.fromTransfer = true;
             state = ConnectionState.LOGIN;
         }
@@ -268,7 +267,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void setHost(final @NotNull String hostname, final int hostPort) {
-        this.hostname = Objects.requireNonNull(hostname, "hostname cannot be null");
+        this.hostname = Objects.requireNonNull(hostname, "hostname must not be null");
         this.hostPort = hostPort;
     }
 

@@ -50,7 +50,7 @@ public class BuiltPacketImpl implements BuiltPacket {
     }
 
     public BuiltPacketImpl(final byte[] data) {
-        this.data = Objects.requireNonNull(data, "data cannot be null");
+        this.data = Objects.requireNonNull(data, "data must not be null");
     }
 
     @Override

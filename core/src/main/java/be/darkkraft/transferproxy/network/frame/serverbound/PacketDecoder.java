@@ -44,7 +44,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
     private final PlayerConnection connection;
 
     public PacketDecoder(final @NotNull PlayerConnection connection) {
-        this.connection = Objects.requireNonNull(connection, "connection cannot be null");
+        this.connection = Objects.requireNonNull(connection, "connection must not be null");
     }
 
     @Override

@@ -36,12 +36,16 @@ public final class PluginInfo {
     private String author;
     private String main;
 
-    public PluginInfo(final @NotNull String name, final String description, final @NotNull String version, final @NotNull String author, final @NotNull String main) {
-        this.name = Objects.requireNonNull(name, "Plugin name cannot be null");
+    public PluginInfo(final @NotNull String name,
+                      final String description,
+                      final @NotNull String version,
+                      final @NotNull String author,
+                      final @NotNull String main) {
+        this.name = Objects.requireNonNull(name, "Plugin name must not be null");
         this.description = Objects.requireNonNullElse(description, "");
-        this.version = Objects.requireNonNull(version, "Plugin version cannot be null");
-        this.author = Objects.requireNonNull(author, "Plugin author cannot be null");
-        this.main = Objects.requireNonNull(main, "Plugin main cannot be null");
+        this.version = Objects.requireNonNull(version, "Plugin version must not be null");
+        this.author = Objects.requireNonNull(author, "Plugin author must not be null");
+        this.main = Objects.requireNonNull(main, "Plugin main must not be null");
     }
 
     public PluginInfo() {

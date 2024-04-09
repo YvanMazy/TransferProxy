@@ -36,7 +36,7 @@ public final class CachedStatusListener implements StatusListener {
     private final StatusResponse response;
 
     public CachedStatusListener(final StatusResponse response) {
-        this.response = Objects.requireNonNull(response, "response cannot be null");
+        this.response = Objects.requireNonNull(response, "response must not be null");
     }
 
     @Override

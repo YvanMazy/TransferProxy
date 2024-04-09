@@ -72,10 +72,12 @@ public final class ResourceUtil {
      * @throws IOException          If an I/O error occurs while copying the resource
      * @throws NullPointerException If any parameter is null
      */
-    public static boolean copyResource(final ClassLoader classLoader, final @NotNull Path path, final @NotNull String resourceName) throws IOException {
-        if (Files.notExists(Objects.requireNonNull(path, "path cannot be null"))) {
-            Objects.requireNonNull(classLoader, "classLoader cannot be null");
-            Objects.requireNonNull(resourceName, "resourceName cannot be null");
+    public static boolean copyResource(final ClassLoader classLoader,
+                                       final @NotNull Path path,
+                                       final @NotNull String resourceName) throws IOException {
+        if (Files.notExists(Objects.requireNonNull(path, "path must not be null"))) {
+            Objects.requireNonNull(classLoader, "classLoader must not be null");
+            Objects.requireNonNull(resourceName, "resourceName must not be null");
             final Path parent = path.getParent();
             if (Files.notExists(parent)) {
                 Files.createDirectories(parent);
@@ -119,8 +121,8 @@ public final class ResourceUtil {
      * @throws NullPointerException If any parameter is null
      */
     public static <T> T readYaml(final @NotNull Path path, final @NotNull Class<T> typeClass) throws IOException {
-        Objects.requireNonNull(path, "path cannot be null");
-        Objects.requireNonNull(typeClass, "typeClass cannot be null");
+        Objects.requireNonNull(path, "path must not be null");
+        Objects.requireNonNull(typeClass, "typeClass must not be null");
         try (final BufferedReader reader = Files.newBufferedReader(path)) {
             return DEFAULT_MAPPER.readValue(reader, typeClass);
         }

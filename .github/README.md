@@ -53,7 +53,8 @@ Contributions are highly encouraged! Whether it's through raising issues or subm
 recommended to best adapt TransferProxy to your server. The project was designed to make it easy to modify certain
 parts.
 
-⭐ If you're interested in the project, please leave a star to show your support. It's through contributions like these that the project is able to exist and thrive.
+⭐ If you're interested in the project, please leave a star to show your support. It's through contributions like these
+that the project is able to exist and thrive.
 
 ## 📄 License - MIT
 

@@ -51,7 +51,7 @@ public class PluginClassloaderImpl extends URLClassLoader implements PluginClass
         final String mainClass = info.getMain();
         final Class<?> main;
         try {
-            main = Class.forName(Objects.requireNonNull(mainClass, "Main class cannot be null"), true, this);
+            main = Class.forName(Objects.requireNonNull(mainClass, "Main class must not be null"), true, this);
         } catch (final ClassNotFoundException e) {
             throw new PluginInitializationException("Failed to find main class '" + mainClass + '\'', e);
         }

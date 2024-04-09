@@ -82,13 +82,16 @@ public interface PlayerConnection {
 
     ClientInformation getInformation();
 
-    @NotNull Channel getChannel();
+    @NotNull
+    Channel getChannel();
 
-    @NotNull ConnectionState getState();
+    @NotNull
+    ConnectionState getState();
 
     int getProtocol();
 
-    @NotNull String getHostname();
+    @NotNull
+    String getHostname();
 
     int getHostPort();
 

@@ -34,7 +34,7 @@ public final class CookieUtil {
 
     public static void ensureCookieFormat(final String cookieKey) {
         if (cookieKey == null) {
-            throw new IllegalArgumentException("Cookie key cannot be null");
+            throw new IllegalArgumentException("Cookie key must not be null");
         }
         if (cookieKey.indexOf(':') < 0) {
             throw new IllegalArgumentException("Cookie key format must be: namespace:key");

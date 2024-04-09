@@ -26,15 +26,20 @@ package be.darkkraft.transferproxy.api.module;
 
 import be.darkkraft.transferproxy.api.event.EventManager;
 import be.darkkraft.transferproxy.api.plugin.PluginManager;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public interface ModuleManager {
 
     void initializeDefaults();
 
-    @NotNull EventManager getEventManager();
+    @Contract(pure = true)
+    @NotNull
+    EventManager getEventManager();
 
-    @NotNull PluginManager getPluginManager();
+    @Contract(pure = true)
+    @NotNull
+    PluginManager getPluginManager();
 
     void setEventManager(final @NotNull EventManager eventManager);
 

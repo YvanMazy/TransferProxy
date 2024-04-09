@@ -41,7 +41,7 @@ public abstract class TransferProxy {
         if (TransferProxy.instance != null) {
             throw new IllegalStateException("Instance is already defined");
         }
-        TransferProxy.instance = Objects.requireNonNull(instance, "Instance cannot be null");
+        TransferProxy.instance = Objects.requireNonNull(instance, "Instance must not be null");
     }
 
     public abstract void start();

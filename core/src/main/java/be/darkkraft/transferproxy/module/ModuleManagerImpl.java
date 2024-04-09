@@ -61,12 +61,12 @@ public class ModuleManagerImpl implements ModuleManager {
 
     @Override
     public void setPluginManager(final @NotNull PluginManager pluginManager) {
-        this.pluginManager = Objects.requireNonNull(pluginManager, "pluginManager cannot be null");
+        this.pluginManager = Objects.requireNonNull(pluginManager, "pluginManager must not be null");
     }
 
     @Override
     public void setEventManager(final @NotNull EventManager eventManager) {
-        this.eventManager = Objects.requireNonNull(eventManager, "eventManager cannot be null");
+        this.eventManager = Objects.requireNonNull(eventManager, "eventManager must not be null");
     }
 
 }

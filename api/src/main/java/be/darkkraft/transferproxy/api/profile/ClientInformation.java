@@ -26,7 +26,14 @@ package be.darkkraft.transferproxy.api.profile;
 
 public interface ClientInformation {
 
-    static ClientInformation create(final String locale, final byte viewDistance, final ChatVisibility chatVisibility, final boolean chatColors, final byte displayedSkinParts, final MainHand mainHand, final boolean enableTextFiltering, final boolean allowServerListing) {
+    static ClientInformation create(final String locale,
+                                    final byte viewDistance,
+                                    final ChatVisibility chatVisibility,
+                                    final boolean chatColors,
+                                    final byte displayedSkinParts,
+                                    final MainHand mainHand,
+                                    final boolean enableTextFiltering,
+                                    final boolean allowServerListing) {
         return new ClientInformationImpl(locale,
                 viewDistance,
                 chatVisibility,

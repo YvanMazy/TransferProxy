@@ -41,8 +41,8 @@ public final class EventManagerImpl implements EventManager {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void call(final @NotNull EventType eventType, final @NotNull Object event) {
-        Objects.requireNonNull(eventType, "eventType cannot be null");
-        Objects.requireNonNull(event, "event cannot be null");
+        Objects.requireNonNull(eventType, "eventType must not be null");
+        Objects.requireNonNull(event, "event must not be null");
         if (!eventType.getEventClass().isInstance(event)) {
             throw new IllegalArgumentException("Invalid event type for event: " + event.getClass() + "/" + eventType.getEventClass());
         }
@@ -58,8 +58,8 @@ public final class EventManagerImpl implements EventManager {
 
     @Override
     public synchronized <T extends EventListener<?>> void addListener(final @NotNull EventType eventType, final @NotNull T eventListener) {
-        Objects.requireNonNull(eventType, "eventType cannot be null");
-        Objects.requireNonNull(eventListener, "eventListener cannot be null");
+        Objects.requireNonNull(eventType, "eventType must not be null");
+        Objects.requireNonNull(eventListener, "eventListener must not be null");
         this.listenerMap.compute(eventType, (key, listeners) -> {
             if (listeners == null) {
                 return new EventListener<?>[] {eventListener};

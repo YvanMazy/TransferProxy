@@ -74,7 +74,7 @@ public final class BufUtil {
 
     public static void writeString(final @NotNull ByteBuf buf, final @NotNull CharSequence string, final int maxLength) {
         if (string == null) {
-            throw new EncoderException("Input string cannot be null");
+            throw new EncoderException("Input string must not be null");
         }
         if (string.length() > maxLength) {
             throw new EncoderException("Invalid string length: " + string.length() + " > " + maxLength);
@@ -109,7 +109,9 @@ public final class BufUtil {
         buf.writeBytes(payload);
     }
 
-    public static <T> void writeArray(final @NotNull ByteBuf buf, final @NotNull T[] array, final @NotNull BiConsumer<ByteBuf, T> consumer) {
+    public static <T> void writeArray(final @NotNull ByteBuf buf,
+                                      final @NotNull T[] array,
+                                      final @NotNull BiConsumer<ByteBuf, T> consumer) {
         writeVarInt(buf, array.length);
         for (final T t : array) {
             consumer.accept(buf, t);
@@ -184,7 +186,10 @@ public final class BufUtil {
         return bytes;
     }
 
-    public static <T> T[] readArray(final @NotNull ByteBuf buf, final @NotNull IntFunction<T[]> arrayBuilder, final @NotNull Function<ByteBuf, T> objectBuilder, final int maxLength) {
+    public static <T> T[] readArray(final @NotNull ByteBuf buf,
+                                    final @NotNull IntFunction<T[]> arrayBuilder,
+                                    final @NotNull Function<ByteBuf, T> objectBuilder,
+                                    final int maxLength) {
         final int length = readVarInt(buf);
         if (length > maxLength) {
             throw new DecoderException("Invalid array length: " + length + "/" + maxLength);
