@@ -44,7 +44,7 @@ public record TransferPacket(String host, int port) implements Packet {
 
     @Override
     public int getId() {
-        return 0x0A;
+        return 0x0B;
     }
 
 }

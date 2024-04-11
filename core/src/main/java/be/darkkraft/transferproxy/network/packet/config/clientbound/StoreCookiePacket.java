@@ -48,7 +48,7 @@ public record StoreCookiePacket(String key, byte[] payload) implements Packet {
 
     @Override
     public int getId() {
-        return 0x09;
+        return 0x0A;
     }
 
     @Override

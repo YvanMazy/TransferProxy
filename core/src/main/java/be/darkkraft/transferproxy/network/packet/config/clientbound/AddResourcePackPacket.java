@@ -61,7 +61,7 @@ public record AddResourcePackPacket(UUID uuid, String url, String hash, boolean 
 
     @Override
     public int getId() {
-        return 0x08;
+        return 0x09;
     }
 
 }

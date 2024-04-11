@@ -51,7 +51,7 @@ public record RemoveResourcePackPacket(UUID uuid) implements Packet {
 
     @Override
     public int getId() {
-        return 0x07;
+        return 0x08;
     }
 
 }
