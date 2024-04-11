@@ -172,6 +172,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
+    public void resetChat() {
+        this.sendPacket(ResetChatPacket.INSTANCE);
+    }
+
+    @Override
     public void disconnect(final @NotNull Component reason) {
         Objects.requireNonNull(reason, "reason must not be null");
         if (this.state != ConnectionState.LOGIN && this.state != ConnectionState.CONFIG) {

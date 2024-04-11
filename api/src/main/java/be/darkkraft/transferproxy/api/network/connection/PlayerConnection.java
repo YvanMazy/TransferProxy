@@ -58,6 +58,8 @@ public interface PlayerConnection {
 
     void removeResourcePack(final @Nullable UUID uuid);
 
+    void resetChat();
+
     default void disconnect(final @NotNull String reason) {
         this.disconnect(Component.text(reason));
     }

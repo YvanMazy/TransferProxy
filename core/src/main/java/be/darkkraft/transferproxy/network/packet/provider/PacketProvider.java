@@ -30,6 +30,7 @@ import be.darkkraft.transferproxy.network.packet.config.FinishConfigurationPacke
 import be.darkkraft.transferproxy.network.packet.config.KeepAlivePacket;
 import be.darkkraft.transferproxy.network.packet.config.PluginMessagePacket;
 import be.darkkraft.transferproxy.network.packet.config.serverbound.ClientInformationPacket;
+import be.darkkraft.transferproxy.network.packet.config.serverbound.ClientSelectKnownPacksPacket;
 import be.darkkraft.transferproxy.network.packet.config.serverbound.ConfigCookieResponsePacket;
 import be.darkkraft.transferproxy.network.packet.config.serverbound.ResourcePackResponsePacket;
 import be.darkkraft.transferproxy.network.packet.handshake.HandshakePacket;
@@ -47,8 +48,18 @@ public interface PacketProvider {
     PacketProvider[] HANDSHAKE = {HandshakePacket::new};
     PacketProvider[] STATUS = {StatusRequestPacket::new, PingPongPacket::new};
     PacketProvider[] LOGIN = {LoginStartPacket::new, null, null, LoginAcknowledgedPacket::new, LoginCookieResponsePacket::new};
-    PacketProvider[] CONFIG =
-            {ClientInformationPacket::new, ConfigCookieResponsePacket::new, PluginMessagePacket::from, FinishConfigurationPacket::new, KeepAlivePacket::new, null, ResourcePackResponsePacket::new};
+    // @formatter:off
+    PacketProvider[] CONFIG = {
+            ClientInformationPacket::new,
+            ConfigCookieResponsePacket::new,
+            PluginMessagePacket::from,
+            FinishConfigurationPacket::new,
+            KeepAlivePacket::new,
+            null, // Pong packet
+            ResourcePackResponsePacket::new,
+            ClientSelectKnownPacksPacket::from
+    };
+    // @formatter:on
 
     Packet provide(final @NotNull ByteBuf buf);
 
