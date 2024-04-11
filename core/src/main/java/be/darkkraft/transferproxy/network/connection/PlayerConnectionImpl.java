@@ -168,7 +168,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void removeResourcePack(final @Nullable UUID uuid) {
-        this.sendPacket(new RemoveResourcePackPacket(Objects.requireNonNull(uuid, "uuid must not be null")));
+        this.sendPacket(new RemoveResourcePackPacket(uuid));
     }
 
     @Override
