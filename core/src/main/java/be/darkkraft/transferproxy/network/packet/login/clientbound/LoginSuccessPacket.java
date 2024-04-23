@@ -35,7 +35,7 @@ import java.util.UUID;
 
 import static be.darkkraft.transferproxy.util.BufUtil.*;
 
-public record LoginSuccessPacket(UUID uuid, String username, Property[] properties) implements Packet {
+public record LoginSuccessPacket(UUID uuid, String username, Property[] properties, boolean strictErrorHandling) implements Packet {
 
     public LoginSuccessPacket(final @NotNull ByteBuf buf) {
         this(readUUID(buf),
@@ -43,7 +43,8 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
                 readArray(buf,
                         Property[]::new,
                         sub -> new Property(readString(sub), readString(sub), sub.readBoolean() ? readString(buf) : null),
-                        16));
+                        16),
+                buf.readBoolean());
     }
 
     @Override
@@ -52,19 +53,20 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
         writeString(buf, this.username, 16);
         if (this.properties == null) {
             writeVarInt(buf, 0);
-            return;
+        } else {
+            writeArray(buf, this.properties, (sub, property) -> {
+                writeString(sub, property.name());
+                writeString(sub, property.value());
+                final String signature = property.signature();
+                if (signature != null && !signature.isEmpty()) {
+                    sub.writeBoolean(true);
+                    writeString(sub, signature);
+                } else {
+                    sub.writeBoolean(false);
+                }
+            });
         }
-        writeArray(buf, this.properties, (sub, property) -> {
-            writeString(sub, property.name());
-            writeString(sub, property.value());
-            final String signature = property.signature();
-            if (signature != null && !signature.isEmpty()) {
-                sub.writeBoolean(true);
-                writeString(sub, signature);
-            } else {
-                sub.writeBoolean(false);
-            }
-        });
+        buf.writeBoolean(this.strictErrorHandling);
     }
 
     @Override

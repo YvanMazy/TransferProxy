@@ -103,7 +103,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
         this.ensureState(ConnectionState.LOGIN, "sendLoginSuccess");
         Objects.requireNonNull(uuid, "uuid must not be null");
         Objects.requireNonNull(username, "username must not be null");
-        this.sendPacket(new LoginSuccessPacket(uuid, username, null));
+        this.sendPacket(new LoginSuccessPacket(uuid, username, null, true));
     }
 
     @Override
