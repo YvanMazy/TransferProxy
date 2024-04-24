@@ -117,11 +117,13 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         private final String name;
         private final String description;
         private final String protocol;
+        private final String faviconPath;
 
         private YamlStatus() {
             this.name = "TransferProxy";
             this.description = "<green>A TransferProxy server";
             this.protocol = "AUTO";
+            this.faviconPath = "./favicon.png";
         }
 
         @Override
@@ -137,6 +139,11 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         @Override
         public String getProtocol() {
             return this.protocol;
+        }
+
+        @Override
+        public String getFaviconPath() {
+            return this.faviconPath;
         }
 
     }

@@ -62,6 +62,8 @@ public interface ProxyConfiguration {
 
         String getProtocol();
 
+        String getFaviconPath();
+
     }
 
     interface Miscellaneous {

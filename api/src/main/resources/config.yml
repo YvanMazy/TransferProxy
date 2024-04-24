@@ -21,6 +21,9 @@ status:
   # Sets server protocol version. 'AUTO' automatically matches client's version.
   # You can also directly specify the protocol number, such as 766.
   protocol: "AUTO"
+  # The path of the file corresponding to the favicon to display.
+  # If the file is not found, nothing will be displayed.
+  favicon-path: "./favicon.png"
 
 miscellaneous:
   # Enables kicking players with outdated Minecraft versions.

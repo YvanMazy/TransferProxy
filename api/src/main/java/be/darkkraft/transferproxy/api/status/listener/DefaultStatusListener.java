@@ -29,16 +29,27 @@ import be.darkkraft.transferproxy.api.configuration.ProxyConfiguration;
 import be.darkkraft.transferproxy.api.event.listener.StatusListener;
 import be.darkkraft.transferproxy.api.network.connection.PlayerConnection;
 import be.darkkraft.transferproxy.api.status.StatusResponse;
+import be.darkkraft.transferproxy.api.util.IOUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public final class DefaultStatusListener implements StatusListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultStatusListener.class);
 
     private final String name;
     private final Component description;
     private final int protocol;
     private final boolean autoProtocol;
+    private final String favicon;
 
     public DefaultStatusListener() {
         final ProxyConfiguration.Status config = TransferProxy.getInstance().getConfiguration().getStatus();
@@ -52,6 +63,7 @@ public final class DefaultStatusListener implements StatusListener {
             this.autoProtocol = false;
             this.protocol = parseProtocol(rawProtocol);
         }
+        this.favicon = readFavicon(Path.of(config.getFaviconPath()));
     }
 
     @Override
@@ -60,6 +72,7 @@ public final class DefaultStatusListener implements StatusListener {
                 .name(this.name)
                 .description(this.description)
                 .protocol(this.autoProtocol ? connection.getProtocol() : this.protocol)
+                .favicon(this.favicon)
                 .build());
     }
 
@@ -69,6 +82,17 @@ public final class DefaultStatusListener implements StatusListener {
         } catch (final NumberFormatException exception) {
             throw new NumberFormatException("Status protocol must be a number: " + rawProtocol);
         }
+    }
+
+    private static @Nullable String readFavicon(final Path path) {
+        if (Files.isRegularFile(path)) {
+            try {
+                return IOUtil.createImage(path);
+            } catch (final IOException e) {
+                LOGGER.error("Failed to read favicon", e);
+            }
+        }
+        return null;
     }
 
 }
