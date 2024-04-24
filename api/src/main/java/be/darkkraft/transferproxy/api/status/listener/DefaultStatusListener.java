@@ -35,17 +35,23 @@ import org.jetbrains.annotations.NotNull;
 
 public final class DefaultStatusListener implements StatusListener {
 
-    private static final int MAGIC_PROTOCOL = -256;
-
     private final String name;
     private final Component description;
     private final int protocol;
+    private final boolean autoProtocol;
 
     public DefaultStatusListener() {
         final ProxyConfiguration.Status config = TransferProxy.getInstance().getConfiguration().getStatus();
         this.name = config.getName();
         this.description = MiniMessage.miniMessage().deserialize(config.getDescription());
-        this.protocol = parseProtocol(config.getProtocol());
+        final String rawProtocol = config.getProtocol();
+        if (rawProtocol.equalsIgnoreCase("auto")) {
+            this.autoProtocol = true;
+            this.protocol = -1;
+        } else {
+            this.autoProtocol = false;
+            this.protocol = parseProtocol(rawProtocol);
+        }
     }
 
     @Override
@@ -53,18 +59,15 @@ public final class DefaultStatusListener implements StatusListener {
         connection.sendStatusResponse(StatusResponse.builder()
                 .name(this.name)
                 .description(this.description)
-                .protocol(this.protocol == MAGIC_PROTOCOL ? connection.getProtocol() : this.protocol)
+                .protocol(this.autoProtocol ? connection.getProtocol() : this.protocol)
                 .build());
     }
 
     private static int parseProtocol(final @NotNull String rawProtocol) {
-        if (rawProtocol.equalsIgnoreCase("AUTO")) {
-            return MAGIC_PROTOCOL;
-        }
         try {
             return Integer.parseInt(rawProtocol);
         } catch (final NumberFormatException exception) {
-            throw new NumberFormatException("Invalid protocol specified: " + rawProtocol);
+            throw new NumberFormatException("Status protocol must be a number: " + rawProtocol);
         }
     }
 
