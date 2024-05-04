@@ -43,7 +43,7 @@ public class ColoredConsoleWriter extends AbstractFormatPatternWriter {
     private static final String ANSI_BLUE = "\u001B[38;5;14m";
 
     private final Level errorLevel;
-    private final boolean ansi;
+    private boolean ansi;
 
     public ColoredConsoleWriter() {
         this(Map.of());
@@ -116,6 +116,14 @@ public class ColoredConsoleWriter extends AbstractFormatPatternWriter {
     @Override
     public void close() {
         // do nothing
+    }
+
+    public boolean isAnsi() {
+        return this.ansi;
+    }
+
+    public void setAnsi(final boolean ansi) {
+        this.ansi = ansi;
     }
 
 }
