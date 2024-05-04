@@ -38,6 +38,10 @@ import java.util.concurrent.CompletableFuture;
 
 public interface PlayerConnection {
 
+    default void transfer(final @NotNull String host) {
+        this.transfer(host, 25565);
+    }
+
     void transfer(final @NotNull String host, final int hostPort);
 
     void sendLoginSuccess(final @NotNull UUID uuid, final @NotNull String username);
