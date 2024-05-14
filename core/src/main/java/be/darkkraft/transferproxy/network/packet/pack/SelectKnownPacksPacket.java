@@ -41,8 +41,8 @@ public abstract class SelectKnownPacksPacket implements Packet {
 
     private final List<KnownPack> packs;
 
-    protected SelectKnownPacksPacket(final List<KnownPack> packs) {
-        this.packs = packs;
+    protected SelectKnownPacksPacket(final @NotNull List<KnownPack> packs) {
+        this.packs = Objects.requireNonNull(packs, "packs must not be null");
     }
 
     protected static <T> T from(final @NotNull ByteBuf buf, final @NotNull Function<List<KnownPack>, T> function) {
@@ -72,7 +72,7 @@ public abstract class SelectKnownPacksPacket implements Packet {
         }
     }
 
-    public List<KnownPack> packs() {
+    public @NotNull List<KnownPack> packs() {
         return this.packs;
     }
 

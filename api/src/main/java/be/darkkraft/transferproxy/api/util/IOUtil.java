@@ -24,6 +24,8 @@
 
 package be.darkkraft.transferproxy.api.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -47,7 +49,7 @@ public final class IOUtil {
      *
      * @throws IOException I/O exception
      */
-    public static String createImage(final Path path) throws IOException {
+    public static String createImage(final @NotNull Path path) throws IOException {
         return createImage(ImageIO.read(Files.newInputStream(path)));
     }
 
@@ -60,7 +62,7 @@ public final class IOUtil {
      *
      * @throws IOException I/O exception
      */
-    public static String createImage(final BufferedImage image) throws IOException {
+    public static String createImage(final @NotNull BufferedImage image) throws IOException {
         if (image.getWidth() != 64 || image.getHeight() != 64) {
             throw new IOException("Server icon must be exactly 64x64 pixels");
         }

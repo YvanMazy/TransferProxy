@@ -24,6 +24,16 @@
 
 package be.darkkraft.transferproxy.api.resourcepack;
 
-public record KnownPack(String namespace, String id, String version) {
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
+public record KnownPack(@NotNull String namespace, @NotNull String id, @NotNull String version) {
+
+    public KnownPack {
+        Objects.requireNonNull(namespace, "namespace must not be null");
+        Objects.requireNonNull(id, "id must not be null");
+        Objects.requireNonNull(version, "version must not be null");
+    }
 
 }

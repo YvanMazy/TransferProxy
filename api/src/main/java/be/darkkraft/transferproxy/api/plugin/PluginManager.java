@@ -24,6 +24,8 @@
 
 package be.darkkraft.transferproxy.api.plugin;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 
 public interface PluginManager {
@@ -32,6 +34,6 @@ public interface PluginManager {
 
     void stop();
 
-    Collection<Plugin> getPlugins();
+    @NotNull Collection<Plugin> getPlugins();
 
 }

@@ -48,9 +48,8 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
-    @NotNull
     @Override
-    public EventManager getEventManager() {
+    public @NotNull EventManager getEventManager() {
         return this.eventManager;
     }
 

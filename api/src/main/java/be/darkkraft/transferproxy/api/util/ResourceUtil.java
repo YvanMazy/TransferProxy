@@ -72,7 +72,7 @@ public final class ResourceUtil {
      * @throws IOException          If an I/O error occurs while copying the resource
      * @throws NullPointerException If any parameter is null
      */
-    public static boolean copyResource(final ClassLoader classLoader,
+    public static boolean copyResource(final @NotNull ClassLoader classLoader,
                                        final @NotNull Path path,
                                        final @NotNull String resourceName) throws IOException {
         if (Files.notExists(Objects.requireNonNull(path, "path must not be null"))) {

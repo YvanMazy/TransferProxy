@@ -24,6 +24,16 @@
 
 package be.darkkraft.transferproxy.api.profile;
 
-public record Property(String name, String value, String signature) {
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+
+public record Property(@NotNull String name, @NotNull String value, @Nullable String signature) {
+
+    public Property {
+        Objects.requireNonNull(name, "name must not be null");
+        Objects.requireNonNull(value, "value must not be null");
+    }
 
 }

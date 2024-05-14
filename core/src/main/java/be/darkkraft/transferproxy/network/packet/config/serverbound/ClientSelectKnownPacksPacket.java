@@ -33,7 +33,7 @@ import java.util.List;
 
 public final class ClientSelectKnownPacksPacket extends SelectKnownPacksPacket {
 
-    public ClientSelectKnownPacksPacket(final List<KnownPack> packs) {
+    public ClientSelectKnownPacksPacket(final @NotNull List<KnownPack> packs) {
         super(packs);
     }
 

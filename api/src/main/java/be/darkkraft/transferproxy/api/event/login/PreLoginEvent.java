@@ -45,13 +45,13 @@ public class PreLoginEvent {
                          final @NotNull UUID uuid,
                          final @NotNull String username,
                          final boolean canSendSuccessPacket) {
-        this.connection = connection;
-        this.uuid = uuid;
-        this.username = username;
+        this.connection = Objects.requireNonNull(connection, "connection must not be null");
+        this.setUUID(uuid);
+        this.setUsername(username);
         this.canSendSuccessPacket = canSendSuccessPacket;
     }
 
-    public PlayerConnection getConnection() {
+    public @NotNull PlayerConnection getConnection() {
         return this.connection;
     }
 
@@ -71,7 +71,7 @@ public class PreLoginEvent {
         this.uuid = Objects.requireNonNull(uuid, "uuid must not be null");
     }
 
-    public void setUsername(final String username) {
+    public void setUsername(final @NotNull String username) {
         this.username = Objects.requireNonNull(username, "username must not be null");
     }
 

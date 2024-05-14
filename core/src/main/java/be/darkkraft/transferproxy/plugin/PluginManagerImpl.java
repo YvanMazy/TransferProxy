@@ -30,6 +30,7 @@ import be.darkkraft.transferproxy.api.plugin.classloader.PluginClassloader;
 import be.darkkraft.transferproxy.api.plugin.info.PluginInfo;
 import be.darkkraft.transferproxy.api.util.ResourceUtil;
 import be.darkkraft.transferproxy.plugin.classloader.PluginClassloaderImpl;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,7 +125,7 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     @Override
-    public Collection<Plugin> getPlugins() {
+    public @NotNull Collection<Plugin> getPlugins() {
         return List.copyOf(this.plugins);
     }
 
