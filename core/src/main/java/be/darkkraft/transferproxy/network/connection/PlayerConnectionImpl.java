@@ -114,7 +114,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
-    public synchronized CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey) {
+    public synchronized @NotNull CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey) {
         Objects.requireNonNull(cookieKey, "Cookie key must not be null");
         CookieUtil.ensureCookieFormat(cookieKey);
         if (this.state != ConnectionState.LOGIN && this.state != ConnectionState.CONFIG) {
@@ -162,7 +162,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
-    public Map<String, CompletableFuture<byte[]>> getPendingCookies() {
+    public @NotNull Map<String, CompletableFuture<byte[]>> getPendingCookies() {
         return this.pendingCookies != null ? Map.copyOf(this.pendingCookies) : Map.of();
     }
 

@@ -28,6 +28,7 @@ import be.darkkraft.transferproxy.api.network.packet.Packet;
 import be.darkkraft.transferproxy.api.profile.ClientInformation;
 import be.darkkraft.transferproxy.api.status.StatusResponse;
 import io.netty.channel.Channel;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,12 +49,26 @@ public interface PlayerConnection {
 
     void sendStatusResponse(final @NotNull StatusResponse response);
 
+    default @NotNull CompletableFuture<byte[]> fetchCookie(final @NotNull Key cookieKey) {
+        return this.fetchCookie(cookieKey.asString());
+    }
+
+    @NotNull
     CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey);
+
+    default void storeCookie(final @NotNull Key cookieKey, final byte @NotNull [] payload) {
+        this.storeCookie(cookieKey.asString(), payload);
+    }
 
     void storeCookie(final @NotNull String cookieKey, final byte @NotNull [] payload);
 
+    default void handleCookieResponse(final @NotNull Key cookieKey, final byte @Nullable [] payload) {
+        this.handleCookieResponse(cookieKey.asString(), payload);
+    }
+
     void handleCookieResponse(final @NotNull String cookieKey, final byte @Nullable [] payload);
 
+    @NotNull
     Map<String, CompletableFuture<byte[]>> getPendingCookies();
 
     default void removeResourcePacks() {
@@ -92,6 +107,7 @@ public interface PlayerConnection {
 
     UUID getUUID();
 
+    @Nullable
     ClientInformation getInformation();
 
     @NotNull
