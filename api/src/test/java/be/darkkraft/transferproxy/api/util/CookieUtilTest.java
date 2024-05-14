@@ -25,18 +25,29 @@
 package be.darkkraft.transferproxy.api.util;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CookieUtilTest {
 
+    @ParameterizedTest
+    @ValueSource(strings = {"namespace:key", "minecraft:cookie", "minecraft:cookie_part"})
+    void testValidCookieFormat(final String key) {
+        assertDoesNotThrow(() -> CookieUtil.ensureCookieFormat(key));
+    }
+
     @Test
-    void testCookieFormat() {
+    void testCookieFormatWithNullValue() {
         assertThrows(IllegalArgumentException.class, () -> CookieUtil.ensureCookieFormat(null));
-        assertThrows(IllegalArgumentException.class, () -> CookieUtil.ensureCookieFormat("key"));
-        assertDoesNotThrow(() -> CookieUtil.ensureCookieFormat("namespace:key"));
-        assertDoesNotThrow(() -> CookieUtil.ensureCookieFormat("minecraft:cookie"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "key", ":key", "namespace:ke@y", "n@mespace:key"})
+    void testInvalidCookieFormat(final String key) {
+        assertThrows(IllegalArgumentException.class, () -> CookieUtil.ensureCookieFormat(key));
     }
 
 }

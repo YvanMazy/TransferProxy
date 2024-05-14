@@ -24,6 +24,9 @@
 
 package be.darkkraft.transferproxy.api.util;
 
+import static net.kyori.adventure.key.Key.checkNamespace;
+import static net.kyori.adventure.key.Key.checkValue;
+
 public final class CookieUtil {
 
     private static final int MAX_COOKIE_SIZE = 5120; // 5 kiB
@@ -36,8 +39,15 @@ public final class CookieUtil {
         if (cookieKey == null) {
             throw new IllegalArgumentException("Cookie key must not be null");
         }
-        if (cookieKey.indexOf(':') < 0) {
+        final int index = cookieKey.indexOf(':');
+        if (index < 1) {
             throw new IllegalArgumentException("Cookie key format must be: namespace:key");
+        }
+        if (checkNamespace(cookieKey.substring(0, index)).isPresent()) {
+            throw new IllegalArgumentException("Invalid characters in cookie namespace: " + cookieKey);
+        }
+        if (checkValue(cookieKey.substring(index + 1)).isPresent()) {
+            throw new IllegalArgumentException("Invalid characters in cookie value: " + cookieKey);
         }
     }
 
