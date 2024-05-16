@@ -13,7 +13,7 @@ dependencies {
 
 shadowJar {
     manifest {
-        attributes 'Main-Class': 'be.darkkraft.transferproxy.main.Main'
+        attributes 'Main-Class': 'net.transferproxy.main.Main'
     }
     archiveClassifier.set('')
 }
