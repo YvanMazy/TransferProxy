@@ -24,14 +24,15 @@
 
 package net.transferproxy.network.frame.serverbound;
 
-import net.transferproxy.api.network.connection.ConnectionState;
-import net.transferproxy.api.network.connection.PlayerConnection;
-import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.network.packet.provider.PacketProvider;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.DecoderException;
+import net.transferproxy.api.TransferProxy;
+import net.transferproxy.api.network.connection.ConnectionState;
+import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.network.packet.provider.PacketProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,6 +41,8 @@ import java.util.Objects;
 import static net.transferproxy.util.BufUtil.readVarInt;
 
 public final class PacketDecoder extends ByteToMessageDecoder {
+
+    private static final boolean CHECK_EXTRA_BYTE = !TransferProxy.getInstance().getConfiguration().getNetwork().isDisableExtraByteCheck();
 
     private final PlayerConnection connection;
 
@@ -63,10 +66,12 @@ public final class PacketDecoder extends ByteToMessageDecoder {
                 throw new DecoderException("Bad packet id 0x" + Integer.toHexString(packetId) + " in state: " + state);
             }
 
-            final int readable = in.readableBytes();
-            if (readable > 0) {
-                final String packetName = packet.getClass().getSimpleName();
-                throw new DecoderException("Packet on " + state + " (" + packetName + ") extra bytes: " + readable);
+            if (CHECK_EXTRA_BYTE) {
+                final int readable = in.readableBytes();
+                if (readable > 0) {
+                    final String packetName = packet.getClass().getSimpleName();
+                    throw new DecoderException("Packet on " + state + " (" + packetName + ") extra bytes: " + readable);
+                }
             }
 
             out.add(packet);

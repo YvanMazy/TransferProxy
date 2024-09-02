@@ -11,6 +11,10 @@ network:
   worker-threads: 3
   # Disables Nagle's algorithm if set to true. False can increase latency but reduce network chatter.
   use-tcp-no-delay: false
+  # Disables verification of extra byte in packets sent by the player.
+  # When this happens, the player is disconnected immediately.
+  # Only turn it on if you know what you are doing.
+  disable-extra-byte-check: false
 
 status:
   # Server name displayed in server list.

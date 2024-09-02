@@ -24,8 +24,8 @@
 
 package net.transferproxy.api.configuration.yaml;
 
-import net.transferproxy.api.configuration.ProxyConfiguration;
 import io.netty.util.ResourceLeakDetector;
+import net.transferproxy.api.configuration.ProxyConfiguration;
 
 @SuppressWarnings("unused")
 public class YamlProxyConfiguration implements ProxyConfiguration {
@@ -64,6 +64,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         private final int bossThreads;
         private final int workerThreads;
         private final boolean useTcpNoDelay;
+        private final boolean disableExtraByteCheck;
 
         private YamlNetwork() {
             this.bindAddress = "localhost";
@@ -73,6 +74,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
             this.bossThreads = 1;
             this.workerThreads = 3;
             this.useTcpNoDelay = false;
+            this.disableExtraByteCheck = false;
         }
 
         @Override
@@ -108,6 +110,11 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         @Override
         public boolean isUseTcpNoDelay() {
             return this.useTcpNoDelay;
+        }
+
+        @Override
+        public boolean isDisableExtraByteCheck() {
+            return this.disableExtraByteCheck;
         }
 
     }

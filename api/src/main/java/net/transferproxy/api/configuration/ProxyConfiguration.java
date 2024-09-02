@@ -52,6 +52,8 @@ public interface ProxyConfiguration {
 
         boolean isUseTcpNoDelay();
 
+        boolean isDisableExtraByteCheck();
+
     }
 
     interface Status {
