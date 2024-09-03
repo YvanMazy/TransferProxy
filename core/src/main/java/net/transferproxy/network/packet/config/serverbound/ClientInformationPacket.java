@@ -24,6 +24,7 @@
 
 package net.transferproxy.network.packet.config.serverbound;
 
+import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.event.EventType;
 import net.transferproxy.api.network.connection.PlayerConnection;
@@ -31,14 +32,14 @@ import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import net.transferproxy.api.profile.ChatVisibility;
 import net.transferproxy.api.profile.ClientInformation;
 import net.transferproxy.api.profile.MainHand;
-import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.profile.ParticleStatus;
 import org.jetbrains.annotations.NotNull;
 
 import static net.transferproxy.util.BufUtil.*;
 
 public record ClientInformationPacket(String locale, byte viewDistance, ChatVisibility chatVisibility, boolean chatColors,
-                                      byte displayedSkinParts, MainHand mainHand, boolean enableTextFiltering,
-                                      boolean allowServerListing) implements ServerboundPacket, ClientInformation {
+                                      byte displayedSkinParts, MainHand mainHand, boolean enableTextFiltering, boolean allowServerListing,
+                                      ParticleStatus particleStatus) implements ServerboundPacket, ClientInformation {
 
     public ClientInformationPacket(final @NotNull ClientInformation information) {
         this(information.locale(),
@@ -48,10 +49,11 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
                 information.displayedSkinParts(),
                 information.mainHand(),
                 information.enableTextFiltering(),
-                information.allowServerListing());
+                information.allowServerListing(),
+                information.particleStatus());
     }
 
-    public ClientInformationPacket(final @NotNull ByteBuf buf) {
+    public ClientInformationPacket(final @NotNull PlayerConnection connection, final @NotNull ByteBuf buf) {
         this(readString(buf, 16),
                 buf.readByte(),
                 ChatVisibility.fromId(readVarInt(buf)),
@@ -59,7 +61,8 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
                 buf.readByte(),
                 MainHand.fromId(readVarInt(buf)),
                 buf.readBoolean(),
-                buf.readBoolean());
+                buf.readBoolean(),
+                connection.getProtocol() >= 768 ? ParticleStatus.fromId(readVarInt(buf)) : null);
     }
 
     @Override
@@ -78,6 +81,9 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
         writeVarInt(buf, this.mainHand.ordinal());
         buf.writeBoolean(this.enableTextFiltering);
         buf.writeBoolean(this.allowServerListing);
+        if (this.particleStatus != null) {
+            writeVarInt(buf, this.particleStatus.getId());
+        }
     }
 
     @Override

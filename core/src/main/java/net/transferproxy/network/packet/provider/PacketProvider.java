@@ -24,7 +24,10 @@
 
 package net.transferproxy.network.packet.provider;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.DecoderException;
 import net.transferproxy.api.network.connection.ConnectionState;
+import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.network.packet.config.FinishConfigurationPacket;
 import net.transferproxy.network.packet.config.KeepAlivePacket;
@@ -39,31 +42,36 @@ import net.transferproxy.network.packet.login.serverbound.LoginCookieResponsePac
 import net.transferproxy.network.packet.login.serverbound.LoginStartPacket;
 import net.transferproxy.network.packet.status.PingPongPacket;
 import net.transferproxy.network.packet.status.serverbound.StatusRequestPacket;
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.DecoderException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import static net.transferproxy.network.packet.provider.PacketProviders.newBuilder;
+import static net.transferproxy.network.packet.provider.PacketProviders.providers;
 
 public interface PacketProvider {
 
-    PacketProvider[] HANDSHAKE = {HandshakePacket::new};
-    PacketProvider[] STATUS = {StatusRequestPacket::new, PingPongPacket::new};
-    PacketProvider[] LOGIN = {LoginStartPacket::new, null, null, LoginAcknowledgedPacket::new, LoginCookieResponsePacket::new};
+    PacketProvider[] HANDSHAKE = providers(HandshakePacket::new);
+    PacketProvider[] STATUS = providers(StatusRequestPacket::new, PingPongPacket::new);
+    PacketProvider[] LOGIN = providers(LoginStartPacket::new, null, null, LoginAcknowledgedPacket::new, LoginCookieResponsePacket::new);
     // @formatter:off
-    PacketProvider[] CONFIG = {
-            ClientInformationPacket::new,
-            ConfigCookieResponsePacket::new,
-            PluginMessagePacket::from,
-            FinishConfigurationPacket::new,
-            KeepAlivePacket::new,
-            null, // Pong packet
-            ResourcePackResponsePacket::new,
-            ClientSelectKnownPacksPacket::from
-    };
+    PacketProvider[] CONFIG = newBuilder()
+            .put(ClientInformationPacket::new)
+            .putOnlyBuffer(ConfigCookieResponsePacket::new)
+            .putOnlyBuffer(PluginMessagePacket::from)
+            .putOnlyBuffer(FinishConfigurationPacket::new)
+            .putOnlyBuffer(KeepAlivePacket::new)
+            .putNull() // Pong packet
+            .putOnlyBuffer(ResourcePackResponsePacket::new)
+            .putOnlyBuffer(ClientSelectKnownPacksPacket::from)
+    .build();
     // @formatter:on
 
-    Packet provide(final @NotNull ByteBuf buf);
+    @Nullable Packet provide(final PlayerConnection connection, final @NotNull ByteBuf buf);
 
-    static Packet buildPacket(final @NotNull ConnectionState state, final @NotNull ByteBuf buf, final int packetId) {
+    static Packet buildPacket(final @NotNull PlayerConnection connection,
+                              final @NotNull ConnectionState state,
+                              final @NotNull ByteBuf buf,
+                              final int packetId) {
         final PacketProvider[] packets = getProviders(state);
 
         if (packets == null) {
@@ -76,7 +84,7 @@ public interface PacketProvider {
 
         final PacketProvider provider = packets[packetId];
         final Packet packet;
-        if (provider == null || (packet = provider.provide(buf)) == null) {
+        if (provider == null || (packet = provider.provide(connection, buf)) == null) {
             return null;
         }
 

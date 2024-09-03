@@ -26,6 +26,7 @@ package net.transferproxy.api.profile;
 
 public interface ClientInformation {
 
+    @Deprecated(forRemoval = true)
     static ClientInformation create(final String locale,
                                     final byte viewDistance,
                                     final ChatVisibility chatVisibility,
@@ -34,6 +35,26 @@ public interface ClientInformation {
                                     final MainHand mainHand,
                                     final boolean enableTextFiltering,
                                     final boolean allowServerListing) {
+        return create(locale,
+                viewDistance,
+                chatVisibility,
+                chatColors,
+                displayedSkinParts,
+                mainHand,
+                enableTextFiltering,
+                allowServerListing,
+                null);
+    }
+
+    static ClientInformation create(final String locale,
+                                    final byte viewDistance,
+                                    final ChatVisibility chatVisibility,
+                                    final boolean chatColors,
+                                    final byte displayedSkinParts,
+                                    final MainHand mainHand,
+                                    final boolean enableTextFiltering,
+                                    final boolean allowServerListing,
+                                    final ParticleStatus particleStatus) {
         return new ClientInformationImpl(locale,
                 viewDistance,
                 chatVisibility,
@@ -41,7 +62,8 @@ public interface ClientInformation {
                 displayedSkinParts,
                 mainHand,
                 enableTextFiltering,
-                allowServerListing);
+                allowServerListing,
+                particleStatus);
     }
 
     String locale();
@@ -59,5 +81,7 @@ public interface ClientInformation {
     boolean enableTextFiltering();
 
     boolean allowServerListing();
+
+    ParticleStatus particleStatus();
 
 }

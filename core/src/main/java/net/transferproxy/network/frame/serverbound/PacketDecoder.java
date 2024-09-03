@@ -61,7 +61,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
             }
 
             final int packetId = readVarInt(in);
-            final Packet packet = PacketProvider.buildPacket(state, in, packetId);
+            final Packet packet = PacketProvider.buildPacket(this.connection, state, in, packetId);
             if (packet == null) {
                 throw new DecoderException("Bad packet id 0x" + Integer.toHexString(packetId) + " in state: " + state);
             }

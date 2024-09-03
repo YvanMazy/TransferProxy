@@ -24,12 +24,12 @@
 
 package net.transferproxy.network.packet;
 
-import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.util.BufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.util.BufUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockedStatic;
