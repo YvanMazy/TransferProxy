@@ -35,7 +35,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
 import java.util.function.BiFunction;
@@ -48,6 +47,8 @@ import static org.mockito.Mockito.*;
 
 public class PacketTestBase {
 
+    protected static final int DEFAULT_MOCK_PROTOCOL = 770; // 1.21.2
+
     protected static PlayerConnection mockConnection;
 
     private ByteBuf buf;
@@ -55,12 +56,12 @@ public class PacketTestBase {
     @BeforeAll
     static void beforeAll() {
         mockConnection = mock(PlayerConnection.class);
-        when(mockConnection.getProtocol()).thenReturn(768);
     }
 
     @BeforeEach
     void setUp() {
         this.buf = Unpooled.buffer();
+        mockClientProtocol(DEFAULT_MOCK_PROTOCOL);
     }
 
     protected <T extends Packet> void testOnlyBuffer(final T packet, final Function<ByteBuf, T> builder) {
@@ -73,6 +74,14 @@ public class PacketTestBase {
         assertEquals(0, this.buf.readableBytes());
     }
 
+    protected <T extends Packet> void testWithoutOriginal(final T packet, final BiFunction<PlayerConnection, ByteBuf, T> builder) {
+        packet.write(mockConnection, this.buf);
+        final T read = builder.apply(mockConnection, this.buf);
+        assertEquals(0, this.buf.readableBytes());
+        packet.write(mockConnection, this.buf);
+        assertEquals(read, builder.apply(mockConnection, this.buf));
+    }
+
     protected <T extends Packet> void testFail(final T packet, final Function<ByteBuf, T> builder) {
         // Assert encoding failure
         assertThrows(EncoderException.class, () -> packet.write(mockConnection, this.buf));
@@ -81,8 +90,7 @@ public class PacketTestBase {
         this.buf.clear();
 
         // Mock BufUtil for bypass length checking
-        try (final MockedStatic<BufUtil> mockedStatic = mockStatic(BufUtil.class,
-                Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS))) {
+        try (final MockedStatic<BufUtil> mockedStatic = mockStatic(BufUtil.class, withSettings().defaultAnswer(CALLS_REAL_METHODS))) {
             mockedStatic.when(() -> BufUtil.writeString(any(ByteBuf.class), anyString(), anyInt()))
                     .thenAnswer(PacketTestBase.<String>buildWriteAnswer(BufUtil::writeString));
             mockedStatic.when(() -> BufUtil.writeBytes(any(ByteBuf.class), any(byte[].class), anyInt()))
@@ -109,6 +117,10 @@ public class PacketTestBase {
     @AfterEach
     void tearDown() {
         this.buf.release();
+    }
+
+    protected static void mockClientProtocol(final int protocol) {
+        when(mockConnection.getProtocol()).thenReturn(protocol);
     }
 
     private static <T> Answer<Object> buildWriteAnswer(final BufConsumer<T> consumer) {

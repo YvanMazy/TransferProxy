@@ -41,6 +41,8 @@ class ClientInformationPacketTest extends PacketTestBase {
     @MethodSource("generateInformation")
     void testWriteReadConsistency(final ClientInformation information) {
         this.test(new ClientInformationPacket(information), ClientInformationPacket::new);
+        mockClientProtocol(767);
+        this.testWithoutOriginal(new ClientInformationPacket(information), ClientInformationPacket::new);
     }
 
     public static Stream<ClientInformation> generateInformation() {

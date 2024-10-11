@@ -46,7 +46,7 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
                         Property[]::new,
                         sub -> new Property(readString(sub), readString(sub), sub.readBoolean() ? readString(buf) : null),
                         16));
-        if (connection.getProtocol() < 769) {
+        if (connection.getProtocol() < 769) { // 769 = 1.21.2
             buf.readBoolean();
         }
     }
@@ -70,7 +70,7 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
                 }
             });
         }
-        if (connection != null && connection.getProtocol() < 769) {
+        if (connection != null && connection.getProtocol() < 769) { // 769 = 1.21.2
             buf.writeBoolean(true);
         }
     }

@@ -63,7 +63,7 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
                 MainHand.fromId(readVarInt(buf)),
                 buf.readBoolean(),
                 buf.readBoolean(),
-                connection.getProtocol() >= 768 ? ParticleStatus.fromId(readVarInt(buf)) : null);
+                connection.getProtocol() >= 768 ? ParticleStatus.fromId(readVarInt(buf)) : null); // 768 = 1.21.1
     }
 
     @Override
@@ -82,7 +82,7 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
         writeVarInt(buf, this.mainHand.ordinal());
         buf.writeBoolean(this.enableTextFiltering);
         buf.writeBoolean(this.allowServerListing);
-        if (this.particleStatus != null) {
+        if (connection == null || connection.getProtocol() >= 768) { // 768 = 1.21.1
             writeVarInt(buf, this.particleStatus.getId());
         }
     }
