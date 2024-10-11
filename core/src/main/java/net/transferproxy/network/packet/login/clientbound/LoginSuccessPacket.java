@@ -24,10 +24,10 @@
 
 package net.transferproxy.network.packet.login.clientbound;
 
-import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.profile.Property;
+import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,16 +37,18 @@ import java.util.UUID;
 
 import static net.transferproxy.util.BufUtil.*;
 
-public record LoginSuccessPacket(UUID uuid, String username, Property[] properties, boolean strictErrorHandling) implements Packet {
+public record LoginSuccessPacket(UUID uuid, String username, Property[] properties) implements Packet {
 
-    public LoginSuccessPacket(final @NotNull ByteBuf buf) {
+    public LoginSuccessPacket(final @NotNull PlayerConnection connection, final @NotNull ByteBuf buf) {
         this(readUUID(buf),
                 readString(buf, 16),
                 readArray(buf,
                         Property[]::new,
                         sub -> new Property(readString(sub), readString(sub), sub.readBoolean() ? readString(buf) : null),
-                        16),
-                buf.readBoolean());
+                        16));
+        if (connection.getProtocol() < 769) {
+            buf.readBoolean();
+        }
     }
 
     @Override
@@ -68,7 +70,9 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
                 }
             });
         }
-        buf.writeBoolean(this.strictErrorHandling);
+        if (connection != null && connection.getProtocol() < 769) {
+            buf.writeBoolean(true);
+        }
     }
 
     @Override

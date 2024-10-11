@@ -27,6 +27,7 @@ package net.transferproxy.network.packet.login.clientbound;
 import net.transferproxy.api.profile.Property;
 import net.transferproxy.network.packet.PacketTestBase;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.UUID;
 
@@ -37,8 +38,11 @@ class LoginSuccessPacketTest extends PacketTestBase {
         final UUID uuid = UUID.fromString("169033d6-0967-49dc-828e-a6c48665e08f");
         final String username = "Darkkraft";
         final Property[] properties = {new Property("name", "value", "signature")};
-        this.testOnlyBuffer(new LoginSuccessPacket(uuid, username, new Property[0], true), LoginSuccessPacket::new);
-        this.testOnlyBuffer(new LoginSuccessPacket(uuid, username, properties, true), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, new Property[0]), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, properties), LoginSuccessPacket::new);
+        Mockito.when(mockConnection.getProtocol()).thenReturn(769);
+        this.test(new LoginSuccessPacket(uuid, username, new Property[0]), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, properties), LoginSuccessPacket::new);
     }
 
 }
