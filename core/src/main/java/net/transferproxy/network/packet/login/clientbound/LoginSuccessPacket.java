@@ -24,10 +24,12 @@
 
 package net.transferproxy.network.packet.login.clientbound;
 
+import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.profile.Property;
-import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -48,7 +50,7 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeUUID(buf, this.uuid);
         writeString(buf, this.username, 16);
         if (this.properties == null) {

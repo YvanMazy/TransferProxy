@@ -33,7 +33,7 @@ class KeepAlivePacketTest extends PacketTestBase {
     @ParameterizedTest
     @ValueSource(longs = {0L, 5L, Long.MIN_VALUE, Long.MAX_VALUE})
     void testWriteReadConsistency(final long payload) {
-        this.test(new KeepAlivePacket(payload), KeepAlivePacket::new);
+        this.testOnlyBuffer(new KeepAlivePacket(payload), KeepAlivePacket::new);
     }
 
 }

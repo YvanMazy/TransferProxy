@@ -35,7 +35,7 @@ class ResourcePackResponsePacketTest extends PacketTestBase {
     @Test
     void testWriteReadConsistency() {
         for (final ResourcePackResult result : ResourcePackResult.values()) {
-            this.test(new ResourcePackResponsePacket(UUID.randomUUID(), result), ResourcePackResponsePacket::new);
+            this.testOnlyBuffer(new ResourcePackResponsePacket(UUID.randomUUID(), result), ResourcePackResponsePacket::new);
         }
     }
 

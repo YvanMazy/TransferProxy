@@ -24,10 +24,12 @@
 
 package net.transferproxy.network.packet.config.clientbound;
 
+import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.util.CookieUtil;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -41,7 +43,7 @@ public record StoreCookiePacket(String key, byte[] payload) implements Packet {
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeString(buf, this.key);
         writeBytes(buf, this.payload, CookieUtil.getMaxCookieSize());
     }

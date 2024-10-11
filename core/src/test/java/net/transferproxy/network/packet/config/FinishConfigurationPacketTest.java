@@ -31,7 +31,7 @@ class FinishConfigurationPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new FinishConfigurationPacket(), FinishConfigurationPacket::new);
+        this.testOnlyBuffer(new FinishConfigurationPacket(), FinishConfigurationPacket::new);
     }
 
 }

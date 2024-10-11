@@ -29,6 +29,7 @@ import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import net.transferproxy.api.resourcepack.ResourcePackResult;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -46,7 +47,7 @@ public record ResourcePackResponsePacket(UUID uuid, ResourcePackResult result) i
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeUUID(buf, this.uuid);
         writeVarInt(buf, this.result.getId());
     }

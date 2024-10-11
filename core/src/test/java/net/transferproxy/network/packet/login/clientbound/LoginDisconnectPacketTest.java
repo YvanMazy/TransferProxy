@@ -31,7 +31,7 @@ class LoginDisconnectPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new LoginDisconnectPacket("{}"), LoginDisconnectPacket::new);
+        this.testOnlyBuffer(new LoginDisconnectPacket("{}"), LoginDisconnectPacket::new);
     }
 
 }

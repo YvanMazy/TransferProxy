@@ -24,36 +24,23 @@
 
 package net.transferproxy.network.packet.config.serverbound;
 
-import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.profile.ChatVisibility;
 import net.transferproxy.api.profile.ClientInformation;
 import net.transferproxy.api.profile.MainHand;
 import net.transferproxy.api.profile.ParticleStatus;
 import net.transferproxy.network.packet.PacketTestBase;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 class ClientInformationPacketTest extends PacketTestBase {
-
-    private static PlayerConnection mockConnection;
-
-    @BeforeAll
-    static void beforeAll() {
-        mockConnection = mock(PlayerConnection.class);
-        when(mockConnection.getProtocol()).thenReturn(768);
-    }
 
     @ParameterizedTest
     @MethodSource("generateInformation")
     void testWriteReadConsistency(final ClientInformation information) {
-        this.test(new ClientInformationPacket(information), buf -> new ClientInformationPacket(mockConnection, buf));
+        this.test(new ClientInformationPacket(information), ClientInformationPacket::new);
     }
 
     public static Stream<ClientInformation> generateInformation() {

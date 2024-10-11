@@ -32,7 +32,7 @@ import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.network.connection.ConnectionState;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.network.packet.provider.PacketProvider;
+import net.transferproxy.api.network.packet.provider.PacketProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

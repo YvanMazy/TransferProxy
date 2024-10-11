@@ -22,34 +22,29 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.network.packet.config.serverbound;
+package net.transferproxy.network.packet.provider;
 
-import net.transferproxy.api.util.CookieUtil;
-import net.transferproxy.network.packet.PacketTestBase;
-import org.junit.jupiter.api.Test;
+import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
+import net.transferproxy.network.packet.provider.impl.LatestPacketProviderGroup;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-class ConfigCookieResponsePacketTest extends PacketTestBase {
+public final class PacketProviderGroups {
 
-    @Test
-    void testWriteReadConsistency() {
-        this.testOnlyBuffer(new ConfigCookieResponsePacket("minecraft:cookie_key", new byte[] {1, 2, 3}), ConfigCookieResponsePacket::new);
+    private static final PacketProviderGroup LATEST_GROUP = new LatestPacketProviderGroup();
+
+    private PacketProviderGroups() throws IllegalAccessException {
+        throw new IllegalAccessException("You cannot instantiate this class");
     }
 
-    @Test
-    void testWriteReadConsistencyWithNoValue() {
-        this.testOnlyBuffer(new ConfigCookieResponsePacket("minecraft:cookie_key", null), ConfigCookieResponsePacket::new);
+    @Contract(pure = true)
+    public static @NotNull PacketProviderGroup determineGroup(final int protocol) {
+        return LATEST_GROUP;
     }
 
-    @Test
-    void testWriteReadWithTooLongKey() {
-        this.testFail(new ConfigCookieResponsePacket("minecraft:" + "a".repeat(Short.MAX_VALUE - 9), new byte[5]),
-                ConfigCookieResponsePacket::new);
-    }
-
-    @Test
-    void testWriteReadWithTooLongData() {
-        this.testFail(new ConfigCookieResponsePacket("minecraft:cookie_key", new byte[CookieUtil.getMaxCookieSize() + 1]),
-                ConfigCookieResponsePacket::new);
+    @Contract(pure = true)
+    public static @NotNull PacketProviderGroup getDefaultGroup() {
+        return LATEST_GROUP;
     }
 
 }

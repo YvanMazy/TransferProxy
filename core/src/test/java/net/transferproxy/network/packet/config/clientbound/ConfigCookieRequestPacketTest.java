@@ -31,7 +31,7 @@ class ConfigCookieRequestPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new ConfigCookieRequestPacket("minecraft:cookie_key"), ConfigCookieRequestPacket::new);
+        this.testOnlyBuffer(new ConfigCookieRequestPacket("minecraft:cookie_key"), ConfigCookieRequestPacket::new);
     }
 
     @Test

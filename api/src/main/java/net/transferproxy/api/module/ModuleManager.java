@@ -25,24 +25,30 @@
 package net.transferproxy.api.module;
 
 import net.transferproxy.api.event.EventManager;
+import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.plugin.PluginManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.IntFunction;
 
 public interface ModuleManager {
 
     void initializeDefaults();
 
     @Contract(pure = true)
-    @NotNull
-    EventManager getEventManager();
+    @NotNull EventManager getEventManager();
 
     @Contract(pure = true)
-    @NotNull
-    PluginManager getPluginManager();
+    @NotNull PluginManager getPluginManager();
+
+    @Contract(pure = true)
+    @NotNull IntFunction<PacketProviderGroup> getPacketProviderGroupFunction();
 
     void setEventManager(final @NotNull EventManager eventManager);
 
     void setPluginManager(final @NotNull PluginManager pluginManager);
+
+    void setPacketProviderGroupFunction(final @NotNull IntFunction<PacketProviderGroup> packetProviderGroupFunction);
 
 }

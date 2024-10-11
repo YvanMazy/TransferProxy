@@ -34,6 +34,7 @@ import net.transferproxy.api.profile.ClientInformation;
 import net.transferproxy.api.profile.MainHand;
 import net.transferproxy.api.profile.ParticleStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static net.transferproxy.util.BufUtil.*;
 
@@ -72,7 +73,7 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeString(buf, this.locale);
         buf.writeByte(this.viewDistance);
         writeVarInt(buf, this.chatVisibility.getId());

@@ -24,21 +24,29 @@
 
 package net.transferproxy.network.frame.clientbound;
 
-import net.transferproxy.api.network.packet.Packet;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.network.packet.Packet;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 import static net.transferproxy.util.BufUtil.writeVarInt;
 
-@ChannelHandler.Sharable
 public final class PacketEncoder extends MessageToByteEncoder<Packet> {
+
+    private final PlayerConnection connection;
+
+    public PacketEncoder(final @NotNull PlayerConnection connection) {
+        this.connection = Objects.requireNonNull(connection, "connection must not be null");
+    }
 
     @Override
     protected void encode(final ChannelHandlerContext ctx, final Packet msg, final ByteBuf out) {
         writeVarInt(out, msg.getId());
-        msg.write(out);
+        msg.write(this.connection, out);
     }
 
 }

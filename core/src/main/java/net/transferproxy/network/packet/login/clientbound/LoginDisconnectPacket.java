@@ -24,11 +24,13 @@
 
 package net.transferproxy.network.packet.login.clientbound;
 
+import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import io.netty.buffer.ByteBuf;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static net.transferproxy.util.BufUtil.readString;
 import static net.transferproxy.util.BufUtil.writeString;
@@ -44,7 +46,7 @@ public record LoginDisconnectPacket(String json) implements Packet {
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeString(buf, this.json);
     }
 

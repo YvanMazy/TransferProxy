@@ -37,6 +37,7 @@ import net.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import io.netty.buffer.ByteBuf;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static net.transferproxy.util.BufUtil.*;
 
@@ -65,7 +66,7 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeVarInt(buf, this.protocol);
         writeString(buf, this.hostname, 255);
         buf.writeShort(this.hostPort);

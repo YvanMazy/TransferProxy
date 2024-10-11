@@ -24,11 +24,13 @@
 
 package net.transferproxy.network.packet.config.clientbound;
 
+import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.network.packet.built.BuiltPacket;
 import net.transferproxy.network.packet.built.BuiltPacketImpl;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public record ResetChatPacket() implements Packet {
 
@@ -39,7 +41,7 @@ public record ResetChatPacket() implements Packet {
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         // do nothing
     }
 

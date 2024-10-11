@@ -24,14 +24,6 @@
 
 package net.transferproxy.network;
 
-import net.transferproxy.api.TransferProxy;
-import net.transferproxy.api.configuration.ProxyConfiguration;
-import net.transferproxy.api.network.NetworkServer;
-import net.transferproxy.network.connection.PlayerConnectionImpl;
-import net.transferproxy.network.frame.clientbound.PacketEncoder;
-import net.transferproxy.network.frame.clientbound.VarIntFrameEncoder;
-import net.transferproxy.network.frame.serverbound.PacketDecoder;
-import net.transferproxy.network.frame.serverbound.VarIntFrameDecoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
@@ -45,6 +37,15 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import net.transferproxy.api.TransferProxy;
+import net.transferproxy.api.configuration.ProxyConfiguration;
+import net.transferproxy.api.network.NetworkServer;
+import net.transferproxy.network.connection.PlayerConnectionImpl;
+import net.transferproxy.network.frame.clientbound.PacketEncoder;
+import net.transferproxy.network.frame.clientbound.VarIntFrameEncoder;
+import net.transferproxy.network.frame.serverbound.PacketDecoder;
+import net.transferproxy.network.frame.serverbound.VarIntFrameDecoder;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +56,6 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyNetworkServer.class);
     private static final ChannelHandler FRAME_ENCODER = new VarIntFrameEncoder();
-    private static final ChannelHandler PACKET_ENCODER = new PacketEncoder();
 
     private final ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     private Channel channel;
@@ -124,7 +124,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
     }
 
     @Override
-    protected void initChannel(final Channel channel) {
+    protected void initChannel(final @NotNull Channel channel) {
         this.group.add(channel);
         final PlayerConnectionImpl connection = new PlayerConnectionImpl(channel);
         final ChannelPipeline pipeline = channel.pipeline();
@@ -133,7 +133,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
                 .addLast("splitter", new VarIntFrameDecoder())
                 .addLast("decoder", new PacketDecoder(connection))
                 .addLast("prepender", FRAME_ENCODER);
-        pipeline.addLast("encoder", PACKET_ENCODER).addLast("handler", connection);
+        pipeline.addLast("encoder", new PacketEncoder(connection)).addLast("handler", connection);
     }
 
     @Override

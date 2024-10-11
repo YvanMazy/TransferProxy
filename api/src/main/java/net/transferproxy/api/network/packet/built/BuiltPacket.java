@@ -24,10 +24,12 @@
 
 package net.transferproxy.api.network.packet.built;
 
-import net.transferproxy.api.network.packet.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface BuiltPacket extends Packet {
 
@@ -35,6 +37,11 @@ public interface BuiltPacket extends Packet {
 
     @Override
     default void write(final @NotNull ByteBuf buf) {
+        throwIllegalState();
+    }
+
+    @Override
+    default void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         throwIllegalState();
     }
 

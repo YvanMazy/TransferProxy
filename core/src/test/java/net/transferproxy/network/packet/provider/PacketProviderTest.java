@@ -25,6 +25,7 @@
 package net.transferproxy.network.packet.provider;
 
 import net.transferproxy.api.network.connection.ConnectionState;
+import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,12 +35,13 @@ class PacketProviderTest {
 
     @Test
     void testAlwaysFoundProvidersForConnectionState() {
+        final PacketProviderGroup group = PacketProviderGroups.getDefaultGroup();
         for (final ConnectionState state : ConnectionState.values()) {
             if (state == ConnectionState.CLOSED) {
-                assertNull(PacketProvider.getProviders(ConnectionState.CLOSED));
+                assertNull(group.getProviders(ConnectionState.CLOSED));
                 return;
             }
-            assertNotNull(PacketProvider.getProviders(state), "No provider found for state: " + state);
+            assertNotNull(group.getProviders(state), "No provider found for state: " + state);
         }
     }
 

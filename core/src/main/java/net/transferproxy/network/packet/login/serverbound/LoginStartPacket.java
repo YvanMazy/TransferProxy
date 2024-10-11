@@ -31,6 +31,7 @@ import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public record LoginStartPacket(String name, UUID uuid) implements ServerboundPac
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeString(buf, this.name, 16);
         writeUUID(buf, this.uuid);
     }

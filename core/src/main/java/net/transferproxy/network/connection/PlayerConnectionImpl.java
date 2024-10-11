@@ -24,21 +24,6 @@
 
 package net.transferproxy.network.connection;
 
-import net.transferproxy.api.TransferProxy;
-import net.transferproxy.api.configuration.ProxyConfiguration;
-import net.transferproxy.api.network.connection.ConnectionState;
-import net.transferproxy.api.network.connection.PlayerConnection;
-import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.api.network.packet.built.BuiltPacket;
-import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
-import net.transferproxy.api.profile.ClientInformation;
-import net.transferproxy.api.status.StatusResponse;
-import net.transferproxy.api.util.CookieUtil;
-import net.transferproxy.network.packet.config.clientbound.*;
-import net.transferproxy.network.packet.login.clientbound.LoginCookieRequestPacket;
-import net.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
-import net.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
-import net.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -47,6 +32,23 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.unix.Errors;
 import io.netty.handler.timeout.ReadTimeoutException;
 import net.kyori.adventure.text.Component;
+import net.transferproxy.api.TransferProxy;
+import net.transferproxy.api.configuration.ProxyConfiguration;
+import net.transferproxy.api.network.connection.ConnectionState;
+import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.packet.built.BuiltPacket;
+import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
+import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
+import net.transferproxy.api.profile.ClientInformation;
+import net.transferproxy.api.status.StatusResponse;
+import net.transferproxy.api.util.CookieUtil;
+import net.transferproxy.network.packet.config.clientbound.*;
+import net.transferproxy.network.packet.login.clientbound.LoginCookieRequestPacket;
+import net.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
+import net.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
+import net.transferproxy.network.packet.provider.PacketProviderGroups;
+import net.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -64,6 +66,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerConnectionImpl.class);
 
     private final Channel channel;
+    private PacketProviderGroup packetProviderGroup;
 
     private ConnectionState state = ConnectionState.HANDSHAKE;
     private int protocol;
@@ -278,6 +281,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     @Override
     public void setProtocol(final int protocol) {
         this.protocol = protocol;
+        this.packetProviderGroup = TransferProxy.getInstance().getModuleManager().getPacketProviderGroupFunction().apply(protocol);
     }
 
     @Override
@@ -292,6 +296,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
+    public void setPacketProviderGroup(final @NotNull PacketProviderGroup packetProviderGroup) {
+        this.packetProviderGroup = Objects.requireNonNull(packetProviderGroup, "packetProviderGroup must not be null");
+    }
+
+    @Override
     public String getName() {
         return this.name;
     }
@@ -299,6 +308,12 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     @Override
     public UUID getUUID() {
         return this.uuid;
+    }
+
+    @Override
+    @NotNull
+    public PacketProviderGroup getPacketProviderGroup() {
+        return Objects.requireNonNullElse(this.packetProviderGroup, PacketProviderGroups.getDefaultGroup());
     }
 
     @Override

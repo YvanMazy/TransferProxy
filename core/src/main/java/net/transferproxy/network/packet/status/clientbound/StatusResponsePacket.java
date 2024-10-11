@@ -24,10 +24,12 @@
 
 package net.transferproxy.network.packet.status.clientbound;
 
+import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.status.StatusResponse;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static net.transferproxy.util.BufUtil.readString;
 import static net.transferproxy.util.BufUtil.writeString;
@@ -40,7 +42,7 @@ public record StatusResponsePacket(StatusResponse response) implements Packet {
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeString(buf, gson().serializer().toJson(this.response));
     }
 

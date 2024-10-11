@@ -31,7 +31,7 @@ class LoginAcknowledgedPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new LoginAcknowledgedPacket(), LoginAcknowledgedPacket::new);
+        this.testOnlyBuffer(new LoginAcknowledgedPacket(), LoginAcknowledgedPacket::new);
     }
 
 }

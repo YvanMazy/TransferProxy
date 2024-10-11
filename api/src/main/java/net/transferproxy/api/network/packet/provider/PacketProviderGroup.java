@@ -22,34 +22,15 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.network.packet.config.serverbound;
+package net.transferproxy.api.network.packet.provider;
 
-import net.transferproxy.api.util.CookieUtil;
-import net.transferproxy.network.packet.PacketTestBase;
-import org.junit.jupiter.api.Test;
+import net.transferproxy.api.network.connection.ConnectionState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-class ConfigCookieResponsePacketTest extends PacketTestBase {
+@FunctionalInterface
+public interface PacketProviderGroup {
 
-    @Test
-    void testWriteReadConsistency() {
-        this.testOnlyBuffer(new ConfigCookieResponsePacket("minecraft:cookie_key", new byte[] {1, 2, 3}), ConfigCookieResponsePacket::new);
-    }
-
-    @Test
-    void testWriteReadConsistencyWithNoValue() {
-        this.testOnlyBuffer(new ConfigCookieResponsePacket("minecraft:cookie_key", null), ConfigCookieResponsePacket::new);
-    }
-
-    @Test
-    void testWriteReadWithTooLongKey() {
-        this.testFail(new ConfigCookieResponsePacket("minecraft:" + "a".repeat(Short.MAX_VALUE - 9), new byte[5]),
-                ConfigCookieResponsePacket::new);
-    }
-
-    @Test
-    void testWriteReadWithTooLongData() {
-        this.testFail(new ConfigCookieResponsePacket("minecraft:cookie_key", new byte[CookieUtil.getMaxCookieSize() + 1]),
-                ConfigCookieResponsePacket::new);
-    }
+    PacketProvider @Nullable [] getProviders(final @NotNull ConnectionState state);
 
 }

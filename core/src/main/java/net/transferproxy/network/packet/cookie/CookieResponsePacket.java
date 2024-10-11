@@ -56,7 +56,7 @@ public abstract class CookieResponsePacket implements ServerboundPacket {
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeString(buf, this.key);
         if (this.payload != null) {
             buf.writeBoolean(true);

@@ -31,7 +31,7 @@ class StatusRequestPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new StatusRequestPacket(), StatusRequestPacket::new);
+        this.testOnlyBuffer(new StatusRequestPacket(), StatusRequestPacket::new);
     }
 
 }

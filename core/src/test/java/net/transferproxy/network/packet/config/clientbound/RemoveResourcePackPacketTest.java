@@ -33,7 +33,7 @@ class RemoveResourcePackPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new RemoveResourcePackPacket(UUID.randomUUID()), RemoveResourcePackPacket::new);
+        this.testOnlyBuffer(new RemoveResourcePackPacket(UUID.randomUUID()), RemoveResourcePackPacket::new);
     }
 
 }

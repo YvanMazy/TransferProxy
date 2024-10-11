@@ -31,7 +31,7 @@ class ResetChatPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new ResetChatPacket(), ResetChatPacket::new);
+        this.testOnlyBuffer(new ResetChatPacket(), ResetChatPacket::new);
     }
 
 }

@@ -31,7 +31,7 @@ class StoreCookiePacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new StoreCookiePacket("minecraft:cookie_key", new byte[] {1, 2, 3}), StoreCookiePacket::new);
+        this.testOnlyBuffer(new StoreCookiePacket("minecraft:cookie_key", new byte[] {1, 2, 3}), StoreCookiePacket::new);
     }
 
 }

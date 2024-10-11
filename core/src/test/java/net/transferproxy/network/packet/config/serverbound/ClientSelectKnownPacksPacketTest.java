@@ -34,9 +34,9 @@ class ClientSelectKnownPacksPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new ClientSelectKnownPacksPacket(List.of(new KnownPack("namespace", "id", "version"))),
+        this.testOnlyBuffer(new ClientSelectKnownPacksPacket(List.of(new KnownPack("namespace", "id", "version"))),
                 ClientSelectKnownPacksPacket::from);
-        this.test(new ClientSelectKnownPacksPacket(List.of()), ClientSelectKnownPacksPacket::from);
+        this.testOnlyBuffer(new ClientSelectKnownPacksPacket(List.of()), ClientSelectKnownPacksPacket::from);
     }
 
 }

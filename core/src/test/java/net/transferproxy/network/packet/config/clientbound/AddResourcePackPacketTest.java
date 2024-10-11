@@ -34,7 +34,7 @@ class AddResourcePackPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new AddResourcePackPacket(UUID.randomUUID(), "url", "hash", true, TestGenerationUtil.generateComplexComponent()),
+        this.testOnlyBuffer(new AddResourcePackPacket(UUID.randomUUID(), "url", "hash", true, TestGenerationUtil.generateComplexComponent()),
                 AddResourcePackPacket::new);
     }
 

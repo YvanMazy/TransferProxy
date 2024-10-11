@@ -31,7 +31,7 @@ class TransferPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new TransferPacket("localhost", 25565), TransferPacket::new);
+        this.testOnlyBuffer(new TransferPacket("localhost", 25565), TransferPacket::new);
     }
 
 }

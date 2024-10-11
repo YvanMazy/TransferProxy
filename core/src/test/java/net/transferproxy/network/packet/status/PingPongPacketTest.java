@@ -33,7 +33,7 @@ class PingPongPacketTest extends PacketTestBase {
     @ParameterizedTest
     @ValueSource(longs = {0L, 5L, Long.MIN_VALUE, Long.MAX_VALUE})
     void testWriteReadConsistency(final long payload) {
-        this.test(new PingPongPacket(payload), PingPongPacket::new);
+        this.testOnlyBuffer(new PingPongPacket(payload), PingPongPacket::new);
     }
 
 }

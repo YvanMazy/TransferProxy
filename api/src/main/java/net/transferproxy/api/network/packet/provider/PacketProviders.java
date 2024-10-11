@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.network.packet.provider;
+package net.transferproxy.api.network.packet.provider;
 
 import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.network.packet.Packet;
@@ -35,53 +35,57 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-final class PacketProviders {
+public final class PacketProviders {
 
-    static PacketProvider @NotNull [] providers(final @Nullable PacketProviders.OnlyBufferProvider provider) {
+    public static PacketProvider @NotNull [] providers(final @Nullable PacketProviders.OnlyBufferProvider provider) {
         return providers(provider != null ? provider.toProvider() : null);
     }
 
-    static PacketProvider @NotNull [] providers(final @Nullable PacketProvider provider) {
+    public static PacketProvider @NotNull [] providers(final @Nullable PacketProvider provider) {
         return newBuilder().put(provider).build();
     }
 
-    static PacketProvider @NotNull [] providers(final @Nullable PacketProviders.OnlyBufferProvider... providers) {
+    public static PacketProvider @NotNull [] providers(final @Nullable PacketProviders.OnlyBufferProvider... providers) {
         return Stream.of(providers).map(p -> p != null ? p.toProvider() : null).toArray(PacketProvider[]::new);
     }
 
     @Contract("-> new")
-    static @NotNull Builder newBuilder() {
+    public static @NotNull Builder newBuilder() {
         return new Builder();
     }
 
-    static class Builder {
+    private PacketProviders() throws IllegalAccessException {
+        throw new IllegalAccessException("You cannot instantiate this class");
+    }
+
+    public static class Builder {
 
         private final List<PacketProvider> providers = new ArrayList<>();
 
         @Contract("-> this")
-        @NotNull Builder putNull() {
+        public @NotNull Builder putNull() {
             return this.put(null);
         }
 
         @Contract("_ -> this")
-        @NotNull Builder putOnlyBuffer(final @Nullable OnlyBufferProvider provider) {
+        public @NotNull Builder putOnlyBuffer(final @Nullable OnlyBufferProvider provider) {
             return this.put(provider != null ? provider.toProvider() : null);
         }
 
         @Contract("_ -> this")
-        @NotNull Builder put(final @Nullable PacketProvider provider) {
+        public @NotNull Builder put(final @Nullable PacketProvider provider) {
             this.providers.add(provider);
             return this;
         }
 
         @Contract("-> new")
-        PacketProvider @NotNull [] build() {
+        public PacketProvider @NotNull [] build() {
             return this.providers.toArray(PacketProvider[]::new);
         }
 
     }
 
-    interface OnlyBufferProvider extends Function<ByteBuf, Packet> {
+    public interface OnlyBufferProvider extends Function<ByteBuf, Packet> {
 
         @NotNull
         default PacketProvider toProvider() {

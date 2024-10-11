@@ -33,7 +33,7 @@ class LoginStartPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new LoginStartPacket("Darkkraft", UUID.fromString("169033d6-0967-49dc-828e-a6c48665e08f")), LoginStartPacket::new);
+        this.testOnlyBuffer(new LoginStartPacket("Darkkraft", UUID.fromString("169033d6-0967-49dc-828e-a6c48665e08f")), LoginStartPacket::new);
     }
 
 }

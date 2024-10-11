@@ -30,6 +30,7 @@ import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import net.transferproxy.network.packet.built.BuiltPacketImpl;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public record PingPongPacket(long payload) implements ServerboundPacket {
 
@@ -45,7 +46,7 @@ public record PingPongPacket(long payload) implements ServerboundPacket {
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         buf.writeLong(this.payload);
     }
 

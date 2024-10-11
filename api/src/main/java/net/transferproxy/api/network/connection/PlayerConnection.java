@@ -24,12 +24,13 @@
 
 package net.transferproxy.api.network.connection;
 
-import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.api.profile.ClientInformation;
-import net.transferproxy.api.status.StatusResponse;
 import io.netty.channel.Channel;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
+import net.transferproxy.api.profile.ClientInformation;
+import net.transferproxy.api.status.StatusResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,8 +54,7 @@ public interface PlayerConnection {
         return this.fetchCookie(cookieKey.asString());
     }
 
-    @NotNull
-    CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey);
+    @NotNull CompletableFuture<byte[]> fetchCookie(final @NotNull String cookieKey);
 
     default void storeCookie(final @NotNull Key cookieKey, final byte @NotNull [] payload) {
         this.storeCookie(cookieKey.asString(), payload);
@@ -68,8 +68,7 @@ public interface PlayerConnection {
 
     void handleCookieResponse(final @NotNull String cookieKey, final byte @Nullable [] payload);
 
-    @NotNull
-    Map<String, CompletableFuture<byte[]>> getPendingCookies();
+    @NotNull Map<String, CompletableFuture<byte[]>> getPendingCookies();
 
     default void removeResourcePacks() {
         this.removeResourcePack(null);
@@ -103,23 +102,23 @@ public interface PlayerConnection {
 
     void setBrand(final @Nullable String brand);
 
+    void setPacketProviderGroup(final @NotNull PacketProviderGroup group);
+
     String getName();
 
     UUID getUUID();
 
-    @Nullable
-    ClientInformation getInformation();
+    @NotNull PacketProviderGroup getPacketProviderGroup();
 
-    @NotNull
-    Channel getChannel();
+    @Nullable ClientInformation getInformation();
 
-    @NotNull
-    ConnectionState getState();
+    @NotNull Channel getChannel();
+
+    @NotNull ConnectionState getState();
 
     int getProtocol();
 
-    @NotNull
-    String getHostname();
+    @NotNull String getHostname();
 
     int getHostPort();
 
@@ -127,8 +126,7 @@ public interface PlayerConnection {
         return this.getBrand() != null;
     }
 
-    @Nullable
-    String getBrand();
+    @Nullable String getBrand();
 
     boolean isFromTransfer();
 

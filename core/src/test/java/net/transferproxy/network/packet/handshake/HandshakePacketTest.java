@@ -32,7 +32,7 @@ class HandshakePacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new HandshakePacket(-1, "localhost", 25565, ConnectionState.LOGIN), HandshakePacket::new);
+        this.testOnlyBuffer(new HandshakePacket(-1, "localhost", 25565, ConnectionState.LOGIN), HandshakePacket::new);
     }
 
     @Test

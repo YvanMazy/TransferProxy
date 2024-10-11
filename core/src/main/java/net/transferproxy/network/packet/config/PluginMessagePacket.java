@@ -61,7 +61,7 @@ public record PluginMessagePacket(String channel, @Nullable PayloadData payload)
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         writeString(buf, this.channel);
         if (this.payload != null) {
             this.payload.write(buf);

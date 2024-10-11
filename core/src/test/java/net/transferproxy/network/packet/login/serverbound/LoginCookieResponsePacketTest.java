@@ -31,7 +31,7 @@ class LoginCookieResponsePacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.test(new LoginCookieResponsePacket("minecraft:cookie_key", new byte[] {1, 2, 3}), LoginCookieResponsePacket::new);
+        this.testOnlyBuffer(new LoginCookieResponsePacket("minecraft:cookie_key", new byte[] {1, 2, 3}), LoginCookieResponsePacket::new);
     }
 
 }

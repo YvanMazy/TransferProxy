@@ -24,11 +24,13 @@
 
 package net.transferproxy.network.packet.pack;
 
+import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.resourcepack.KnownPack;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.DecoderException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,7 @@ public abstract class SelectKnownPacksPacket implements Packet {
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         final int size = this.packs.size();
         writeVarInt(buf, size);
         for (final KnownPack pack : this.packs) {

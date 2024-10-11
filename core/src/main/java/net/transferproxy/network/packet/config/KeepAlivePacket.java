@@ -28,6 +28,7 @@ import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public record KeepAlivePacket(long payload) implements ServerboundPacket {
 
@@ -41,7 +42,7 @@ public record KeepAlivePacket(long payload) implements ServerboundPacket {
     }
 
     @Override
-    public void write(final @NotNull ByteBuf buf) {
+    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         buf.writeLong(this.payload);
     }
 

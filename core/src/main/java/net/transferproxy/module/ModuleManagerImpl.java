@@ -26,17 +26,21 @@ package net.transferproxy.module;
 
 import net.transferproxy.api.event.EventManager;
 import net.transferproxy.api.module.ModuleManager;
+import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.plugin.PluginManager;
 import net.transferproxy.event.EventManagerImpl;
+import net.transferproxy.network.packet.provider.PacketProviderGroups;
 import net.transferproxy.plugin.PluginManagerImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.IntFunction;
 
 public class ModuleManagerImpl implements ModuleManager {
 
     private EventManager eventManager;
     private PluginManager pluginManager;
+    private IntFunction<PacketProviderGroup> packetProviderGroupFunction;
 
     @Override
     public void initializeDefaults() {
@@ -45,6 +49,9 @@ public class ModuleManagerImpl implements ModuleManager {
         }
         if (this.pluginManager == null) {
             this.pluginManager = new PluginManagerImpl();
+        }
+        if (this.packetProviderGroupFunction == null) {
+            this.packetProviderGroupFunction = PacketProviderGroups::determineGroup;
         }
     }
 
@@ -59,6 +66,11 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     @Override
+    public @NotNull IntFunction<PacketProviderGroup> getPacketProviderGroupFunction() {
+        return this.packetProviderGroupFunction;
+    }
+
+    @Override
     public void setPluginManager(final @NotNull PluginManager pluginManager) {
         this.pluginManager = Objects.requireNonNull(pluginManager, "pluginManager must not be null");
     }
@@ -66,6 +78,12 @@ public class ModuleManagerImpl implements ModuleManager {
     @Override
     public void setEventManager(final @NotNull EventManager eventManager) {
         this.eventManager = Objects.requireNonNull(eventManager, "eventManager must not be null");
+    }
+
+    @Override
+    public void setPacketProviderGroupFunction(final @NotNull IntFunction<PacketProviderGroup> packetProviderGroupFunction) {
+        this.packetProviderGroupFunction =
+                Objects.requireNonNull(packetProviderGroupFunction, "packetProviderGroupFunction must not be null");
     }
 
 }

@@ -25,11 +25,17 @@
 package net.transferproxy.api.network.packet;
 
 import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.network.connection.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Packet {
 
-    void write(final @NotNull ByteBuf buf);
+    default void write(final @NotNull ByteBuf buf) {
+        this.write(null, buf);
+    }
+
+    void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf);
 
     int getId();
 
