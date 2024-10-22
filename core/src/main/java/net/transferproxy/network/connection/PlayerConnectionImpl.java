@@ -190,7 +190,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     }
 
     @Override
-    public void channelInactive(final ChannelHandlerContext ctx) {
+    public void channelInactive(final @NotNull ChannelHandlerContext ctx) {
         if (this.state.isLogin() && TransferProxy.getInstance().getConfiguration().getLogging().isLogDisconnect()) {
             LOGGER.info("Player {} disconnected on state {}", this.getDisplay(), this.state);
         }

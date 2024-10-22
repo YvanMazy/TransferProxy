@@ -47,7 +47,7 @@ import static org.mockito.Mockito.*;
 
 public class PacketTestBase {
 
-    protected static final int DEFAULT_MOCK_PROTOCOL = 770; // 1.21.2
+    protected static final int DEFAULT_MOCK_PROTOCOL = 768; // 1.21.2
 
     protected static PlayerConnection mockConnection;
 
