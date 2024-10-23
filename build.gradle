@@ -1,5 +1,5 @@
 group = 'net.transferproxy'
-version = '1.0.6'
+version = '1.0.7'
 
 buildscript {
     repositories {
@@ -13,7 +13,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     group = 'net.transferproxy'
-    version = '1.0.6'
+    version = '1.0.7'
 
     repositories {
         mavenCentral()
