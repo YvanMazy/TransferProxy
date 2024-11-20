@@ -1,14 +1,35 @@
+buildscript() {
+    repositories {
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+    dependencies {
+        classpath 'com.github.YvanMazy.MinecraftRemapperGradle:MinecraftRemapperGradle:9b8f7b1c98'
+    }
+}
+
 plugins {
     id 'com.gradleup.shadow' version '8.3.0'
 }
 
+apply plugin: 'be.yvanmazy.minecraftremapper.gradle'
+
 dependencies {
     // Project API
     api project(":api")
-    testImplementation project(path: ':api', configuration: 'testClasses')
 
     // Logging
     api 'org.fusesource.jansi:jansi:2.4.1'
+
+    // Testing
+    testImplementation project(path: ':api', configuration: 'testClasses')
+}
+
+minecraftRemapper {
+    version = "1.21.3"
+    directionType = 'CLIENT'
+    dependenciesConfigurations = ["integrationTestImplementation"]
 }
 
 shadowJar {
@@ -18,15 +39,44 @@ shadowJar {
     archiveClassifier.set('')
 }
 
-assemble.dependsOn shadowJar
-
-task copyJar(type: Copy) {
+tasks.register('copyJar', Copy) {
     onlyIf { !gradle.startParameter.taskNames.contains('assemble') }
-    dependsOn shadowJar
+    dependsOn(tasks.shadowJar)
 
-    from shadowJar.archiveFile
-    into project.parent.buildDir
+    from tasks.shadowJar.archiveFile
+    into project.parent.layout.buildDirectory
     rename { "${project.parent.name}-${project.parent.version}.jar" }
 }
 
-tasks.shadowJar.finalizedBy(copyJar)
+assemble.dependsOn shadowJar
+
+testing {
+    suites.register('integrationTest', JvmTestSuite) {
+        targets.configureEach {
+
+            repositories {
+                maven { url 'https://jitpack.io' }
+            }
+
+            dependencies {
+                implementation 'com.github.YvanMazy:RemotedMinecraft:c68ea87d1b'
+                implementation project()
+            }
+        }
+    }
+}
+
+def integrationJavaToolchain = {
+    languageVersion = JavaLanguageVersion.of(21)
+    vendor = java.toolchain.vendor
+}
+
+integrationTest {
+    systemProperty 'library.cache.dir', gradle.gradleUserHomeDir.toPath().resolve('caches').resolve('TransferProxy').resolve('data').toString();
+    systemProperty 'tinylog.configuration', 'test-tinylog.properties'
+    javaLauncher.set(javaToolchains.launcherFor(integrationJavaToolchain))
+}
+
+tasks.compileIntegrationTestJava {
+    javaCompiler.set(javaToolchains.compilerFor(integrationJavaToolchain))
+}

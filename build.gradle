@@ -10,6 +10,7 @@ buildscript {
 allprojects {
     apply plugin: 'java'
     apply plugin: 'java-library'
+    apply plugin: 'jvm-test-suite'
     apply plugin: 'maven-publish'
 
     group = 'net.transferproxy'
@@ -29,19 +30,12 @@ allprojects {
 
         // Annotations
         api 'org.jetbrains:annotations:24.1.0'
-
-        testImplementation platform('org.junit:junit-bom:5.11.0')
-        testImplementation 'org.junit.jupiter:junit-jupiter'
-        testImplementation 'org.mockito:mockito-core:5.13.0'
-    }
-
-    test {
-        useJUnitPlatform()
     }
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
+            languageVersion = JavaLanguageVersion.of(17)
+            vendor = JvmVendorSpec.ADOPTIUM
         }
     }
 
@@ -51,5 +45,25 @@ allprojects {
                 from components.java
             }
         }
+    }
+
+    def applyTestDependencies = { config ->
+        config.implementation config.platform('org.junit:junit-bom:5.11.3')
+        config.implementation 'org.junit.jupiter:junit-jupiter'
+        config.implementation 'org.mockito:mockito-core:5.14.2'
+    }
+
+    plugins.withType(JvmTestSuitePlugin).tap {
+        configureEach {
+            testing {
+                suites.configureEach {
+                    applyTestDependencies(dependencies)
+                }
+            }
+        }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
