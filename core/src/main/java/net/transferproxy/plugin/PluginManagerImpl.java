@@ -28,6 +28,7 @@ import net.transferproxy.api.plugin.Plugin;
 import net.transferproxy.api.plugin.PluginManager;
 import net.transferproxy.api.plugin.classloader.PluginClassloader;
 import net.transferproxy.api.plugin.info.PluginInfo;
+import net.transferproxy.api.util.PropertyHelper;
 import net.transferproxy.api.util.ResourceUtil;
 import net.transferproxy.plugin.classloader.PluginClassloaderImpl;
 import org.jetbrains.annotations.NotNull;
@@ -49,21 +50,22 @@ import java.util.stream.Stream;
 public class PluginManagerImpl implements PluginManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginManagerImpl.class);
-    private static final Path ROOT_PATH = Path.of("plugins");
+    private static final Path DEFAULT_PLUGIN_DIRECTORY = Path.of("plugins");
 
+    private final Path pluginDirectory = PropertyHelper.resolve("transferproxy.plugin.directory", DEFAULT_PLUGIN_DIRECTORY);
     private final List<Plugin> plugins = new CopyOnWriteArrayList<>();
 
     @Override
     public void start() {
-        if (Files.notExists(ROOT_PATH)) {
+        if (Files.notExists(this.pluginDirectory)) {
             try {
-                Files.createDirectories(ROOT_PATH);
+                Files.createDirectories(this.pluginDirectory);
             } catch (final IOException e) {
                 LOGGER.error("Plugins directory cannot be created", e);
                 return;
             }
         }
-        try (final Stream<Path> stream = Files.list(ROOT_PATH)
+        try (final Stream<Path> stream = Files.list(this.pluginDirectory)
                 .filter(Files::isRegularFile)
                 .filter(f -> f.getFileName().toString().endsWith(".jar"))) {
             for (final Path path : stream.toList()) {
@@ -110,6 +112,11 @@ public class PluginManagerImpl implements PluginManager {
         } catch (final Exception e) {
             LOGGER.error("Plugin '{}' cannot be loaded", path.getFileName(), e);
         }
+    }
+
+    @Override
+    public @NotNull Path getPluginDirectory() {
+        return this.pluginDirectory;
     }
 
     private PluginInfo loadPluginInfo(final Path path) throws IOException {

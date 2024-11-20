@@ -22,21 +22,36 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.api.plugin;
+package net.transferproxy.api.util;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
-import java.util.Collection;
 
-public interface PluginManager {
+public final class PropertyHelper {
 
-    void start();
+    public static final String BASE_DIRECTORY_KEY = "transferproxy.base.directory";
 
-    void stop();
+    private PropertyHelper() throws IllegalAccessException {
+        throw new IllegalAccessException("You cannot instantiate a utility class");
+    }
 
-    @NotNull Collection<Plugin> getPlugins();
+    public static @NotNull Path resolve(final @NotNull String propertyKey, final @NotNull Path defaultPath) {
+        return resolve(propertyKey, defaultPath, defaultPath);
+    }
 
-    @NotNull Path getPluginDirectory();
+    public static @NotNull Path resolve(final @NotNull String propertyKey,
+                                        final @NotNull Path relativePath,
+                                        final @NotNull Path defaultPath) {
+        String property = System.getProperty(propertyKey);
+        if (property != null) {
+            return Path.of(property);
+        }
+        property = System.getProperty(BASE_DIRECTORY_KEY);
+        if (property != null) {
+            return Path.of(property).resolve(relativePath);
+        }
+        return defaultPath;
+    }
 
 }

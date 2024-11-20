@@ -48,7 +48,12 @@ public interface Plugin {
     }
 
     default <T> T makeConfiguration(final @NotNull String fileName, final @NotNull Class<T> confiurationClass) {
-        final Path path = Path.of("plugins").resolve(this.getInfo().getName()).resolve(fileName);
+        final Path path = TransferProxy.getInstance()
+                .getModuleManager()
+                .getPluginManager()
+                .getPluginDirectory()
+                .resolve(this.getInfo().getName())
+                .resolve(fileName);
         try {
             return ResourceUtil.copyAndReadYaml(path, confiurationClass);
         } catch (final IOException e) {

@@ -28,6 +28,7 @@ import net.transferproxy.TransferProxyImpl;
 import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.configuration.ProxyConfiguration;
 import net.transferproxy.api.configuration.yaml.YamlProxyConfiguration;
+import net.transferproxy.api.util.PropertyHelper;
 import net.transferproxy.api.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +39,13 @@ import java.nio.file.Path;
 public final class Main {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    private static final Path CONFIG_PATH = Path.of("./config.yml");
+    private static final Path DEFAULT_CONFIG_PATH = Path.of("./config.yml");
 
     public static void main(final String[] args) {
         final ProxyConfiguration configuration;
         try {
-            configuration = ResourceUtil.copyAndReadYaml(CONFIG_PATH, YamlProxyConfiguration.class);
+            final Path configPath = PropertyHelper.resolve("transferproxy.config.path", DEFAULT_CONFIG_PATH);
+            configuration = ResourceUtil.copyAndReadYaml(configPath, YamlProxyConfiguration.class);
         } catch (final IOException e) {
             LOGGER.error("Failed to load configuration", e);
             return;
