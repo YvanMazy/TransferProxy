@@ -27,7 +27,7 @@ dependencies {
 }
 
 minecraftRemapper {
-    version = "1.21.3"
+    version = "1.21.4"
     directionType = 'CLIENT'
     dependenciesConfigurations = ["integrationTestImplementation"]
 }
@@ -59,7 +59,8 @@ testing {
             }
 
             dependencies {
-                implementation 'com.github.YvanMazy:RemotedMinecraft:c68ea87d1b'
+                implementation 'com.github.YvanMazy:RemotedMinecraft:7f570a1787'
+                implementation 'org.junit.platform:junit-platform-launcher:1.11.3'
                 implementation project()
             }
         }
