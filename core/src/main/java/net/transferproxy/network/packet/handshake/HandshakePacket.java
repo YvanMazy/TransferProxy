@@ -24,20 +24,21 @@
 
 package net.transferproxy.network.packet.handshake;
 
+import io.netty.buffer.ByteBuf;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.configuration.ProxyConfiguration;
 import net.transferproxy.api.event.EventType;
 import net.transferproxy.api.network.connection.ConnectionState;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.api.network.packet.built.BuiltPacket;
+import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import net.transferproxy.network.packet.built.BuiltPacketImpl;
+import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
-import io.netty.buffer.ByteBuf;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static net.transferproxy.util.BufUtil.*;
 
@@ -67,7 +68,7 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         writeVarInt(buf, this.protocol);
         writeString(buf, this.hostname, 255);
         buf.writeShort(this.hostPort);

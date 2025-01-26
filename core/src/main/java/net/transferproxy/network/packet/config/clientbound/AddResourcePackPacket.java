@@ -24,14 +24,15 @@
 
 package net.transferproxy.network.packet.config.clientbound;
 
-import net.transferproxy.api.network.connection.PlayerConnection;
-import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.util.NBTUtil;
+import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.protocol.Protocolized;
+import net.transferproxy.api.util.ComponentProtocolUtil;
+import net.transferproxy.util.NBTUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -39,23 +40,27 @@ import static net.transferproxy.util.BufUtil.*;
 
 public record AddResourcePackPacket(UUID uuid, String url, String hash, boolean forced, Component promptMessage) implements Packet {
 
-    public AddResourcePackPacket(final @NotNull ByteBuf buf) {
+    public AddResourcePackPacket(final @NotNull PlayerConnection connection, final @NotNull ByteBuf buf) {
         this(readUUID(buf),
                 readString(buf),
                 readString(buf, 40),
                 buf.readBoolean(),
-                buf.readBoolean() ? GsonComponentSerializer.gson().deserializeFromTree(NBTUtil.deserialize(readTag(buf))) : null);
+                buf.readBoolean() ?
+                        ComponentProtocolUtil.getSerializer(connection.getProtocol())
+                                .deserializeFromTree(NBTUtil.deserialize(readTag(buf))) :
+                        null);
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         writeUUID(buf, this.uuid);
         writeString(buf, this.url);
         writeString(buf, this.hash, 40);
         buf.writeBoolean(this.forced);
         if (this.promptMessage != null) {
             buf.writeBoolean(true);
-            writeTag(buf, NBTUtil.serialize(GsonComponentSerializer.gson().serializeToTree(this.promptMessage)));
+            final JsonElement tree = ComponentProtocolUtil.getSerializer(protocolized.getProtocol()).serializeToTree(this.promptMessage);
+            writeTag(buf, NBTUtil.serialize(tree));
             return;
         }
         buf.writeBoolean(false);

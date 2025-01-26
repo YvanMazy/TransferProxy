@@ -29,6 +29,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
+import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.api.profile.ClientInformation;
 import net.transferproxy.api.status.StatusResponse;
 import net.transferproxy.api.util.CookieUtil;
@@ -41,7 +42,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 
-public interface PlayerConnection {
+public interface PlayerConnection extends Protocolized {
 
     /**
      * Transfers the player to another server using the default Minecraft port (<strong>25565</strong>).
@@ -291,6 +292,7 @@ public interface PlayerConnection {
      *
      * @return The protocol version number
      */
+    @Override
     int getProtocol();
 
     /**

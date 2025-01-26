@@ -36,7 +36,7 @@ class ConfigCookieRequestPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadWithTooLongKey() {
-        this.testFail(new ConfigCookieRequestPacket("minecraft:" + "a".repeat(Short.MAX_VALUE - 9)), ConfigCookieRequestPacket::new);
+        this.testFailOnlyBuffer(new ConfigCookieRequestPacket("minecraft:" + "a".repeat(Short.MAX_VALUE - 9)), ConfigCookieRequestPacket::new);
     }
 
 }

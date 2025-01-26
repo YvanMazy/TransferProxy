@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Yvan Mazy
+ * Copyright (c) 2025 Yvan Mazy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,37 +22,13 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.network.packet.status;
+package net.transferproxy.api.network.protocol;
 
-import io.netty.buffer.ByteBuf;
-import net.transferproxy.api.network.connection.PlayerConnection;
-import net.transferproxy.api.network.packet.built.BuiltPacket;
-import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
-import net.transferproxy.api.network.protocol.Protocolized;
-import net.transferproxy.network.packet.built.BuiltPacketImpl;
-import org.jetbrains.annotations.NotNull;
-
-public record PingPongPacket(long payload) implements ServerboundPacket {
-
-    private static final BuiltPacket PONG_PACKET = new BuiltPacketImpl(new PingPongPacket(0L));
-
-    public PingPongPacket(final @NotNull ByteBuf buf) {
-        this(buf.readLong());
-    }
+public record WrappedProtocolized(int protocol) implements Protocolized {
 
     @Override
-    public void handle(final @NotNull PlayerConnection connection) {
-        connection.sendPacketAndClose(PONG_PACKET);
-    }
-
-    @Override
-    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
-        buf.writeLong(this.payload);
-    }
-
-    @Override
-    public int getId() {
-        return 0x01;
+    public int getProtocol() {
+        return this.protocol;
     }
 
 }

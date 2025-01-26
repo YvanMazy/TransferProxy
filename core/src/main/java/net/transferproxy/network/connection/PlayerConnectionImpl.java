@@ -184,8 +184,9 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
         if (this.state != ConnectionState.LOGIN && this.state != ConnectionState.CONFIG) {
             throw new IllegalStateException("Invalid state to disconnect: " + this.state);
         }
-        this.sendPacketAndClose(
-                this.state == ConnectionState.LOGIN ? new LoginDisconnectPacket(reason) : new ConfigDisconnectPacket(reason));
+        this.sendPacketAndClose(this.state == ConnectionState.LOGIN ?
+                new LoginDisconnectPacket(this.protocol, reason) :
+                new ConfigDisconnectPacket(reason));
     }
 
     @Override

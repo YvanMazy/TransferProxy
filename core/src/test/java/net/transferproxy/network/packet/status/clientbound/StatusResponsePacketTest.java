@@ -35,7 +35,7 @@ class StatusResponsePacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.testOnlyBuffer(new StatusResponsePacket(StatusResponse.builder()
+        this.test(new StatusResponsePacket(StatusResponse.builder()
                 .description(TestGenerationUtil.generateComplexComponent())
                 .addEntry("Darkkraft", UUID.fromString("169033d6-0967-49dc-828e-a6c48665e08f"))
                 .addEntry("Random", UUID.randomUUID())

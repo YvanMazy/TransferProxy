@@ -25,10 +25,9 @@
 package net.transferproxy.network.packet.cookie;
 
 import io.netty.buffer.ByteBuf;
-import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.protocol.Protocolized;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -48,7 +47,7 @@ public abstract class CookieRequestPacket implements Packet {
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         writeString(buf, this.key);
     }
 

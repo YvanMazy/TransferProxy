@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Yvan Mazy
+ * Copyright (c) 2025 Yvan Mazy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,38 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.network.packet.config.serverbound;
+package net.transferproxy.network.packet.built;
 
-import net.transferproxy.api.util.CookieUtil;
-import net.transferproxy.network.packet.PacketTestBase;
-import org.junit.jupiter.api.Test;
+import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.protocol.Protocolized;
+import org.jetbrains.annotations.NotNull;
 
-class ConfigCookieResponsePacketTest extends PacketTestBase {
+import static net.transferproxy.util.BufUtil.*;
 
-    @Test
-    void testWriteReadConsistency() {
-        this.testOnlyBuffer(new ConfigCookieResponsePacket("minecraft:cookie_key", new byte[] {1, 2, 3}), ConfigCookieResponsePacket::new);
+public record DummyTestPacket(int protocol, String data) implements Packet {
+
+    public static final int ID = 0x05;
+
+    public DummyTestPacket(final ByteBuf buf) {
+        this(buf.readInt(), readString(buf));
     }
 
-    @Test
-    void testWriteReadConsistencyWithNoValue() {
-        this.testOnlyBuffer(new ConfigCookieResponsePacket("minecraft:cookie_key", null), ConfigCookieResponsePacket::new);
+    public DummyTestPacket {
+        if (data == null) {
+            throw new NullPointerException("data must not be null");
+        }
     }
 
-    @Test
-    void testWriteReadWithTooLongKey() {
-        this.testFailOnlyBuffer(new ConfigCookieResponsePacket("minecraft:" + "a".repeat(Short.MAX_VALUE - 9), new byte[5]),
-                ConfigCookieResponsePacket::new);
+    @Override
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
+        buf.writeInt(protocolized.getProtocol());
+        writeString(buf, this.data);
     }
 
-    @Test
-    void testWriteReadWithTooLongData() {
-        this.testFailOnlyBuffer(new ConfigCookieResponsePacket("minecraft:cookie_key", new byte[CookieUtil.getMaxCookieSize() + 1]),
-                ConfigCookieResponsePacket::new);
+    @Override
+    public int getId() {
+        return ID;
     }
 
 }

@@ -30,6 +30,7 @@ import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.util.BiIntFunction;
 import net.transferproxy.util.BufUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,6 +75,12 @@ public class PacketTestBase {
         assertEquals(0, this.buf.readableBytes());
     }
 
+    protected <T extends Packet> void testWithProtocol(final T packet, final BiIntFunction<ByteBuf, T> builder) {
+        packet.write(mockConnection, this.buf);
+        assertEquals(packet, builder.apply(mockConnection.getProtocol(), this.buf));
+        assertEquals(0, this.buf.readableBytes());
+    }
+
     protected <T extends Packet> void testWithoutOriginal(final T packet, final BiFunction<PlayerConnection, ByteBuf, T> builder) {
         packet.write(mockConnection, this.buf);
         final T read = builder.apply(mockConnection, this.buf);
@@ -82,7 +89,11 @@ public class PacketTestBase {
         assertEquals(read, builder.apply(mockConnection, this.buf));
     }
 
-    protected <T extends Packet> void testFail(final T packet, final Function<ByteBuf, T> builder) {
+    protected <T extends Packet> void testFailOnlyBuffer(final T packet, final Function<ByteBuf, T> builder) {
+        this.testFail(packet, (conn, buf) -> builder.apply(buf));
+    }
+
+    protected <T extends Packet> void testFail(final T packet, final BiFunction<PlayerConnection, ByteBuf, T> builder) {
         // Assert encoding failure
         assertThrows(EncoderException.class, () -> packet.write(mockConnection, this.buf));
 
@@ -99,9 +110,9 @@ public class PacketTestBase {
             mockedStatic.when(() -> BufUtil.readBytes(any(ByteBuf.class), anyInt())).thenAnswer(buildReadAnswer(BufUtil::readBytes));
 
             // Write with bypass
-            packet.write(this.buf);
+            packet.write(mockConnection, this.buf);
             // Check equality with bypass
-            assertEquals(packet, builder.apply(this.buf));
+            assertEquals(packet, builder.apply(mockConnection, this.buf));
 
             // Re-clear after write
             this.buf.clear();
@@ -111,7 +122,7 @@ public class PacketTestBase {
         }
 
         // Assert decoding failure
-        assertThrows(DecoderException.class, () -> builder.apply(this.buf));
+        assertThrows(DecoderException.class, () -> builder.apply(mockConnection, this.buf));
     }
 
     @AfterEach

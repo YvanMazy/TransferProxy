@@ -25,10 +25,9 @@
 package net.transferproxy.api.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.network.protocol.Protocolized;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a network packet that can be encoded into a byte buffer for transmission.
@@ -43,7 +42,7 @@ public interface Packet {
     /**
      * Writes this packet's data to the specified byte buffer without a player connection context.
      * <p>
-     * This default implementation delegates to {@link #write(PlayerConnection, ByteBuf)} with
+     * This default implementation delegates to {@link #write(Protocolized, ByteBuf)} with
      * a {@code null} connection parameter.
      * Implementations should override this method if connection-agnostic encoding requires different logic.
      * </p>
@@ -51,7 +50,7 @@ public interface Packet {
      * @param buf the target byte buffer to write data to (must not be {@code null})
      */
     default void write(final @NotNull ByteBuf buf) {
-        this.write(null, buf);
+        this.write(Protocolized.empty(), buf);
     }
 
     /**
@@ -64,10 +63,10 @@ public interface Packet {
      * </p>
      * Natively, connection can be null when the packet is converter to a snapshot.
      *
-     * @param connection the player connection context (maybe {@code null} if irrelevant)
+     * @param protocolized the context (maybe {@code null} if irrelevant)
      * @param buf the target byte buffer to write data to (must not be {@code null})
      */
-    void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf);
+    void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf);
 
     /**
      * Returns the unique numeric identifier for this packet type.

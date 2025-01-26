@@ -24,11 +24,10 @@
 
 package net.transferproxy.network.packet.config.clientbound;
 
-import net.transferproxy.api.network.connection.PlayerConnection;
-import net.transferproxy.api.network.packet.Packet;
 import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.protocol.Protocolized;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static net.transferproxy.util.BufUtil.*;
 
@@ -39,7 +38,7 @@ public record TransferPacket(String host, int port) implements Packet {
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         writeString(buf, this.host);
         writeVarInt(buf, this.port);
     }

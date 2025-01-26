@@ -24,11 +24,12 @@
 
 package net.transferproxy.network.packet.config;
 
+import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
+import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.network.packet.config.payload.BrandPayload;
 import net.transferproxy.network.packet.config.payload.PayloadData;
-import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +62,7 @@ public record PluginMessagePacket(String channel, @Nullable PayloadData payload)
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         writeString(buf, this.channel);
         if (this.payload != null) {
             this.payload.write(buf);

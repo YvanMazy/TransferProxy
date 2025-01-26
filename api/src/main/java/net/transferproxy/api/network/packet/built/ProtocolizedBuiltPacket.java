@@ -26,8 +26,8 @@ package net.transferproxy.api.network.packet.built;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.protocol.Protocolized;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,7 +63,7 @@ public interface ProtocolizedBuiltPacket extends Packet {
      */
     @Contract("_, _ -> fail")
     @Override
-    default void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    default void write(final @Nullable Protocolized protocolized, final @NotNull ByteBuf buf) {
         throwIllegalState();
     }
 

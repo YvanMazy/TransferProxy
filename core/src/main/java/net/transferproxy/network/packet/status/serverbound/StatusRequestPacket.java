@@ -24,13 +24,13 @@
 
 package net.transferproxy.network.packet.status.serverbound;
 
+import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.event.EventType;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
-import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.network.protocol.Protocolized;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public record StatusRequestPacket() implements ServerboundPacket {
 
@@ -44,7 +44,7 @@ public record StatusRequestPacket() implements ServerboundPacket {
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         // nothing to write
     }
 

@@ -24,25 +24,26 @@
 
 package net.transferproxy.network.packet.config.clientbound;
 
-import net.transferproxy.api.network.connection.PlayerConnection;
-import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.util.BufUtil;
-import net.transferproxy.util.NBTUtil;
+import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.protocol.Protocolized;
+import net.transferproxy.api.util.ComponentProtocolUtil;
+import net.transferproxy.util.BufUtil;
+import net.transferproxy.util.NBTUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public record ConfigDisconnectPacket(Component component) implements Packet {
 
-    public ConfigDisconnectPacket(final @NotNull ByteBuf buf) {
-        this(GsonComponentSerializer.gson().deserializeFromTree(NBTUtil.deserialize(BufUtil.readTag(buf))));
+    public ConfigDisconnectPacket(final int protocol, final @NotNull ByteBuf buf) {
+        this(ComponentProtocolUtil.getSerializer(protocol).deserializeFromTree(NBTUtil.deserialize(BufUtil.readTag(buf))));
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
-        BufUtil.writeTag(buf, NBTUtil.serialize(GsonComponentSerializer.gson().serializeToTree(this.component)));
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
+        final JsonElement tree = ComponentProtocolUtil.getSerializer(protocolized.getProtocol()).serializeToTree(this.component);
+        BufUtil.writeTag(buf, NBTUtil.serialize(tree));
     }
 
     @Override

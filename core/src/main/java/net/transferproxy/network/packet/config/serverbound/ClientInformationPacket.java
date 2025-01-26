@@ -29,12 +29,12 @@ import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.event.EventType;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
+import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.api.profile.ChatVisibility;
 import net.transferproxy.api.profile.ClientInformation;
 import net.transferproxy.api.profile.MainHand;
 import net.transferproxy.api.profile.ParticleStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static net.transferproxy.util.BufUtil.*;
 
@@ -73,7 +73,7 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         writeString(buf, this.locale);
         buf.writeByte(this.viewDistance);
         writeVarInt(buf, this.chatVisibility.getId());
@@ -82,7 +82,7 @@ public record ClientInformationPacket(String locale, byte viewDistance, ChatVisi
         writeVarInt(buf, this.mainHand.ordinal());
         buf.writeBoolean(this.enableTextFiltering);
         buf.writeBoolean(this.allowServerListing);
-        if (connection == null || connection.getProtocol() >= 768) { // 768 = 1.21.1
+        if (protocolized.getProtocol() >= 768) { // 768 = 1.21.1
             writeVarInt(buf, this.particleStatus.getId());
         }
     }

@@ -31,6 +31,7 @@ import io.netty.util.collection.IntObjectHashMap;
 import io.netty.util.collection.IntObjectMap;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
+import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.util.BiIntFunction;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +47,11 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
     private final int[] protocols;
     private final IntObjectMap<byte[]> dataMap = new IntObjectHashMap<>(2);
     private final boolean lazy;
+
+    public <T> ProtocolizedBuiltPacketImpl(final @NotNull Packet packet, final boolean lazy, final int... protocols) {
+        this(u -> packet, lazy, protocols);
+        Objects.requireNonNull(packet, "packet must not be null");
+    }
 
     public <T> ProtocolizedBuiltPacketImpl(final @NotNull T value,
                                            final @NotNull BiIntFunction<T, Packet> packetFactory,
@@ -90,6 +96,7 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
                 data = this.dataMap.get(low);
                 if (data == null) {
                     data = this.compute(low, protocol);
+                    this.dataMap.put(low, data);
                 } else {
                     this.dataMap.put(protocol, data);
                 }
@@ -120,7 +127,7 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
 
         final ByteBuf buf = Unpooled.buffer();
         writeVarInt(buf, packet.getId());
-        packet.write(buf);
+        packet.write(Protocolized.of(protocol), buf);
         buf.capacity(buf.readableBytes());
 
         final byte[] data = new byte[buf.readableBytes()];

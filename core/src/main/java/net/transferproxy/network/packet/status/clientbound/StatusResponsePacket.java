@@ -24,26 +24,26 @@
 
 package net.transferproxy.network.packet.status.clientbound;
 
+import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.api.status.StatusResponse;
-import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.util.ComponentProtocolUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static net.transferproxy.util.BufUtil.readString;
 import static net.transferproxy.util.BufUtil.writeString;
-import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 
 public record StatusResponsePacket(StatusResponse response) implements Packet {
 
-    public StatusResponsePacket(final @NotNull ByteBuf buf) {
-        this(gson().serializer().fromJson(readString(buf), StatusResponse.class));
+    public StatusResponsePacket(final @NotNull PlayerConnection connection, final @NotNull ByteBuf buf) {
+        this(ComponentProtocolUtil.getSerializer(connection.getProtocol()).serializer().fromJson(readString(buf), StatusResponse.class));
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
-        writeString(buf, gson().serializer().toJson(this.response));
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
+        writeString(buf, ComponentProtocolUtil.getSerializer(protocolized.getProtocol()).serializer().toJson(this.response));
     }
 
     @Override

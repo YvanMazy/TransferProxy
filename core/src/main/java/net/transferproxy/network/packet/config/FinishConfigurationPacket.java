@@ -24,11 +24,11 @@
 
 package net.transferproxy.network.packet.config;
 
+import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
-import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.network.protocol.Protocolized;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public record FinishConfigurationPacket() implements ServerboundPacket {
 
@@ -42,7 +42,7 @@ public record FinishConfigurationPacket() implements ServerboundPacket {
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         // nothing to write
     }
 

@@ -32,7 +32,7 @@ class ConfigDisconnectPacketTest extends PacketTestBase {
 
     @Test
     void testWriteReadConsistency() {
-        this.testOnlyBuffer(new ConfigDisconnectPacket(TestGenerationUtil.generateComplexComponent()), ConfigDisconnectPacket::new);
+        this.testWithProtocol(new ConfigDisconnectPacket(TestGenerationUtil.generateComplexComponent()), ConfigDisconnectPacket::new);
     }
 
 }

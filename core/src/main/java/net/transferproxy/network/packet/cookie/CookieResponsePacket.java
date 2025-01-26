@@ -24,10 +24,11 @@
 
 package net.transferproxy.network.packet.cookie;
 
+import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
+import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.api.util.CookieUtil;
-import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +57,7 @@ public abstract class CookieResponsePacket implements ServerboundPacket {
     }
 
     @Override
-    public void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
+    public void write(final @NotNull Protocolized protocolized, final @NotNull ByteBuf buf) {
         writeString(buf, this.key);
         if (this.payload != null) {
             buf.writeBoolean(true);
