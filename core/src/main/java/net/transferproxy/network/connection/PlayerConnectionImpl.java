@@ -38,6 +38,7 @@ import net.transferproxy.api.network.connection.ConnectionState;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.network.packet.built.BuiltPacket;
+import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
 import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import net.transferproxy.api.profile.ClientInformation;
@@ -49,6 +50,7 @@ import net.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import net.transferproxy.network.packet.login.clientbound.LoginSuccessPacket;
 import net.transferproxy.network.packet.provider.PacketProviderGroups;
 import net.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -228,7 +230,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     public void sendPacket(final @NotNull Packet packet) {
         Objects.requireNonNull(packet, "packet must not be null");
         if (this.channel.isActive() && this.state != ConnectionState.CLOSED) {
-            this.channel.writeAndFlush(ensurePacket(this.channel.alloc(), packet), this.channel.voidPromise());
+            this.channel.writeAndFlush(this.ensurePacket(this.channel.alloc(), packet), this.channel.voidPromise());
         }
     }
 
@@ -236,7 +238,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     public void sendPacketAndClose(final @NotNull Packet packet) {
         Objects.requireNonNull(packet, "packet must not be null");
         if (this.channel.isActive() && this.state != ConnectionState.CLOSED) {
-            this.channel.writeAndFlush(ensurePacket(this.channel.alloc(), packet)).addListener(ChannelFutureListener.CLOSE);
+            this.channel.writeAndFlush(this.ensurePacket(this.channel.alloc(), packet)).addListener(ChannelFutureListener.CLOSE);
         }
     }
 
@@ -362,8 +364,14 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
         return Objects.requireNonNullElse(this.channel.remoteAddress(), this.channel).toString();
     }
 
-    private static Object ensurePacket(final @NotNull ByteBufAllocator allocator, final @NotNull Object packet) {
-        return packet instanceof final BuiltPacket built ? built.get(allocator) : packet;
+    @Contract("_, null -> null; _, !null -> !null")
+    private Object ensurePacket(final @NotNull ByteBufAllocator allocator, final Object packet) {
+        if (packet instanceof final BuiltPacket built) {
+            return built.get(allocator);
+        } else if (packet instanceof final ProtocolizedBuiltPacket built) {
+            return built.get(allocator, this.protocol);
+        }
+        return packet;
     }
 
     private void ensureState(final @NotNull ConnectionState state, final String method) {
