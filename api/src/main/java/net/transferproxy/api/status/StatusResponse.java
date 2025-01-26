@@ -24,16 +24,21 @@
 
 package net.transferproxy.api.status;
 
-import net.transferproxy.api.util.IOUtil;
 import net.kyori.adventure.text.Component;
+import net.transferproxy.api.util.IOUtil;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.*;
 
 public record StatusResponse(Component description, Players players, Version version, String favicon) {
 
-    public static Builder builder() {
+    @Contract("-> new")
+    public static @NotNull Builder builder() {
         return new Builder();
     }
 
@@ -89,60 +94,91 @@ public record StatusResponse(Component description, Players players, Version ver
         private Builder() {
         }
 
-        public StatusResponse build() {
+        @Contract("-> new")
+        public @NotNull StatusResponse build() {
+            if (this.name == null) {
+                throw new IllegalStateException("Name must be set before building");
+            }
             return new StatusResponse(this.description,
-                    new Players(this.max, this.online, this.entries.toArray(Players.SampleEntry[]::new)),
+                    new Players(this.max, this.online, !this.entries.isEmpty() ? this.entries.toArray(Players.SampleEntry[]::new) : null),
                     new Version(this.name, this.protocol),
                     this.favicon);
         }
 
-        public Builder description(final Component component) {
+        @Contract("_ -> this")
+        public @NotNull Builder description(final @Nullable Component component) {
             this.description = component;
             return this;
         }
 
-        public Builder name(final String name) {
-            this.name = name;
+        @Contract("_ -> this")
+        public @NotNull Builder name(final @NotNull String name) {
+            this.name = Objects.requireNonNull(name, "name must not be null");
             return this;
         }
 
-        public Builder protocol(final int protocol) {
+        @Contract("_ -> this")
+        public @NotNull Builder protocol(final int protocol) {
             this.protocol = protocol;
             return this;
         }
 
-        public Builder online(final int online) {
+        @Contract("_ -> this")
+        public @NotNull Builder online(final int online) {
             this.online = online;
             return this;
         }
 
-        public Builder max(final int max) {
+        @Contract("_ -> this")
+        public @NotNull Builder max(final int max) {
             this.max = max;
             return this;
         }
 
-        public Builder addEntry(final String name, final UUID uuid) {
+        @Contract("_, _ -> this")
+        public @NotNull Builder addEntry(final @NotNull String name, final @NotNull UUID uuid) {
+            Objects.requireNonNull(name, "name must not be null");
+            Objects.requireNonNull(uuid, "uuid must not be null");
             this.entries.add(new Players.SampleEntry(name, uuid));
             return this;
         }
 
-        public Builder addEntry(final Players.SampleEntry entry) {
+        @Contract("_ -> this")
+        public @NotNull Builder addEntry(final @NotNull Players.SampleEntry entry) {
+            Objects.requireNonNull(entry, "entry must not be null");
             this.entries.add(entry);
             return this;
         }
 
-        public Builder addEntries(final Players.SampleEntry... entries) {
+        @Contract("_ -> this")
+        public @NotNull Builder addEntries(final @NotNull Players.SampleEntry... entries) {
+            Objects.requireNonNull(entries, "entries must not be null");
             this.entries.addAll(List.of(entries));
             return this;
         }
 
-        public Builder favicon(final String base64) {
+        @Contract("_ -> this")
+        public @NotNull Builder favicon(final @Nullable String base64) {
             this.favicon = base64;
             return this;
         }
 
-        public Builder favicon(final Path path) throws IOException {
+        @Contract("_ -> this")
+        public @NotNull Builder favicon(final @Nullable Path path) throws IOException {
+            if (path == null) {
+                this.favicon = null;
+                return this;
+            }
             return this.favicon(IOUtil.createImage(path));
+        }
+
+        @Contract("_ -> this")
+        public @NotNull Builder uncheckedFavicon(final @Nullable Path path) {
+            try {
+                return this.favicon(path);
+            } catch (final IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
 
     }
