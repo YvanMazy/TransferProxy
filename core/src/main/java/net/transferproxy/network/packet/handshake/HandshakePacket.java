@@ -35,8 +35,9 @@ import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
-import net.transferproxy.network.packet.built.BuiltPacketImpl;
 import net.transferproxy.api.network.protocol.Protocolized;
+import net.transferproxy.api.util.ComponentProtocolUtil;
+import net.transferproxy.network.packet.built.ProtocolizedBuiltPacketImpl;
 import net.transferproxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +45,7 @@ import static net.transferproxy.util.BufUtil.*;
 
 public record HandshakePacket(int protocol, String hostname, int hostPort, ConnectionState nextState) implements ServerboundPacket {
 
-    private static BuiltPacket kickPacket;
+    private static ProtocolizedBuiltPacket kickPacket;
 
     public HandshakePacket(final @NotNull ByteBuf buf) {
         this(readVarInt(buf), readString(buf, 255), buf.readShort(), ConnectionState.fromId(readVarInt(buf)));
@@ -84,8 +85,13 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
         if (kickPacket != null) {
             return kickPacket;
         }
-        return kickPacket = new BuiltPacketImpl(new LoginDisconnectPacket(MiniMessage.miniMessage()
-                .deserialize(TransferProxy.getInstance().getConfiguration().getMiscellaneous().getKickOldProtocolMessage())));
+        final String message = TransferProxy.getInstance().getConfiguration().getMiscellaneous().getKickOldProtocolMessage();
+        final Component component = MiniMessage.miniMessage().deserialize(message);
+
+        return kickPacket = new ProtocolizedBuiltPacketImpl(component,
+                LoginDisconnectPacket::new,
+                true,
+                ComponentProtocolUtil.getSerializerProtocols());
     }
 
 }
