@@ -55,10 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.SocketException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class PlayerConnectionImpl extends SimpleChannelInboundHandler<ServerboundPacket> implements PlayerConnection {
@@ -166,7 +163,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public @NotNull Map<String, CompletableFuture<byte[]>> getPendingCookies() {
-        return this.pendingCookies != null ? Map.copyOf(this.pendingCookies) : Map.of();
+        return this.pendingCookies != null ? Collections.unmodifiableMap(this.pendingCookies) : Map.of();
     }
 
     @Override
