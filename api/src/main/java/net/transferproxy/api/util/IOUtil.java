@@ -43,9 +43,9 @@ public final class IOUtil {
     /**
      * Build an image (Base64 format) from {@link BufferedImage}
      *
-     * @param path The path of image (like png, jpg, ...)
+     * @param path the path of image (like png, jpg, ...)
      *
-     * @return The built image in Base64
+     * @return the built image in Base64
      *
      * @throws IOException I/O exception
      */
@@ -56,9 +56,9 @@ public final class IOUtil {
     /**
      * Build an image (Base64 format) from {@link BufferedImage}
      *
-     * @param image The {@link BufferedImage} base
+     * @param image the {@link BufferedImage} base
      *
-     * @return The built image in Base64
+     * @return the built image in Base64
      *
      * @throws IOException I/O exception
      */

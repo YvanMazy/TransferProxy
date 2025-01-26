@@ -32,23 +32,61 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.IntFunction;
 
+/**
+ * Manages the modules of the TransferProxy.
+ */
 public interface ModuleManager {
 
+    /**
+     * Initializes all undefined modules with default implementations.
+     */
     void initializeDefaults();
 
+    /**
+     * Gets the current {@link EventManager} implementation.
+     *
+     * @return the event manager
+     */
     @Contract(pure = true)
     @NotNull EventManager getEventManager();
 
+    /**
+     * Gets the current {@link PluginManager} implementation.
+     *
+     * @return the plugin manager
+     */
     @Contract(pure = true)
     @NotNull PluginManager getPluginManager();
 
+    /**
+     * Gets the current {@link IntFunction<PacketProviderGroup>} implementation.
+     * <p>This implementation will be used to create new packet provider groups from player protocol.</p>
+     *
+     * @return the packet provider group function
+     */
     @Contract(pure = true)
     @NotNull IntFunction<PacketProviderGroup> getPacketProviderGroupFunction();
 
+    /**
+     * Sets the {@link EventManager} implementation to use.
+     *
+     * @param eventManager the event manager
+     */
     void setEventManager(final @NotNull EventManager eventManager);
 
+    /**
+     * Sets the {@link PluginManager} implementation to use.
+     *
+     * @param pluginManager the plugin manager
+     */
     void setPluginManager(final @NotNull PluginManager pluginManager);
 
+    /**
+     * Sets the {@link IntFunction<PacketProviderGroup>} implementation to use.
+     * <p>This implementation will be used to create new packet provider groups from player protocol.</p>
+     *
+     * @param packetProviderGroupFunction the packet provider group function
+     */
     void setPacketProviderGroupFunction(final @NotNull IntFunction<PacketProviderGroup> packetProviderGroupFunction);
 
 }

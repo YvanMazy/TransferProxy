@@ -28,27 +28,61 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a pre-built packet snapshot that has already been serialized and cannot be modified.
+ * <p>
+ * This type of packet must be sent using the {@link #get(ByteBufAllocator)} method rather than
+ * standard write methods.
+ * All inherited {@link Packet} encoding operations are disabled to enforce proper usage of the pre-serialized snapshot.
+ * </p>
+ */
 public interface BuiltPacket extends Packet {
 
+    /**
+     * Returns a pre-serialized byte buffer containing this packet's data.
+     * <p>
+     * This is the primary method for accessing the packet's content.
+     * The provided allocator may be used to create or copy the buffer depending on implementation requirements.
+     * </p>
+     *
+     * @param allocator the byte buffer allocator to use for buffer operations (must not be {@code null})
+     * @return a byte buffer containing the fully serialized packet data
+     */
     ByteBuf get(final @NotNull ByteBufAllocator allocator);
 
+    /**
+     * @throws IllegalStateException always thrown to enforce usage of {@link #get(ByteBufAllocator)}
+     * @deprecated Not supported for pre-built packets - use {@link #get(ByteBufAllocator)} instead
+     */
+    @Contract("_ -> fail")
     @Override
     default void write(final @NotNull ByteBuf buf) {
         throwIllegalState();
     }
 
+    /**
+     * @throws IllegalStateException always thrown to enforce usage of {@link #get(ByteBufAllocator)}
+     * @deprecated Not supported for pre-built packets - use {@link #get(ByteBufAllocator)} instead
+     */
+    @Contract("_, _ -> fail")
     @Override
     default void write(final @Nullable PlayerConnection connection, final @NotNull ByteBuf buf) {
         throwIllegalState();
     }
 
+    /**
+     * @throws IllegalStateException always thrown as packet ID is already embedded in the serialized snapshot
+     * @deprecated ID retrieval is unnecessary for pre-built packets
+     */
+    @Contract("-> fail")
     @Override
     default int getId() {
         throwIllegalState();
-        return 0x00;
+        return 0x00; // Unreachable - compiler placeholder
     }
 
     private static void throwIllegalState() {

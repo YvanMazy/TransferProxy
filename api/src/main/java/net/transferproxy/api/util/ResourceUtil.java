@@ -54,8 +54,8 @@ public final class ResourceUtil {
      *
      * @return true if the resource has been copied and written
      *
-     * @throws IOException          If an I/O error occurs while copying the resource
-     * @throws NullPointerException If any parameter is null
+     * @throws IOException          if an I/O error occurs while copying the resource
+     * @throws NullPointerException if any parameter is null
      * @apiNote This method uses {@link #copyResource(ClassLoader, Path, String)} using the file name as the resource name
      */
     public static boolean copyResource(final @NotNull ClassLoader classLoader, final @NotNull Path path) throws IOException {
@@ -65,12 +65,12 @@ public final class ResourceUtil {
     /**
      * Copies a resource if the file does not exist.
      *
-     * @param path The file path
+     * @param path the file path
      *
      * @return true if the resource has been copied and written.
      *
-     * @throws IOException          If an I/O error occurs while copying the resource
-     * @throws NullPointerException If any parameter is null
+     * @throws IOException          if an I/O error occurs while copying the resource
+     * @throws NullPointerException if any parameter is null
      */
     public static boolean copyResource(final @NotNull ClassLoader classLoader,
                                        final @NotNull Path path,
@@ -96,13 +96,13 @@ public final class ResourceUtil {
     /**
      * Combines {@link #copyResource(ClassLoader, Path)} and {@link #readYaml(Path, Class)} to copy and read a YAML file
      *
-     * @param path      The YAML file path
-     * @param typeClass The class of the type to deserialize into
+     * @param path      the YAML file path
+     * @param typeClass the class of the type to deserialize into
      *
-     * @return Deserialized instance of {@link T}
+     * @return deserialized instance of {@link T}
      *
-     * @throws IOException          If an I/O error occurs while reading the file
-     * @throws NullPointerException If any parameter is null
+     * @throws IOException          if an I/O error occurs while reading the file
+     * @throws NullPointerException if any parameter is null
      */
     public static <T> T copyAndReadYaml(final @NotNull Path path, final @NotNull Class<T> typeClass) throws IOException {
         copyResource(typeClass.getClassLoader(), path);
@@ -112,13 +112,13 @@ public final class ResourceUtil {
     /**
      * Reads a YAML file and deserializes its content into an object of the specified type
      *
-     * @param path      The YAML file path
-     * @param typeClass The class of the type to deserialize into
+     * @param path      the YAML file path
+     * @param typeClass the class of the type to deserialize into
      *
-     * @return Deserialized instance of {@link T}
+     * @return deserialized instance of {@link T}
      *
-     * @throws IOException          If an I/O error occurs while reading the file
-     * @throws NullPointerException If any parameter is null
+     * @throws IOException          if an I/O error occurs while reading the file
+     * @throws NullPointerException if any parameter is null
      */
     public static <T> T readYaml(final @NotNull Path path, final @NotNull Class<T> typeClass) throws IOException {
         Objects.requireNonNull(path, "path must not be null");
@@ -128,6 +128,12 @@ public final class ResourceUtil {
         }
     }
 
+    /**
+     * Returns the default YAML {@link ObjectMapper} configured with Kebab Case property naming strategy
+     * and ignoring unknown properties during deserialization.
+     *
+     * @return the default YAML {@link ObjectMapper}
+     */
     public static @NotNull ObjectMapper getDefaultYamlMapper() {
         return DEFAULT_MAPPER;
     }

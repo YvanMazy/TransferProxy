@@ -28,8 +28,22 @@ import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a network packet sent from a client to the server that requires server-side processing.
+ * <p>
+ * Implementing classes define how the server should handle incoming packets of this type, such as
+ * validating actions, modifying game state, or triggering events.
+ * These packets are typically decoded from raw network data before being passed to the handler.
+ * </p>
+ */
 public interface ServerboundPacket extends Packet {
 
+    /**
+     * Processes this packet on the server using the provided player connection context.
+     * This method is invoked when the packet is received and decoded.
+     *
+     * @param connection the non-null player connection that received this packet
+     */
     void handle(final @NotNull PlayerConnection connection);
 
 }

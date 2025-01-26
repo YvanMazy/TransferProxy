@@ -35,6 +35,15 @@ public final class CookieUtil {
         throw new IllegalAccessException("You cannot instantiate a utility class");
     }
 
+    /**
+     * Ensures the format of the given cookie key is valid.
+     *
+     * @param cookieKey the cookie key to validate
+     *
+     * @throws IllegalArgumentException if the cookie key is null,
+     *                                  does not contain a colon separator,
+     *                                  or contains invalid characters in the namespace or value
+     */
     public static void ensureCookieFormat(final String cookieKey) {
         if (cookieKey == null) {
             throw new IllegalArgumentException("Cookie key must not be null");

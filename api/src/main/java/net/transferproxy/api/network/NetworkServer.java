@@ -27,14 +27,34 @@ package net.transferproxy.api.network;
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 
+
+/**
+ * An interface that represents the network server that will manage player connections.
+ */
 public interface NetworkServer {
 
+    /**
+     * Starts the server.
+     */
     void start();
 
+    /**
+     * Stops the server.
+     */
     void stop();
 
+    /**
+     * Gets the server channel.
+     *
+     * @return the server channel
+     */
     Channel getChannel();
 
+    /**
+     * Gets the group containing all player connections.
+     *
+     * @return the group
+     */
     ChannelGroup getGroup();
 
 }

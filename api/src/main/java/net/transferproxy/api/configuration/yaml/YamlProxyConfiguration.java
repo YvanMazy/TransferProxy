@@ -26,6 +26,7 @@ package net.transferproxy.api.configuration.yaml;
 
 import io.netty.util.ResourceLeakDetector;
 import net.transferproxy.api.configuration.ProxyConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class YamlProxyConfiguration implements ProxyConfiguration {
@@ -36,22 +37,22 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
     private YamlLogging logging;
 
     @Override
-    public ProxyConfiguration.Network getNetwork() {
+    public ProxyConfiguration.@NotNull Network getNetwork() {
         return this.network != null ? this.network : (this.network = new YamlNetwork());
     }
 
     @Override
-    public ProxyConfiguration.Status getStatus() {
+    public ProxyConfiguration.@NotNull Status getStatus() {
         return this.status != null ? this.status : (this.status = new YamlStatus());
     }
 
     @Override
-    public ProxyConfiguration.Miscellaneous getMiscellaneous() {
+    public ProxyConfiguration.@NotNull Miscellaneous getMiscellaneous() {
         return this.miscellaneous != null ? this.miscellaneous : (this.miscellaneous = new YamlMiscellaneous());
     }
 
     @Override
-    public ProxyConfiguration.Logging getLogging() {
+    public ProxyConfiguration.@NotNull Logging getLogging() {
         return this.logging != null ? this.logging : (this.logging = new YamlLogging());
     }
 
@@ -78,7 +79,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         }
 
         @Override
-        public String getBindAddress() {
+        public @NotNull String getBindAddress() {
             return this.bindAddress;
         }
 
@@ -88,7 +89,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         }
 
         @Override
-        public ResourceLeakDetector.Level getResourceLeakDetectorLevel() {
+        public ResourceLeakDetector.@NotNull Level getResourceLeakDetectorLevel() {
             return this.resourceLeakDetectorLevel;
         }
 
@@ -134,22 +135,22 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         }
 
         @Override
-        public String getName() {
+        public @NotNull String getName() {
             return this.name;
         }
 
         @Override
-        public String getDescription() {
+        public @NotNull String getDescription() {
             return this.description;
         }
 
         @Override
-        public String getProtocol() {
+        public @NotNull String getProtocol() {
             return this.protocol;
         }
 
         @Override
-        public String getFaviconPath() {
+        public @NotNull String getFaviconPath() {
             return this.faviconPath;
         }
 
@@ -175,7 +176,7 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         }
 
         @Override
-        public String getKickOldProtocolMessage() {
+        public @NotNull String getKickOldProtocolMessage() {
             return this.kickOldProtocolMessage;
         }
 

@@ -30,6 +30,7 @@ import net.transferproxy.api.event.listener.EventListener;
 import net.transferproxy.api.event.login.PreLoginEvent;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.status.listener.DefaultStatusListener;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -50,10 +51,22 @@ public enum EventType {
         this.defaultListener = Objects.requireNonNull(defaultListener, "defaultListener must not be null");
     }
 
+    /**
+     * Retrieves the class type of the event associated with this event type.
+     *
+     * @return the class of the event
+     */
+    @Contract(pure = true)
     public @NotNull Class<?> getEventClass() {
         return this.eventClass;
     }
 
+    /**
+     * Builds the default event listener for this event type.
+     *
+     * @return the default event listener
+     */
+    @Contract(pure = true)
     public @NotNull EventListener<?> buildDefaultListener() {
         return this.defaultListener.get();
     }

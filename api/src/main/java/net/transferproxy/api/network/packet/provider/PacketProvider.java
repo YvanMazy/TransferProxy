@@ -32,15 +32,41 @@ import net.transferproxy.api.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a factory interface for creating {@link Packet} instances from network data.
+ * <p>
+ * Implementations of this functional interface are responsible for parsing byte buffers
+ * and constructing protocol-specific packet objects.
+ * </p>
+ */
 @FunctionalInterface
 public interface PacketProvider {
 
+    /**
+     * Creates a packet instance by parsing data from the provided byte buffer.
+     *
+     * @param connection the player connection context providing protocol state
+     * @param buf the byte buffer containing raw packet data (must not be {@code null})
+     * @return the parsed packet instance, or {@code null} if the packet cannot be created
+     */
     @Nullable Packet provide(final PlayerConnection connection, final @NotNull ByteBuf buf);
 
+    /**
+     * Attempts to construct a packet using registered providers for a specific protocol state.
+     *
+     * @param connection the active player connection context (must not be {@code null})
+     * @param state the current protocol state (must not be {@code null})
+     * @param buf the byte buffer containing packet data (must not be {@code null})
+     * @param packetId the numeric identifier of the packet being decoded
+     * @return the parsed packet instance, or {@code null} if the packet ID is invalid or
+     *         no provider exists for the ID
+     * @throws DecoderException if no providers are registered for the specified protocol state
+     * @throws NullPointerException if any non-null parameter is null
+     */
     static @Nullable Packet buildPacket(final @NotNull PlayerConnection connection,
-                              final @NotNull ConnectionState state,
-                              final @NotNull ByteBuf buf,
-                              final int packetId) {
+                                        final @NotNull ConnectionState state,
+                                        final @NotNull ByteBuf buf,
+                                        final int packetId) {
         final PacketProvider[] packets = connection.getPacketProviderGroup().getProviders(state);
 
         if (packets == null) {

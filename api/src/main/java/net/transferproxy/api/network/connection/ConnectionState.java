@@ -24,6 +24,9 @@
 
 package net.transferproxy.api.network.connection;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 public enum ConnectionState {
 
     HANDSHAKE,
@@ -43,11 +46,24 @@ public enum ConnectionState {
         this.login = login;
     }
 
+    /**
+     * Checks if the connection is in a login state.
+     *
+     * @return If the connection is in a login state.
+     */
+    @Contract(pure = true)
     public boolean isLogin() {
         return this.login;
     }
 
-    public static ConnectionState fromId(final int id) {
+    /**
+     * Gets the connection state from the id.
+     *
+     * @param id The id of the connection state.
+     * @return The connection state.
+     * @throws IllegalArgumentException If the id is invalid.
+     */
+    public static @NotNull ConnectionState fromId(final int id) {
         return switch (id) {
             case 1 -> STATUS;
             case 2 -> LOGIN;
