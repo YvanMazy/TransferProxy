@@ -55,13 +55,14 @@ public record HandshakePacket(int protocol, String hostname, int hostPort, Conne
         connection.setHost(this.hostname, this.hostPort);
         connection.setState(this.nextState);
         final TransferProxy proxy = TransferProxy.getInstance();
-        if (this.protocol < 766) {
+        if (this.nextState.isLogin() && this.protocol < 766) {
             final ProxyConfiguration.Miscellaneous config = proxy.getConfiguration().getMiscellaneous();
             if (config.isKickOldProtocol()) {
                 connection.sendPacketAndClose(getKickPacket());
                 return;
             }
         }
+
         proxy.getModuleManager().getEventManager().call(EventType.HANDSHAKE, connection);
     }
 
