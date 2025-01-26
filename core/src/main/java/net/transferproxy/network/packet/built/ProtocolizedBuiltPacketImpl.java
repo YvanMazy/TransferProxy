@@ -34,6 +34,7 @@ import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
 import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.util.BiIntFunction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Objects;
 import java.util.function.IntFunction;
@@ -122,7 +123,8 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
         return this.compute(protocol, protocol);
     }
 
-    private byte[] compute(final int protocol, final int updateProtocol) {
+    @VisibleForTesting
+    byte[] compute(final int protocol, final int updateProtocol) {
         final Packet packet = this.packetFactory.apply(protocol);
 
         final ByteBuf buf = Unpooled.buffer();
