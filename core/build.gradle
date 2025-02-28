@@ -29,7 +29,8 @@ dependencies {
 minecraftRemapper {
     version = "1.21.4"
     directionType = 'CLIENT'
-    dependenciesConfigurations = ["integrationTestImplementation"]
+    dependenciesConfigurations = ["integrationTestCompileOnly"]
+    includeLibrariesDependency = true
 }
 
 shadowJar {
