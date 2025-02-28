@@ -27,12 +27,19 @@ package net.transferproxy.test.agent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
+import net.transferproxy.test.common.SimpleStatusResponse;
+import net.transferproxy.test.agent.callback.StatusResponseCallback;
 
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.CompletableFuture;
 
 public final class TestAgentImpl extends UnicastRemoteObject implements TestAgent {
+
+    private final ServerStatusPinger serverStatusPinger = new ServerStatusPinger();
 
     TestAgentImpl() throws RemoteException {
         super();
@@ -50,6 +57,19 @@ public final class TestAgentImpl extends UnicastRemoteObject implements TestAgen
                     false,
                     null);
         });
+    }
+
+    @Override
+    public SimpleStatusResponse requestStatus(final String host, final int port) throws RemoteException {
+        final ServerData serverData = new ServerData("Test", host + ":" + port, ServerData.Type.OTHER);
+        final CompletableFuture<SimpleStatusResponse> future = new CompletableFuture<>();
+        try {
+            this.serverStatusPinger.pingServer(serverData, () -> {
+            }, new StatusResponseCallback(serverData, future));
+        } catch (final UnknownHostException e) {
+            future.completeExceptionally(e);
+        }
+        return future.join();
     }
 
     @Override

@@ -25,6 +25,7 @@
 package net.transferproxy.test.agent;
 
 import be.yvanmazy.remotedminecraft.controller.agent.RemotedAgent;
+import net.transferproxy.test.common.SimpleStatusResponse;
 
 import java.rmi.RemoteException;
 
@@ -33,5 +34,7 @@ public interface TestAgent extends RemotedAgent {
     String ID = TestAgent.class.getName();
 
     void connect(final String host, final int port) throws RemoteException;
+
+    SimpleStatusResponse requestStatus(final String host, final int port) throws RemoteException;
 
 }

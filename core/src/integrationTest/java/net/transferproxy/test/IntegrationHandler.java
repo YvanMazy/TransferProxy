@@ -32,6 +32,8 @@ import net.transferproxy.api.util.PropertyHelper;
 import net.transferproxy.test.agent.AgentMain;
 import net.transferproxy.test.agent.TestAgent;
 import net.transferproxy.test.agent.TestAgentImpl;
+import net.transferproxy.test.common.SimpleStatusResponse;
+import net.transferproxy.test.agent.callback.StatusResponseCallback;
 import net.transferproxy.test.util.DeleteAllFileVisitor;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
@@ -121,7 +123,13 @@ public class IntegrationHandler implements TestExecutionListener {
     private StartedMinecraft<TestAgent> launchMinecraft() {
         return MinecraftTestStarter.<TestAgent>newStarterLocal()
                 .agentMainClass(AgentMain.class)
-                .applyAgentBuilder(builder -> builder.addClasses(TestAgent.class, TestAgentImpl.class))
+                .applyAgentBuilder(builder -> builder.addClasses(TestAgent.class,
+                        TestAgentImpl.class,
+                        StatusResponseCallback.class,
+                        SimpleStatusResponse.class,
+                        SimpleStatusResponse.Players.class,
+                        SimpleStatusResponse.Version.class,
+                        SimpleStatusResponse.Players.SampleEntry.class))
                 .agentPath(this.workDirectory.resolve("agent.jar"))
                 .agentId(TestAgent.ID)
                 .config(config -> config.version("1.21.4")
