@@ -48,7 +48,7 @@ public record StatusResponse(Component description, Players players, Version ver
 
     public record Players(int max, int online, SampleEntry[] sample) {
 
-        public record SampleEntry(String name, UUID id) {
+        public record SampleEntry(String name, String id) {
 
         }
 
@@ -137,6 +137,11 @@ public record StatusResponse(Component description, Players players, Version ver
 
         @Contract("_, _ -> this")
         public @NotNull Builder addEntry(final @NotNull String name, final @NotNull UUID uuid) {
+            return this.addEntry(name, uuid.toString());
+        }
+
+        @Contract("_, _ -> this")
+        public @NotNull Builder addEntry(final @NotNull String name, final @NotNull String uuid) {
             Objects.requireNonNull(name, "name must not be null");
             Objects.requireNonNull(uuid, "uuid must not be null");
             this.entries.add(new Players.SampleEntry(name, uuid));
