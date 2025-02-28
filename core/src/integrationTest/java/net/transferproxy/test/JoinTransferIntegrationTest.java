@@ -93,6 +93,7 @@ class JoinTransferIntegrationTest {
 
     private static void onCookieReceived(final PlayerConnection connection, final Integer amount) {
         if (amount != null && amount == TEST_LOG_AMOUNT) {
+            connection.forceDisconnect();
             SUCCESS.set(true);
             PHASER.arriveAndAwaitAdvance();
         } else {
