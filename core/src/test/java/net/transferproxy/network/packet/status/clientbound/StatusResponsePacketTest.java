@@ -42,7 +42,6 @@ class StatusResponsePacketTest extends PacketTestBase {
                 .addEntry("Random", UUID.randomUUID())
                 .max(Integer.MAX_VALUE)
                 .online(Integer.MIN_VALUE)
-                .online(0)
                 .protocol(-1)
                 .favicon("base64")
                 .build()), StatusResponsePacket::new);
