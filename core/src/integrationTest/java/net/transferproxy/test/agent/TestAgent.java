@@ -35,6 +35,10 @@ public interface TestAgent extends RemotedAgent {
 
     void connect(final String host, final int port) throws RemoteException;
 
+    void disconnectServer() throws RemoteException;
+
     SimpleStatusResponse requestStatus(final String host, final int port) throws RemoteException;
+
+    void updateClientOptions(final boolean test) throws RemoteException;
 
 }

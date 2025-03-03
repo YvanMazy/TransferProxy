@@ -25,17 +25,23 @@
 package net.transferproxy.test.agent;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.transferproxy.test.common.SimpleStatusResponse;
+import net.minecraft.server.level.ParticleStatus;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.ChatVisiblity;
+import net.minecraft.world.entity.player.PlayerModelPart;
 import net.transferproxy.test.agent.callback.StatusResponseCallback;
+import net.transferproxy.test.common.SimpleStatusResponse;
 
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 
 public final class TestAgentImpl extends UnicastRemoteObject implements TestAgent {
 
@@ -60,6 +66,23 @@ public final class TestAgentImpl extends UnicastRemoteObject implements TestAgen
     }
 
     @Override
+    public void disconnectServer() throws RemoteException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        Minecraft.getInstance().schedule(() -> {
+            try {
+                Minecraft.getInstance().disconnect();
+            } finally {
+                latch.countDown();
+            }
+        });
+        try {
+            latch.await();
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Override
     public SimpleStatusResponse requestStatus(final String host, final int port) throws RemoteException {
         final ServerData serverData = new ServerData("Test", host + ":" + port, ServerData.Type.OTHER);
         final CompletableFuture<SimpleStatusResponse> future = new CompletableFuture<>();
@@ -70,6 +93,28 @@ public final class TestAgentImpl extends UnicastRemoteObject implements TestAgen
             future.completeExceptionally(e);
         }
         return future.join();
+    }
+
+    @Override
+    public void updateClientOptions(final boolean test) throws RemoteException {
+        final Options options = Minecraft.getInstance().options;
+        if (test) {
+            options.languageCode = "fr_fr";
+            options.renderDistance().set(3);
+            options.setModelPart(PlayerModelPart.LEFT_SLEEVE, false);
+            options.chatVisibility().set(ChatVisiblity.SYSTEM);
+            options.chatColors().set(false);
+            options.mainHand().set(HumanoidArm.LEFT);
+            options.particles().set(ParticleStatus.DECREASED);
+        } else {
+            options.languageCode = "en_us";
+            options.renderDistance().set(12);
+            options.setModelPart(PlayerModelPart.LEFT_SLEEVE, true);
+            options.chatVisibility().set(ChatVisiblity.FULL);
+            options.chatColors().set(true);
+            options.mainHand().set(HumanoidArm.RIGHT);
+            options.particles().set(ParticleStatus.ALL);
+        }
     }
 
     @Override
