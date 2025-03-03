@@ -32,6 +32,7 @@ import net.transferproxy.event.EventManagerImpl;
 import net.transferproxy.network.packet.provider.PacketProviderGroups;
 import net.transferproxy.plugin.PluginManagerImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Objects;
 import java.util.function.IntFunction;
@@ -44,15 +45,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
     @Override
     public void initializeDefaults() {
-        if (this.eventManager == null) {
-            this.eventManager = new EventManagerImpl();
-        }
-        if (this.pluginManager == null) {
-            this.pluginManager = new PluginManagerImpl();
-        }
-        if (this.packetProviderGroupFunction == null) {
-            this.packetProviderGroupFunction = PacketProviderGroups::determineGroup;
-        }
+        this.initializeDefaults(false);
     }
 
     @Override
@@ -84,6 +77,19 @@ public class ModuleManagerImpl implements ModuleManager {
     public void setPacketProviderGroupFunction(final @NotNull IntFunction<PacketProviderGroup> packetProviderGroupFunction) {
         this.packetProviderGroupFunction =
                 Objects.requireNonNull(packetProviderGroupFunction, "packetProviderGroupFunction must not be null");
+    }
+
+    @VisibleForTesting
+    public void initializeDefaults(final boolean force) {
+        if (force || this.eventManager == null) {
+            this.eventManager = new EventManagerImpl();
+        }
+        if (force || this.pluginManager == null) {
+            this.pluginManager = new PluginManagerImpl();
+        }
+        if (force || this.packetProviderGroupFunction == null) {
+            this.packetProviderGroupFunction = PacketProviderGroups::determineGroup;
+        }
     }
 
 }
