@@ -28,14 +28,18 @@ import be.yvanmazy.remotedminecraft.auth.Auth;
 import be.yvanmazy.remotedminecraft.testing.MinecraftTestStarter;
 import be.yvanmazy.remotedminecraft.testing.StartedMinecraft;
 import net.transferproxy.api.TransferProxy;
+import net.transferproxy.api.module.ModuleManager;
 import net.transferproxy.api.util.PropertyHelper;
+import net.transferproxy.module.ModuleManagerImpl;
 import net.transferproxy.test.agent.AgentMain;
 import net.transferproxy.test.agent.TestAgent;
 import net.transferproxy.test.agent.TestAgentImpl;
-import net.transferproxy.test.common.SimpleStatusResponse;
 import net.transferproxy.test.agent.callback.StatusResponseCallback;
+import net.transferproxy.test.common.SimpleStatusResponse;
 import net.transferproxy.test.util.DeleteAllFileVisitor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +48,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assumptions.abort;
 
@@ -96,6 +101,33 @@ public class IntegrationHandler implements TestExecutionListener {
         this.minecraft = this.launchMinecraft();
 
         this.launchTransferProxyServer();
+    }
+
+    @Override
+    public void executionFinished(final TestIdentifier testIdentifier, final TestExecutionResult testExecutionResult) {
+        if (!testIdentifier.isTest()) {
+            return;
+        }
+        LOGGER.info("Cleaning up session after test {}...", testIdentifier.getDisplayName());
+        // Disconnect Minecraft client
+        if (this.minecraft != null) {
+            final TestAgent agent = this.minecraft.agent();
+            try {
+                if (agent.isReady()) {
+                    agent.disconnectServer();
+                    agent.updateClientOptions(false);
+                }
+            } catch (final RemoteException e) {
+                LOGGER.error("Failed to disconnect Minecraft client", e);
+            }
+        }
+
+        // Reinitialize default modules
+        final ModuleManager moduleManager = TransferProxy.getInstance().getModuleManager();
+        if (moduleManager instanceof final ModuleManagerImpl impl) {
+            impl.initializeDefaults(true);
+        }
+        LOGGER.info("Cleaning up session after test {} finished", testIdentifier.getDisplayName());
     }
 
     @Override
