@@ -58,6 +58,8 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
     private static final ChannelHandler FRAME_ENCODER = new VarIntFrameEncoder();
 
     private final ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
     private Channel channel;
 
     @Override
@@ -67,9 +69,6 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
 
         final Class<? extends ServerChannel> channelClass;
 
-        final EventLoopGroup bossGroup;
-        final EventLoopGroup workerGroup;
-
         final DefaultThreadFactory bossFactory = new DefaultThreadFactory("Boss Thread");
         final DefaultThreadFactory workerFactory = new DefaultThreadFactory("Worker Thread");
 
@@ -78,13 +77,13 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
 
         // Use Epoll if available
         if (config.isUseEpoll() && Epoll.isAvailable()) {
-            bossGroup = new EpollEventLoopGroup(bossThread, bossFactory);
-            workerGroup = new EpollEventLoopGroup(workerThread, workerFactory);
+            this.bossGroup = new EpollEventLoopGroup(bossThread, bossFactory);
+            this.workerGroup = new EpollEventLoopGroup(workerThread, workerFactory);
             channelClass = EpollServerSocketChannel.class;
             LOGGER.info("The network will use the EPOLL channel type");
         } else {
-            bossGroup = new NioEventLoopGroup(bossThread, bossFactory);
-            workerGroup = new NioEventLoopGroup(workerThread, workerFactory);
+            this.bossGroup = new NioEventLoopGroup(bossThread, bossFactory);
+            this.workerGroup = new NioEventLoopGroup(workerThread, workerFactory);
             channelClass = NioServerSocketChannel.class;
             LOGGER.info("The network will use the NIO channel type");
         }
@@ -92,7 +91,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
         final InetSocketAddress address = new InetSocketAddress(config.getBindAddress(), config.getBindPort());
         final ServerBootstrap bootstrap = new ServerBootstrap().channel(channelClass)
                 .option(ChannelOption.SO_REUSEADDR, true)
-                .group(bossGroup, workerGroup)
+                .group(this.bossGroup, this.workerGroup)
                 .childHandler(this)
                 .localAddress(address);
 
@@ -116,10 +115,16 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
     public void stop() {
         if (this.channel != null) {
             try {
-                this.channel.close().await(10, TimeUnit.SECONDS);
+                this.channel.close().await(3, TimeUnit.SECONDS);
             } catch (final InterruptedException exception) {
                 LOGGER.error("Netty server does not shutdown correctly", exception);
             }
+        }
+        if (this.bossGroup != null) {
+            this.bossGroup.shutdownGracefully(100L, 3_000L, TimeUnit.MILLISECONDS);
+        }
+        if (this.workerGroup != null) {
+            this.workerGroup.shutdownGracefully(100L, 3_000L, TimeUnit.MILLISECONDS);
         }
     }
 
