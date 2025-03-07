@@ -2,6 +2,9 @@ dependencies {
     // Configuration
     api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.2'
 
+    // Logging
+    api 'org.fusesource.jansi:jansi:2.4.1'
+
     // Adventure library
     def version = '4.18.0'
     api("net.kyori:adventure-api:$version") {

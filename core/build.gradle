@@ -19,9 +19,6 @@ dependencies {
     // Project API
     api project(":api")
 
-    // Logging
-    api 'org.fusesource.jansi:jansi:2.4.1'
-
     // Testing
     testImplementation project(path: ':api', configuration: 'testClasses')
 }
