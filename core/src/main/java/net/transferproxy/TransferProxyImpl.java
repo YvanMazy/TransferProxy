@@ -31,6 +31,7 @@ import net.transferproxy.api.network.NetworkServer;
 import net.transferproxy.keepalive.KeepAliveTask;
 import net.transferproxy.module.ModuleManagerImpl;
 import net.transferproxy.network.NettyNetworkServer;
+import net.transferproxy.terminal.TerminalThread;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +76,8 @@ public class TransferProxyImpl extends TransferProxy {
             final long delay = this.configuration.getMiscellaneous().getKeepAliveDelay();
             this.keepAliveExecutor.scheduleAtFixedRate(new KeepAliveTask(), delay, delay, TimeUnit.MILLISECONDS);
         }
+
+        new TerminalThread(this::isStarted, this.moduleManager::getTerminalExecutor).start();
 
         LOGGER.info("Server started successfully in {}ms", System.currentTimeMillis() - this.startedTime);
     }

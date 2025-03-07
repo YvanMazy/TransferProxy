@@ -28,6 +28,8 @@ import net.transferproxy.api.event.EventManager;
 import net.transferproxy.api.module.ModuleManager;
 import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.plugin.PluginManager;
+import net.transferproxy.api.terminal.TerminalExecutor;
+import net.transferproxy.api.terminal.DefaultTerminalExecutor;
 import net.transferproxy.event.EventManagerImpl;
 import net.transferproxy.network.packet.provider.PacketProviderGroups;
 import net.transferproxy.plugin.PluginManagerImpl;
@@ -42,6 +44,7 @@ public class ModuleManagerImpl implements ModuleManager {
     private EventManager eventManager;
     private PluginManager pluginManager;
     private IntFunction<PacketProviderGroup> packetProviderGroupFunction;
+    private TerminalExecutor terminalExecutor;
 
     @Override
     public void initializeDefaults() {
@@ -64,6 +67,11 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     @Override
+    public @NotNull TerminalExecutor getTerminalExecutor() {
+        return this.terminalExecutor;
+    }
+
+    @Override
     public void setPluginManager(final @NotNull PluginManager pluginManager) {
         this.pluginManager = Objects.requireNonNull(pluginManager, "pluginManager must not be null");
     }
@@ -79,6 +87,11 @@ public class ModuleManagerImpl implements ModuleManager {
                 Objects.requireNonNull(packetProviderGroupFunction, "packetProviderGroupFunction must not be null");
     }
 
+    @Override
+    public void setTerminalExecutor(final @NotNull TerminalExecutor terminalExecutor) {
+        this.terminalExecutor = Objects.requireNonNull(terminalExecutor, "terminalExecutor must not be null");
+    }
+
     @VisibleForTesting
     public void initializeDefaults(final boolean force) {
         if (force || this.eventManager == null) {
@@ -89,6 +102,9 @@ public class ModuleManagerImpl implements ModuleManager {
         }
         if (force || this.packetProviderGroupFunction == null) {
             this.packetProviderGroupFunction = PacketProviderGroups::determineGroup;
+        }
+        if (force || this.terminalExecutor == null) {
+            this.terminalExecutor = new DefaultTerminalExecutor();
         }
     }
 

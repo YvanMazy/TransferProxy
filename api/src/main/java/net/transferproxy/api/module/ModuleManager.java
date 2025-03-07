@@ -27,6 +27,7 @@ package net.transferproxy.api.module;
 import net.transferproxy.api.event.EventManager;
 import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.plugin.PluginManager;
+import net.transferproxy.api.terminal.TerminalExecutor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,6 +69,15 @@ public interface ModuleManager {
     @NotNull IntFunction<PacketProviderGroup> getPacketProviderGroupFunction();
 
     /**
+     * Gets the current {@link TerminalExecutor} implementation.
+     * <p>This implementation will be used to execute terminal commands.</p>
+     *
+     * @return the terminal executor
+     */
+    @Contract(pure = true)
+    @NotNull TerminalExecutor getTerminalExecutor();
+
+    /**
      * Sets the {@link EventManager} implementation to use.
      *
      * @param eventManager the event manager
@@ -88,5 +98,13 @@ public interface ModuleManager {
      * @param packetProviderGroupFunction the packet provider group function
      */
     void setPacketProviderGroupFunction(final @NotNull IntFunction<PacketProviderGroup> packetProviderGroupFunction);
+
+    /**
+     * Sets the {@link TerminalExecutor} implementation to use.
+     * <p>This implementation will be used to execute terminal commands.</p>
+     *
+     * @param terminalExecutor the terminal executor
+     */
+    void setTerminalExecutor(final @NotNull TerminalExecutor terminalExecutor);
 
 }
