@@ -66,7 +66,7 @@ public class TransferProxyImpl extends TransferProxy {
 
         this.moduleManager.initializeDefaults();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::stop, "Proxy Shutdown Thread"));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop, "Shutdown Thread"));
 
         this.moduleManager.getPluginManager().start();
         (this.networkServer = new NettyNetworkServer()).start();
