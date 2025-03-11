@@ -24,12 +24,14 @@
 
 package net.transferproxy.api.terminal;
 
+import net.transferproxy.api.terminal.command.builtin.SystemInfoCommand;
 import net.transferproxy.api.terminal.command.builtin.StopCommand;
 
 public class DefaultTerminalExecutor extends BaseTerminalExecutor {
 
     public DefaultTerminalExecutor() {
         this.register("stop", "Shut down the server.", new StopCommand());
+        this.register("sysinfo", "Display system information.", new SystemInfoCommand());
     }
 
 }
