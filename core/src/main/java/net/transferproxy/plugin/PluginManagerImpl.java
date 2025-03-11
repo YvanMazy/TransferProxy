@@ -41,6 +41,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.JarEntry;
@@ -133,7 +134,7 @@ public class PluginManagerImpl implements PluginManager {
 
     @Override
     public @NotNull Collection<Plugin> getPlugins() {
-        return List.copyOf(this.plugins);
+        return Collections.unmodifiableCollection(this.plugins);
     }
 
 }
