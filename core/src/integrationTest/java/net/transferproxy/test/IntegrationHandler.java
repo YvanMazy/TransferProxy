@@ -60,6 +60,7 @@ public class IntegrationHandler implements TestExecutionListener {
 
     public static final String PLAYER_NAME = "TestPlayer";
 
+    private String minecraftVersion;
     private Path workDirectory;
     private Path cacheDirectory;
 
@@ -74,6 +75,14 @@ public class IntegrationHandler implements TestExecutionListener {
 
     @Override
     public void testPlanExecutionStarted(final TestPlan testPlan) {
+        final String version = System.getProperty("minecraft.version");
+        if (version == null) {
+            LOGGER.error("Property 'minecraft.version' is not set!");
+            abort("Property 'minecraft.version' is not set!");
+        }
+        this.minecraftVersion = version;
+        LOGGER.info("Using Minecraft version: {}", this.minecraftVersion);
+
         final String cacheDir = System.getProperty("library.cache.dir");
         if (cacheDir == null) {
             LOGGER.error("Property 'library.cache.dir' is not set!");
@@ -164,7 +173,7 @@ public class IntegrationHandler implements TestExecutionListener {
                         SimpleStatusResponse.Players.SampleEntry.class))
                 .agentPath(this.workDirectory.resolve("agent.jar"))
                 .agentId(TestAgent.ID)
-                .config(config -> config.version("1.21.4")
+                .config(config -> config.version(this.minecraftVersion)
                         .authentication(Auth.byUsername(PLAYER_NAME))
                         .processDirectory(this.cacheDirectory)
                         .inheritIO(false))

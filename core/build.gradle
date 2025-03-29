@@ -73,6 +73,7 @@ def integrationJavaToolchain = {
 integrationTest {
     systemProperty 'library.cache.dir', gradle.gradleUserHomeDir.toPath().resolve('caches').resolve('TransferProxy').resolve('data').toString();
     systemProperty 'tinylog.configuration', 'test-tinylog.properties'
+    systemProperty 'minecraft.version', minecraftRemapper.version
     javaLauncher.set(javaToolchains.launcherFor(integrationJavaToolchain))
 }
 
