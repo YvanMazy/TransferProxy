@@ -83,12 +83,13 @@ public class PluginManagerImpl implements PluginManager {
     @Override
     public void stop() {
         for (final Plugin plugin : this.plugins) {
-            plugin.onDisable();
-            final PluginInfo info = plugin.getInfo();
-            if (info == null) {
-                continue;
+            try {
+                plugin.onDisable();
+                final PluginInfo info = plugin.getInfo();
+                LOGGER.info("Plugin {} {} from {} are now disabled", info.getName(), info.getVersion(), info.getAuthor());
+            } catch (final Exception e) {
+                LOGGER.error("Plugin '{}' failed to disable", plugin.getInfo().getName(), e);
             }
-            LOGGER.info("Plugin {} {} from {} are now disabled", info.getName(), info.getVersion(), info.getAuthor());
         }
     }
 
@@ -111,7 +112,7 @@ public class PluginManagerImpl implements PluginManager {
             plugin.onEnable();
             LOGGER.info("Plugin {} {} from {} are now enabled", pluginInfo.getName(), pluginInfo.getVersion(), pluginInfo.getAuthor());
         } catch (final Exception e) {
-            LOGGER.error("Plugin '{}' cannot be loaded", path.getFileName(), e);
+            LOGGER.error("Plugin '{}' failed to enable", path.getFileName(), e);
         }
     }
 
