@@ -26,11 +26,15 @@ package net.transferproxy.api.plugin.classloader;
 
 import net.transferproxy.api.plugin.Plugin;
 import net.transferproxy.api.plugin.info.PluginInfo;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public interface PluginClassloader {
 
-    Plugin getPlugin();
+    @Contract(pure = true)
+    @NotNull Plugin getPlugin();
 
-    PluginInfo getInfo();
+    @Contract(pure = true)
+    @NotNull PluginInfo getInfo();
 
 }

@@ -31,6 +31,7 @@ import net.transferproxy.api.plugin.classloader.PluginClassloader;
 import net.transferproxy.api.plugin.exception.PluginInitializationException;
 import net.transferproxy.api.plugin.info.PluginInfo;
 import net.transferproxy.api.util.ResourceUtil;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -48,9 +49,7 @@ public interface Plugin {
     }
 
     default <T> T makeConfiguration(final @NotNull String fileName, final @NotNull Class<T> confiurationClass) {
-        final Path path = TransferProxy.getInstance()
-                .getModuleManager()
-                .getPluginManager()
+        final Path path = this.getPluginManager()
                 .getPluginDirectory()
                 .resolve(this.getInfo().getName())
                 .resolve(fileName);
@@ -61,23 +60,28 @@ public interface Plugin {
         }
     }
 
-    default EventManager getEventManager() {
+    @Contract(pure = true)
+    default @NotNull EventManager getEventManager() {
         return this.getModuleManager().getEventManager();
     }
 
-    default PluginManager getPluginManager() {
+    @Contract(pure = true)
+    default @NotNull PluginManager getPluginManager() {
         return this.getModuleManager().getPluginManager();
     }
 
-    default ModuleManager getModuleManager() {
+    @Contract(pure = true)
+    default @NotNull ModuleManager getModuleManager() {
         return this.getProxy().getModuleManager();
     }
 
+    @Contract(pure = true)
     default TransferProxy getProxy() {
         return TransferProxy.getInstance();
     }
 
-    default PluginInfo getInfo() {
+    @Contract(pure = true)
+    default @NotNull PluginInfo getInfo() {
         if (this.getClass().getClassLoader() instanceof final PluginClassloader classloader) {
             return classloader.getInfo();
         }

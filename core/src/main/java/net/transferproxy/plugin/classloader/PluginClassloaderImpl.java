@@ -46,8 +46,8 @@ public class PluginClassloaderImpl extends URLClassLoader implements PluginClass
     private final Map<String, Class<?>> classes = new ConcurrentHashMap<>();
 
     public PluginClassloaderImpl(final @NotNull URL url, final @NotNull ClassLoader parent, final @NotNull PluginInfo info) {
-        super(new URL[] {url}, parent);
-        this.info = info;
+        super(new URL[] {Objects.requireNonNull(url, "url must not be null")}, Objects.requireNonNull(parent, "parent must not be null"));
+        this.info = Objects.requireNonNull(info, "info must not be null");
         final String mainClass = info.getMain();
         final Class<?> main;
         try {
@@ -95,12 +95,12 @@ public class PluginClassloaderImpl extends URLClassLoader implements PluginClass
     }
 
     @Override
-    public PluginInfo getInfo() {
+    public @NotNull PluginInfo getInfo() {
         return this.info;
     }
 
     @Override
-    public Plugin getPlugin() {
+    public @NotNull Plugin getPlugin() {
         return this.plugin;
     }
 
