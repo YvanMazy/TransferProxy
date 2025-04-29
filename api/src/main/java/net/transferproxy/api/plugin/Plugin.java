@@ -49,15 +49,22 @@ public interface Plugin {
     }
 
     default <T> T makeConfiguration(final @NotNull String fileName, final @NotNull Class<T> confiurationClass) {
-        final Path path = this.getPluginManager()
-                .getPluginDirectory()
-                .resolve(this.getInfo().getName())
-                .resolve(fileName);
+        final Path path = this.getDirectoryPath().resolve(fileName);
         try {
             return ResourceUtil.copyAndReadYaml(path, confiurationClass);
         } catch (final IOException e) {
             throw new PluginInitializationException("Fail to load configuration '" + fileName + "'", e);
         }
+    }
+
+    @Contract(pure = true)
+    default @NotNull Path getConfigPath() {
+        return this.getDirectoryPath().resolve("config.yml");
+    }
+
+    @Contract(pure = true)
+    default @NotNull Path getDirectoryPath() {
+        return this.getPluginManager().getPluginDirectory().resolve(this.getInfo().getName());
     }
 
     @Contract(pure = true)
