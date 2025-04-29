@@ -123,7 +123,10 @@ public class PluginManagerImpl implements PluginManager {
 
     private PluginInfo loadPluginInfo(final Path path) throws IOException {
         try (final JarFile jarFile = new JarFile(path.toFile())) {
-            final JarEntry entry = jarFile.getJarEntry("plugin.yml");
+            JarEntry entry = jarFile.getJarEntry("transferproxy.yml");
+            if (entry == null) {
+                entry = jarFile.getJarEntry("plugin.yml");
+            }
             if (entry != null) {
                 try (final InputStream input = jarFile.getInputStream(entry)) {
                     return ResourceUtil.getDefaultYamlMapper().readValue(input, PluginInfo.class);
