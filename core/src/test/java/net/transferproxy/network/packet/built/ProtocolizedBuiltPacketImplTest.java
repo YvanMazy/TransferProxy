@@ -73,6 +73,8 @@ class ProtocolizedBuiltPacketImplTest extends PacketTestBase {
             final DummyTestPacket packet = assertDoesNotThrow(() -> new DummyTestPacket(buf));
             assertEquals("test data", packet.data());
             assertEquals(entry.expected, packet.protocol());
+
+            buf.release();
         }
         // @formatter:on
     }
