@@ -42,6 +42,11 @@ public record StatusResponse(Component description, Players players, Version ver
         return new Builder();
     }
 
+    @Contract("-> new")
+    public @NotNull Builder toBuilder() {
+        return new Builder(this);
+    }
+
     public record Version(String name, int protocol) {
 
     }
@@ -92,6 +97,23 @@ public record StatusResponse(Component description, Players players, Version ver
         private String favicon;
 
         private Builder() {
+        }
+
+        private Builder(final @NotNull StatusResponse response) {
+            this.description = response.description;
+            if (response.version != null) {
+                this.name = response.version.name();
+                this.protocol = response.version.protocol();
+            }
+            if (response.players != null) {
+                this.online = response.players.online();
+                this.max = response.players.max();
+                final Players.SampleEntry[] sample = response.players.sample();
+                if (sample != null && sample.length > 0) {
+                    this.entries.addAll(List.of(sample));
+                }
+            }
+            this.favicon = response.favicon();
         }
 
         @Contract("-> new")
