@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Yvan Mazy
+ * Copyright (c) 2025 Yvan Mazy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,17 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.api.status.listener;
+package net.transferproxy.api.status;
 
-import net.transferproxy.api.event.listener.StatusListener;
-import net.transferproxy.api.event.status.StatusRequestEvent;
-import net.transferproxy.api.status.StatusResponse;
+import net.transferproxy.api.network.connection.PlayerConnection;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+public interface StatusManager {
 
-public final class CachedStatusListener implements StatusListener {
+    void process(final @NotNull PlayerConnection connection);
 
-    private final StatusResponse response;
-
-    public CachedStatusListener(final @NotNull StatusResponse response) {
-        this.response = Objects.requireNonNull(response, "response must not be null");
-    }
-
-    @Override
-    public void handle(final @NotNull StatusRequestEvent event) {
-        event.setResponse(this.response);
-    }
+    @Contract("_ -> new")
+    @NotNull StatusResponse buildDefaultResponse(final int protocol);
 
 }

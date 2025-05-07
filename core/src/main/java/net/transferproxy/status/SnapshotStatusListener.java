@@ -25,7 +25,7 @@
 package net.transferproxy.status;
 
 import net.transferproxy.api.event.listener.StatusListener;
-import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.event.status.StatusRequestEvent;
 import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
 import net.transferproxy.api.status.StatusResponse;
 import net.transferproxy.api.util.ComponentProtocolUtil;
@@ -46,8 +46,9 @@ public final class SnapshotStatusListener implements StatusListener {
     }
 
     @Override
-    public void handle(final @NotNull PlayerConnection connection) {
-        connection.sendPacket(this.builtPacket);
+    public void handle(final @NotNull StatusRequestEvent event) {
+        event.setCanSendResponsePacket(false);
+        event.getConnection().sendPacket(this.builtPacket);
     }
 
 }

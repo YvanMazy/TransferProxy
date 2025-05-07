@@ -28,8 +28,8 @@ import net.transferproxy.api.event.listener.DefaultReadyListener;
 import net.transferproxy.api.event.listener.EmptyListener;
 import net.transferproxy.api.event.listener.EventListener;
 import net.transferproxy.api.event.login.PreLoginEvent;
+import net.transferproxy.api.event.status.StatusRequestEvent;
 import net.transferproxy.api.network.connection.PlayerConnection;
-import net.transferproxy.api.status.listener.DefaultStatusListener;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +40,7 @@ public enum EventType {
 
     HANDSHAKE(PlayerConnection.class, EmptyListener::getInstance),
     PRE_LOGIN(PreLoginEvent.class, EmptyListener::getInstance),
-    STATUS(PlayerConnection.class, DefaultStatusListener::new),
+    STATUS(StatusRequestEvent.class, EmptyListener::getInstance),
     READY(PlayerConnection.class, DefaultReadyListener::new);
 
     private final Class<?> eventClass;

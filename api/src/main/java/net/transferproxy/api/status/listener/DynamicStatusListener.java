@@ -25,6 +25,7 @@
 package net.transferproxy.api.status.listener;
 
 import net.transferproxy.api.event.listener.StatusListener;
+import net.transferproxy.api.event.status.StatusRequestEvent;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.status.StatusResponse;
 import org.jetbrains.annotations.NotNull;
@@ -32,8 +33,8 @@ import org.jetbrains.annotations.NotNull;
 public abstract class DynamicStatusListener implements StatusListener {
 
     @Override
-    public void handle(final @NotNull PlayerConnection connection) {
-        connection.sendStatusResponse(this.buildResponse(connection));
+    public void handle(final @NotNull StatusRequestEvent event) {
+        event.setResponse(this.buildResponse(event.getConnection()));
     }
 
     protected abstract StatusResponse buildResponse(final @NotNull PlayerConnection connection);

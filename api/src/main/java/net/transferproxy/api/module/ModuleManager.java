@@ -27,6 +27,7 @@ package net.transferproxy.api.module;
 import net.transferproxy.api.event.EventManager;
 import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.plugin.PluginManager;
+import net.transferproxy.api.status.StatusManager;
 import net.transferproxy.api.terminal.TerminalExecutor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,14 @@ public interface ModuleManager {
      */
     @Contract(pure = true)
     @NotNull EventManager getEventManager();
+
+    /**
+     * Gets the current {@link StatusManager} implementation.
+     *
+     * @return the status manager
+     */
+    @Contract(pure = true)
+    @NotNull StatusManager getStatusManager();
 
     /**
      * Gets the current {@link PluginManager} implementation.
@@ -83,6 +92,13 @@ public interface ModuleManager {
      * @param eventManager the event manager
      */
     void setEventManager(final @NotNull EventManager eventManager);
+
+    /**
+     * Sets the {@link StatusManager} implementation to use.
+     *
+     * @param statusManager the status manager
+     */
+    void setStatusManager(final @NotNull StatusManager statusManager);
 
     /**
      * Sets the {@link PluginManager} implementation to use.

@@ -24,21 +24,21 @@
 
 package net.transferproxy.api.event.listener;
 
-import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.event.status.StatusRequestEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * The listener used to handle every status request
  */
 @FunctionalInterface
-public interface StatusListener extends EventListener<PlayerConnection> {
+public interface StatusListener extends EventListener<StatusRequestEvent> {
 
     /**
      * Handle the status request
      *
-     * @param connection The {@link PlayerConnection} who request
+     * @param event The called event
      */
     @Override
-    void handle(final @NotNull PlayerConnection connection);
+    void handle(final @NotNull StatusRequestEvent event);
 
 }

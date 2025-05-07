@@ -28,11 +28,13 @@ import net.transferproxy.api.event.EventManager;
 import net.transferproxy.api.module.ModuleManager;
 import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.plugin.PluginManager;
-import net.transferproxy.api.terminal.TerminalExecutor;
+import net.transferproxy.api.status.StatusManager;
 import net.transferproxy.api.terminal.DefaultTerminalExecutor;
+import net.transferproxy.api.terminal.TerminalExecutor;
 import net.transferproxy.event.EventManagerImpl;
 import net.transferproxy.network.packet.provider.PacketProviderGroups;
 import net.transferproxy.plugin.PluginManagerImpl;
+import net.transferproxy.status.StatusManagerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.VisibleForTesting;
 
@@ -42,6 +44,7 @@ import java.util.function.IntFunction;
 public class ModuleManagerImpl implements ModuleManager {
 
     private EventManager eventManager;
+    private StatusManager statusManager;
     private PluginManager pluginManager;
     private IntFunction<PacketProviderGroup> packetProviderGroupFunction;
     private TerminalExecutor terminalExecutor;
@@ -54,6 +57,11 @@ public class ModuleManagerImpl implements ModuleManager {
     @Override
     public @NotNull EventManager getEventManager() {
         return this.eventManager;
+    }
+
+    @Override
+    public @NotNull StatusManager getStatusManager() {
+        return this.statusManager;
     }
 
     @Override
@@ -82,6 +90,11 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     @Override
+    public void setStatusManager(final @NotNull StatusManager statusManager) {
+        this.statusManager = Objects.requireNonNull(statusManager, "statusManager must not be null");
+    }
+
+    @Override
     public void setPacketProviderGroupFunction(final @NotNull IntFunction<PacketProviderGroup> packetProviderGroupFunction) {
         this.packetProviderGroupFunction =
                 Objects.requireNonNull(packetProviderGroupFunction, "packetProviderGroupFunction must not be null");
@@ -96,6 +109,9 @@ public class ModuleManagerImpl implements ModuleManager {
     public void initializeDefaults(final boolean force) {
         if (force || this.eventManager == null) {
             this.eventManager = new EventManagerImpl();
+        }
+        if (force || this.statusManager == null) {
+            this.statusManager = new StatusManagerImpl();
         }
         if (force || this.pluginManager == null) {
             this.pluginManager = new PluginManagerImpl();

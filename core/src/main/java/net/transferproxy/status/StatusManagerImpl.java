@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Yvan Mazy
+ * Copyright (c) 2025 Yvan Mazy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,22 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.api.status.listener;
+package net.transferproxy.status;
 
-import net.transferproxy.api.TransferProxy;
-import net.transferproxy.api.configuration.ProxyConfiguration;
-import net.transferproxy.api.event.listener.StatusListener;
-import net.transferproxy.api.network.connection.PlayerConnection;
-import net.transferproxy.api.status.StatusResponse;
-import net.transferproxy.api.util.IOUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.transferproxy.api.TransferProxy;
+import net.transferproxy.api.configuration.ProxyConfiguration;
+import net.transferproxy.api.event.EventType;
+import net.transferproxy.api.event.status.StatusRequestEvent;
+import net.transferproxy.api.network.connection.PlayerConnection;
+import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
+import net.transferproxy.api.status.StatusManager;
+import net.transferproxy.api.status.StatusResponse;
+import net.transferproxy.api.util.ComponentProtocolUtil;
+import net.transferproxy.api.util.IOUtil;
+import net.transferproxy.network.packet.built.ProtocolizedBuiltPacketImpl;
+import net.transferproxy.network.packet.status.clientbound.StatusResponsePacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -41,9 +47,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public final class DefaultStatusListener implements StatusListener {
+public final class StatusManagerImpl implements StatusManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultStatusListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatusManagerImpl.class);
 
     private final String name;
     private final Component description;
@@ -51,7 +57,9 @@ public final class DefaultStatusListener implements StatusListener {
     private final boolean autoProtocol;
     private final String favicon;
 
-    public DefaultStatusListener() {
+    private ProtocolizedBuiltPacket builtResponse;
+
+    public StatusManagerImpl() {
         final ProxyConfiguration.Status config = TransferProxy.getInstance().getConfiguration().getStatus();
         this.name = config.getName();
         this.description = MiniMessage.miniMessage().deserialize(config.getDescription());
@@ -61,22 +69,44 @@ public final class DefaultStatusListener implements StatusListener {
             this.protocol = -1;
         } else {
             this.autoProtocol = false;
-            this.protocol = parseProtocol(rawProtocol);
+            this.protocol = this.parseProtocol(rawProtocol);
         }
-        this.favicon = readFavicon(Path.of(config.getFaviconPath()));
+        this.favicon = this.readFavicon(Path.of(config.getFaviconPath()));
+
+        if (!this.autoProtocol) {
+            final StatusResponsePacket packet = new StatusResponsePacket(this.buildDefaultResponse(-1));
+            this.builtResponse = new ProtocolizedBuiltPacketImpl(packet, true, ComponentProtocolUtil.getSerializerProtocols());
+        }
     }
 
     @Override
-    public void handle(final @NotNull PlayerConnection connection) {
-        connection.sendStatusResponse(StatusResponse.builder()
-                .name(this.name)
-                .description(this.description)
-                .protocol(this.autoProtocol ? connection.getProtocol() : this.protocol)
-                .favicon(this.favicon)
-                .build());
+    public void process(final @NotNull PlayerConnection connection) {
+        final StatusRequestEvent event = new StatusRequestEvent(connection);
+        TransferProxy.getInstance().getModuleManager().getEventManager().call(EventType.STATUS, event);
+        if (event.canSendResponsePacket()) {
+            StatusResponse response = event.getResponse();
+            if (response == null) {
+                if (this.builtResponse != null) {
+                    connection.sendPacket(this.builtResponse);
+                    return;
+                }
+                response = this.buildDefaultResponse(event.getConnection().getProtocol());
+            }
+            connection.sendStatusResponse(response);
+        }
     }
 
-    private static int parseProtocol(final @NotNull String rawProtocol) {
+    @Override
+    public @NotNull StatusResponse buildDefaultResponse(final int protocol) {
+        return StatusResponse.builder()
+                .name(this.name)
+                .description(this.description)
+                .protocol(this.autoProtocol ? protocol : this.protocol)
+                .favicon(this.favicon)
+                .build();
+    }
+
+    private int parseProtocol(final @NotNull String rawProtocol) {
         try {
             return Integer.parseInt(rawProtocol);
         } catch (final NumberFormatException exception) {
@@ -84,7 +114,7 @@ public final class DefaultStatusListener implements StatusListener {
         }
     }
 
-    private static @Nullable String readFavicon(final Path path) {
+    private @Nullable String readFavicon(final Path path) {
         if (Files.isRegularFile(path)) {
             try {
                 return IOUtil.createImage(path);

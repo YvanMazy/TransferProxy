@@ -26,7 +26,6 @@ package net.transferproxy.network.packet.status.serverbound;
 
 import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.TransferProxy;
-import net.transferproxy.api.event.EventType;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.serverbound.ServerboundPacket;
 import net.transferproxy.api.network.protocol.Protocolized;
@@ -40,7 +39,7 @@ public record StatusRequestPacket() implements ServerboundPacket {
 
     @Override
     public void handle(final @NotNull PlayerConnection connection) {
-        TransferProxy.getInstance().getModuleManager().getEventManager().call(EventType.STATUS, connection);
+        TransferProxy.getInstance().getModuleManager().getStatusManager().process(connection);
     }
 
     @Override
