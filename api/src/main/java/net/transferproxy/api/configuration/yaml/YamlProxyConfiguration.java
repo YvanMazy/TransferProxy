@@ -125,12 +125,16 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         private final String name;
         private final String description;
         private final String protocol;
+        private final int online;
+        private final int maxOnline;
         private final String faviconPath;
 
         private YamlStatus() {
             this.name = "TransferProxy";
             this.description = "<green>A TransferProxy server";
             this.protocol = "AUTO";
+            this.online = -1;
+            this.maxOnline = -1;
             this.faviconPath = "./favicon.png";
         }
 
@@ -152,6 +156,16 @@ public class YamlProxyConfiguration implements ProxyConfiguration {
         @Override
         public @NotNull String getFaviconPath() {
             return this.faviconPath;
+        }
+
+        @Override
+        public int getOnline() {
+            return this.online;
+        }
+
+        @Override
+        public int getMaxOnline() {
+            return this.maxOnline;
         }
 
     }

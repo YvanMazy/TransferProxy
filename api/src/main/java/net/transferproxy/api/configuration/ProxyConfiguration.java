@@ -183,6 +183,20 @@ public interface ProxyConfiguration {
         String getProtocol();
 
         /**
+         * Gets the online displayed in client server lists.
+         * @return the online
+         */
+        @Contract(pure = true)
+        int getOnline();
+
+        /**
+         * Gets the max online displayed in client server lists.
+         * @return the max online
+         */
+        @Contract(pure = true)
+        int getMaxOnline();
+
+        /**
          * Gets the filesystem path to the server's favicon image.
          * If the file is unavailable, no favicon is displayed in server lists.
          *

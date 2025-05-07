@@ -55,6 +55,8 @@ public final class StatusManagerImpl implements StatusManager {
     private final Component description;
     private final int protocol;
     private final boolean autoProtocol;
+    private final int online;
+    private final int maxOnline;
     private final String favicon;
 
     private ProtocolizedBuiltPacket builtResponse;
@@ -71,6 +73,8 @@ public final class StatusManagerImpl implements StatusManager {
             this.autoProtocol = false;
             this.protocol = this.parseProtocol(rawProtocol);
         }
+        this.online = config.getOnline();
+        this.maxOnline = config.getMaxOnline();
         this.favicon = this.readFavicon(Path.of(config.getFaviconPath()));
 
         if (!this.autoProtocol) {
@@ -103,6 +107,8 @@ public final class StatusManagerImpl implements StatusManager {
                 .description(this.description)
                 .protocol(this.autoProtocol ? protocol : this.protocol)
                 .favicon(this.favicon)
+                .online(this.online)
+                .max(this.maxOnline)
                 .build();
     }
 
