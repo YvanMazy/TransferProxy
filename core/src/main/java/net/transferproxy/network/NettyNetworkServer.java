@@ -28,10 +28,12 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollIoHandler;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.ResourceLeakDetector;
@@ -77,13 +79,13 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
 
         // Use Epoll if available
         if (config.isUseEpoll() && Epoll.isAvailable()) {
-            this.bossGroup = new EpollEventLoopGroup(bossThread, bossFactory);
-            this.workerGroup = new EpollEventLoopGroup(workerThread, workerFactory);
+            this.bossGroup = new MultiThreadIoEventLoopGroup(bossThread, bossFactory, EpollIoHandler.newFactory());
+            this.workerGroup = new MultiThreadIoEventLoopGroup(workerThread, workerFactory, EpollIoHandler.newFactory());
             channelClass = EpollServerSocketChannel.class;
             LOGGER.info("The network will use the EPOLL channel type");
         } else {
-            this.bossGroup = new NioEventLoopGroup(bossThread, bossFactory);
-            this.workerGroup = new NioEventLoopGroup(workerThread, workerFactory);
+            this.bossGroup = new MultiThreadIoEventLoopGroup(bossThread, bossFactory, NioIoHandler.newFactory());
+            this.workerGroup = new MultiThreadIoEventLoopGroup(workerThread, workerFactory, NioIoHandler.newFactory());
             channelClass = NioServerSocketChannel.class;
             LOGGER.info("The network will use the NIO channel type");
         }
