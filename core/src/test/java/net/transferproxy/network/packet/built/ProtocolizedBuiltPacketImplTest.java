@@ -87,7 +87,7 @@ class ProtocolizedBuiltPacketImplTest extends PacketTestBase {
 
         for (int i = 0; i < 20; i++) {
             final int protocol = i;
-            assertDoesNotThrow(() -> builtPacket.get(allocator, protocol));
+            assertDoesNotThrow(() -> builtPacket.get(allocator, protocol)).release();
         }
 
         verify(builtPacket, times(3)).compute(anyInt(), anyInt());
