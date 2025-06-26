@@ -66,12 +66,12 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerConnectionImpl.class);
 
     private final Channel channel;
-    private PacketProviderGroup packetProviderGroup;
+    private volatile PacketProviderGroup packetProviderGroup;
 
-    private ConnectionState state = ConnectionState.HANDSHAKE;
-    private int protocol;
-    private String hostname;
-    private int hostPort;
+    private volatile ConnectionState state = ConnectionState.HANDSHAKE;
+    private volatile int protocol;
+    private volatile String hostname;
+    private volatile int hostPort;
 
     // This is the field that must be volatile and not the entries
     private volatile Map<String, CompletableFuture<byte[]>> pendingCookies;
@@ -79,7 +79,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private String name;
     private UUID uuid;
     private ClientInformation information;
-    private boolean fromTransfer;
+    private volatile boolean fromTransfer;
     private String brand;
 
     public PlayerConnectionImpl(final @NotNull Channel channel) {
