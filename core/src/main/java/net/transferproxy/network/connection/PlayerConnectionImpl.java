@@ -59,6 +59,7 @@ import org.slf4j.LoggerFactory;
 import java.net.SocketException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerConnectionImpl extends SimpleChannelInboundHandler<ServerboundPacket> implements PlayerConnection {
 
@@ -124,7 +125,7 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
         }
         CompletableFuture<byte[]> future;
         if (this.pendingCookies == null) {
-            this.pendingCookies = new HashMap<>();
+            this.pendingCookies = new ConcurrentHashMap<>();
             future = null;
         } else {
             future = this.pendingCookies.get(cookieKey);
@@ -153,10 +154,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public void handleCookieResponse(final @NotNull String cookieKey, final byte @Nullable [] payload) {
-        if (this.pendingCookies == null) {
+        final Map<String, CompletableFuture<byte[]>> pendingCookies = this.pendingCookies;
+        if (pendingCookies == null) {
             return;
         }
-        final CompletableFuture<byte[]> future = this.pendingCookies.get(cookieKey);
+        final CompletableFuture<byte[]> future = pendingCookies.get(cookieKey);
         if (future == null) {
             return;
         }
@@ -165,7 +167,8 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
 
     @Override
     public @NotNull Map<String, CompletableFuture<byte[]>> getPendingCookies() {
-        return this.pendingCookies != null ? Collections.unmodifiableMap(this.pendingCookies) : Map.of();
+        final Map<String, CompletableFuture<byte[]>> pendingCookies = this.pendingCookies;
+        return pendingCookies != null ? Collections.unmodifiableMap(pendingCookies) : Map.of();
     }
 
     @Override
