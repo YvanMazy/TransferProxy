@@ -80,20 +80,10 @@ public final class BufUtil {
             throw new EncoderException("Invalid string length: " + string.length() + " > " + maxLength);
         }
 
-        final ByteBuf temp = buf.alloc().buffer(ByteBufUtil.utf8MaxBytes(string));
-        try {
-            final int realBytes = ByteBufUtil.writeUtf8(temp, string);
-            final int maxForLength = ByteBufUtil.utf8MaxBytes(maxLength);
+        final int writtenBytes = ByteBufUtil.utf8Bytes(string);
 
-            if (realBytes > maxForLength) {
-                throw new EncoderException("Invalid encoded string length: " + realBytes + " > " + maxForLength);
-            }
-
-            writeVarInt(buf, realBytes);
-            buf.writeBytes(temp);
-        } finally {
-            temp.release();
-        }
+        writeVarInt(buf, writtenBytes);
+        ByteBufUtil.writeUtf8(buf, string);
     }
 
     public static void writeUUID(final @NotNull ByteBuf buf, final @NotNull UUID uuid) {
