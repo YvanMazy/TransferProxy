@@ -24,9 +24,9 @@
 
 package net.transferproxy.test.agent.callback;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.protocol.status.ServerStatus;
+import net.minecraft.server.players.NameAndId;
 import net.transferproxy.test.common.SimpleStatusResponse;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,8 +67,8 @@ public class StatusResponseCallback implements Runnable {
         final ServerStatus.Players players = this.serverData.players;
         if (players != null) {
             final List<SimpleStatusResponse.Players.SampleEntry> list = new ArrayList<>();
-            for (final GameProfile profile : players.sample()) {
-                list.add(new SimpleStatusResponse.Players.SampleEntry(profile.getName(), profile.getId()));
+            for (final NameAndId profile : players.sample()) {
+                list.add(new SimpleStatusResponse.Players.SampleEntry(profile.name(), profile.id()));
             }
             return new SimpleStatusResponse.Players(players.online(),
                     players.max(),

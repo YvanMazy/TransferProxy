@@ -5,7 +5,7 @@ buildscript() {
         }
     }
     dependencies {
-        classpath 'com.github.YvanMazy.MinecraftRemapperGradle:MinecraftRemapperGradle:9b8f7b1c98'
+        classpath 'com.github.YvanMazy.MinecraftRemapperGradle:MinecraftRemapperGradle:a2558bb063'
     }
 }
 
@@ -24,10 +24,14 @@ dependencies {
 }
 
 minecraftRemapper {
-    version = "1.21.5"
+    version = "1.21.9"
     directionType = 'CLIENT'
-    dependenciesConfigurations = ["integrationTestCompileOnly"]
+    includeRemappedJarDependency = true
     includeLibrariesDependency = true
+    includeRawJarDependency = true
+    remappedJarDependenciesConfigurations = ["integrationTestCompileOnly"]
+    librariesDependenciesConfigurations = ["integrationTestCompileOnly"]
+    rawJarDependenciesConfigurations = ["integrationTestRuntimeOnly"]
 }
 
 shadowJar {

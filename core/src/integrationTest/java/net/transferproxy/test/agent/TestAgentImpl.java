@@ -27,6 +27,7 @@ package net.transferproxy.test.agent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.ConnectScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
@@ -70,7 +71,7 @@ public final class TestAgentImpl extends UnicastRemoteObject implements TestAgen
         final CountDownLatch latch = new CountDownLatch(1);
         Minecraft.getInstance().schedule(() -> {
             try {
-                Minecraft.getInstance().disconnect();
+                Minecraft.getInstance().disconnect(new TitleScreen(), false);
             } finally {
                 latch.countDown();
             }

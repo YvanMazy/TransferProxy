@@ -49,6 +49,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.rmi.RemoteException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assumptions.abort;
 
@@ -175,6 +176,7 @@ public class IntegrationHandler implements TestExecutionListener {
                 .agentId(TestAgent.ID)
                 .config(config -> config.version(this.minecraftVersion)
                         .authentication(Auth.byUsername(PLAYER_NAME))
+                        .gameArguments(List.of("--offlineDeveloperMode"))
                         .processDirectory(this.cacheDirectory)
                         .inheritIO(false))
                 .start();
