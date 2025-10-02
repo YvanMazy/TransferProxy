@@ -77,6 +77,19 @@ public interface PlayerConnection extends Protocolized {
     void sendStatusResponse(final @NotNull StatusResponse response);
 
     /**
+     * Sends the code of conduct to the client.
+     * @param codeOfConduct The code of conduct to send.
+     * @return A CompletableFuture that will be completed when the code of conduct has been accepted by the client.
+     * @throws IllegalStateException if the code of conduct has already been sent and not yet accepted.
+     */
+    @NotNull CompletableFuture<Void> sendCodeOfConduct(final @NotNull String codeOfConduct);
+
+    /**
+     * Triggers the acceptance of the code of conduct.
+     */
+    void triggerAcceptCodeOfConduct();
+
+    /**
      * Fetches a client-stored cookie using a {@link Key} reference.
      *
      * @param cookieKey The cookie identifier as a Key object (must not be null)

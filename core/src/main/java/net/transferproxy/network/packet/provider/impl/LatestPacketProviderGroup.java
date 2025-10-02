@@ -30,10 +30,7 @@ import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.network.packet.config.FinishConfigurationPacket;
 import net.transferproxy.network.packet.config.KeepAlivePacket;
 import net.transferproxy.network.packet.config.PluginMessagePacket;
-import net.transferproxy.network.packet.config.serverbound.ClientInformationPacket;
-import net.transferproxy.network.packet.config.serverbound.ClientSelectKnownPacksPacket;
-import net.transferproxy.network.packet.config.serverbound.ConfigCookieResponsePacket;
-import net.transferproxy.network.packet.config.serverbound.ResourcePackResponsePacket;
+import net.transferproxy.network.packet.config.serverbound.*;
 import net.transferproxy.network.packet.handshake.HandshakePacket;
 import net.transferproxy.network.packet.login.serverbound.LoginAcknowledgedPacket;
 import net.transferproxy.network.packet.login.serverbound.LoginCookieResponsePacket;
@@ -62,6 +59,8 @@ public class LatestPacketProviderGroup implements PacketProviderGroup {
             .putNull() // Pong packet
             .putOnlyBuffer(ResourcePackResponsePacket::new)
             .putOnlyBuffer(ClientSelectKnownPacksPacket::from)
+            .putNull() // Custom Click Action packet
+            .putOnlyBuffer(AcceptCodeOfConductPacket::new)
             .build();
     // @formatter:on
 

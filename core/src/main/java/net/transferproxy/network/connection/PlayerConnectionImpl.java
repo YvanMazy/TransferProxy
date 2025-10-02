@@ -57,7 +57,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.SocketException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -81,6 +84,9 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private ClientInformation information;
     private volatile boolean fromTransfer;
     private String brand;
+
+    private final Object codeOfConductLock = new Object();
+    private CompletableFuture<Void> codeOfConductFuture;
 
     public PlayerConnectionImpl(final @NotNull Channel channel) {
         this.channel = Objects.requireNonNull(channel, "channel must not be null");
@@ -114,6 +120,33 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
         this.ensureState(ConnectionState.STATUS, "sendStatusResponse");
         Objects.requireNonNull(response, "response must not be null");
         this.sendPacket(new StatusResponsePacket(response));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> sendCodeOfConduct(final @NotNull String codeOfConduct) {
+        final CompletableFuture<Void> future = new CompletableFuture<>();
+        synchronized (this.codeOfConductLock) {
+            if (this.codeOfConductFuture != null) {
+                throw new IllegalStateException("Code of conduct already sent");
+            }
+            this.codeOfConductFuture = future;
+        }
+        this.sendPacket(new CodeOfConductPacket(codeOfConduct));
+        return future;
+    }
+
+    @Override
+    public void triggerAcceptCodeOfConduct() {
+        final CompletableFuture<Void> future;
+        synchronized (this.codeOfConductLock) {
+            future = this.codeOfConductFuture;
+            if (future != null) {
+                this.codeOfConductFuture = null;
+            }
+        }
+        if (future != null) {
+            future.complete(null);
+        }
     }
 
     @Override
