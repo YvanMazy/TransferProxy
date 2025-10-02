@@ -28,10 +28,9 @@ import net.transferproxy.api.event.EventManager;
 import net.transferproxy.api.event.EventType;
 import net.transferproxy.api.event.listener.EventListener;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public final class EventManagerImpl implements EventManager {
 
@@ -111,10 +110,14 @@ public final class EventManagerImpl implements EventManager {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T extends EventListener<?>> T[] getListeners(final EventType eventType) {
-        return eventType != null ? (T[]) this.listenerMap.get(eventType) : null;
+    public @Unmodifiable @NotNull Collection<? extends EventListener<?>> getListeners(final @NotNull EventType eventType) {
+        Objects.requireNonNull(eventType, "eventType must not be null");
+        final EventListener<?>[] listeners = this.listenerMap.get(eventType);
+        if (listeners != null) {
+            return List.of(listeners);
+        }
+        return List.of();
     }
 
 }

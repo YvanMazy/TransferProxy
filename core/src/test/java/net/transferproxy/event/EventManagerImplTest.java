@@ -34,6 +34,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import java.util.Collection;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -77,7 +80,7 @@ class EventManagerImplTest {
 
     @Test
     void testGetListenersWithNullType() {
-        assertNull(this.instance.getListeners(null));
+        assertThrows(RuntimeException.class, () -> this.instance.getListeners(null));
     }
 
     @Test
@@ -92,24 +95,27 @@ class EventManagerImplTest {
     @ParameterizedTest
     @EnumSource(EventType.class)
     void testCommonUseCaseOfAllMethods(final EventType type) {
-        // TODO: Maybe should be moved into integration tests?
         // Mock listener and event
         final EventListener listener = mock(EventListener.class);
         final Object event = mock(type.getEventClass());
 
         // Assert listeners is empty
-        assertNull(this.instance.getListeners(type));
+        final Collection<? extends EventListener<?>> before = this.instance.getListeners(type);
+        assertNotNull(before);
+        assertEquals(0, before.size());
+
         // Add listener and call with mocked event
         this.instance.addListener(type, listener);
         this.instance.call(type, event);
         // Verify listener is called one time
         verify(listener).handle(event);
 
-        assertArrayEquals(this.instance.getListeners(type), new EventListener[] {listener});
+        assertIterableEquals(List.of(listener), this.instance.getListeners(type));
 
         assertTrue(this.instance.removeListener(type, listener));
-        final Object[] listeners = this.instance.getListeners(type);
-        assertTrue(listeners == null || listeners.length == 0);
+        final Collection<? extends EventListener<?>> listeners = this.instance.getListeners(type);
+        assertNotNull(listeners);
+        assertEquals(0, listeners.size());
 
         this.instance.call(type, event);
         verify(listener).handle(event);

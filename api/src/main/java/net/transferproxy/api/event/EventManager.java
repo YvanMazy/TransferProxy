@@ -27,6 +27,9 @@ package net.transferproxy.api.event;
 import net.transferproxy.api.event.listener.EventListener;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.Collection;
 
 public interface EventManager {
 
@@ -76,14 +79,14 @@ public interface EventManager {
     <T extends EventListener<?>> boolean removeListener(final EventType eventType, final T eventListener);
 
     /**
-     * Retrieves the array of event listeners associated with the specified event type.
+     * Retrieves an unmodifiable collection of event listeners associated with the specified event type.
      *
      * @param eventType the event type for which listeners are retrieved
-     * @param <T>       the type of the event listener
      *
-     * @return an array of listeners for the specified event type, or null if the event type is null
+     * @return an unmodifiable collection of listeners for the specified event type
      */
-    @Contract(value = "null -> null; !null -> _", pure = true)
-    <T extends EventListener<?>> T[] getListeners(final EventType eventType);
+    @Contract(pure = true)
+    @Unmodifiable
+    @NotNull Collection<? extends EventListener<?>> getListeners(final @NotNull EventType eventType);
 
 }
