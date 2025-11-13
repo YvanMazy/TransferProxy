@@ -28,7 +28,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.DecoderException;
-import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.network.connection.ConnectionState;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
@@ -42,12 +41,12 @@ import static net.transferproxy.util.BufUtil.readVarInt;
 
 public final class PacketDecoder extends ByteToMessageDecoder {
 
-    private static final boolean CHECK_EXTRA_BYTE = !TransferProxy.getInstance().getConfiguration().getNetwork().isDisableExtraByteCheck();
-
     private final PlayerConnection connection;
+    private final boolean checkExtraByte;
 
-    public PacketDecoder(final @NotNull PlayerConnection connection) {
+    public PacketDecoder(final @NotNull PlayerConnection connection, final boolean checkExtraByte) {
         this.connection = Objects.requireNonNull(connection, "connection must not be null");
+        this.checkExtraByte = checkExtraByte;
     }
 
     @Override
@@ -66,7 +65,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
                 throw new DecoderException("Bad packet id 0x" + Integer.toHexString(packetId) + " in state: " + state);
             }
 
-            if (CHECK_EXTRA_BYTE) {
+            if (this.checkExtraByte) {
                 final int readable = in.readableBytes();
                 if (readable > 0) {
                     final String packetName = packet.getClass().getSimpleName();

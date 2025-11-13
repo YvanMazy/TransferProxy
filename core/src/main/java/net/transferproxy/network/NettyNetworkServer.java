@@ -27,12 +27,10 @@ package net.transferproxy.network;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
-import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollIoHandler;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -63,6 +61,8 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private Channel channel;
+
+    private boolean checkExtraByte;
 
     @Override
     public void start() {
@@ -102,6 +102,8 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
             bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
         }
 
+        this.checkExtraByte = !config.isDisableExtraByteCheck();
+
         // Bind the server
         try {
             this.channel = bootstrap.bind().syncUninterruptibly().channel();
@@ -138,7 +140,7 @@ public class NettyNetworkServer extends ChannelInitializer<Channel> implements N
 
         pipeline.addLast("timeout", new ReadTimeoutHandler(30))
                 .addLast("splitter", new VarIntFrameDecoder())
-                .addLast("decoder", new PacketDecoder(connection))
+                .addLast("decoder", new PacketDecoder(connection, this.checkExtraByte))
                 .addLast("prepender", FRAME_ENCODER);
         pipeline.addLast("encoder", new PacketEncoder(connection)).addLast("handler", connection);
     }
