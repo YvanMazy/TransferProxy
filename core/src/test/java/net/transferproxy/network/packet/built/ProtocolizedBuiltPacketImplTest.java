@@ -90,7 +90,7 @@ class ProtocolizedBuiltPacketImplTest extends PacketTestBase {
             assertDoesNotThrow(() -> builtPacket.get(allocator, protocol)).release();
         }
 
-        verify(builtPacket, times(3)).compute(anyInt(), anyInt());
+        verify(builtPacket, times(3)).computeBytes(anyInt(), any(ByteBufAllocator.class));
     }
 
 }

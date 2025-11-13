@@ -45,10 +45,10 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
 
     private final IntFunction<Packet> packetFactory;
     private final int[] protocols;
-    private final IntObjectMap<byte[]> dataMap = new IntObjectHashMap<>(2);
+    private volatile IntObjectMap<byte[]> dataMap;
     private final boolean lazy;
 
-    public <T> ProtocolizedBuiltPacketImpl(final @NotNull Packet packet, final boolean lazy, final int... protocols) {
+    public ProtocolizedBuiltPacketImpl(final @NotNull Packet packet, final boolean lazy, final int... protocols) {
         this(u -> packet, lazy, protocols);
         Objects.requireNonNull(packet, "packet must not be null");
     }
@@ -78,32 +78,49 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
         if (protocols.length == 0) {
             throw new IllegalArgumentException("Protocols must not be empty. Use BuiltPacket instead if the packet is not protocolized.");
         }
+        final IntObjectMap<byte[]> initialMap = new IntObjectHashMap<>(lazy ? 2 : protocols.length);
         if (!lazy) {
             for (final int protocol : protocols) {
-                this.compute(protocol);
+                final byte[] data = this.computeBytes(protocol);
+                initialMap.put(protocol, data);
             }
         }
+        this.dataMap = initialMap;
     }
 
     @Override
     public ByteBuf get(final @NotNull ByteBufAllocator allocator, final int protocol) {
-        byte[] data = this.dataMap.get(protocol);
+        IntObjectMap<byte[]> localMap = this.dataMap;
+        byte[] data = localMap.get(protocol);
         if (data == null) {
-            if (this.lazy && this.isAvailable(protocol)) {
-                data = this.compute(protocol, protocol, allocator);
-            } else {
-                final int low = this.findLow(protocol);
-                data = this.dataMap.get(low);
+            synchronized (this) {
+                localMap = this.dataMap;
+                data = localMap.get(protocol);
                 if (data == null) {
-                    data = this.compute(low, protocol, allocator);
-                    this.dataMap.put(low, data);
-                } else {
-                    this.dataMap.put(protocol, data);
+                    final IntObjectMap<byte[]> newMap = copyOf(localMap);
+
+                    if (this.lazy && this.isAvailable(protocol)) {
+                        data = this.computeBytes(protocol, allocator);
+                        newMap.put(protocol, data);
+                    } else {
+                        final int low = this.findLow(protocol);
+                        final byte[] lowData = localMap.get(low);
+                        if (lowData == null) {
+                            data = this.computeBytes(low, allocator);
+                            newMap.put(low, data);
+                            newMap.put(protocol, data);
+                        } else {
+                            data = lowData;
+                            newMap.put(protocol, data);
+                        }
+                    }
+
+                    this.dataMap = newMap;
                 }
             }
         }
-        final int length = data.length;
-        final ByteBuf buf = allocator.buffer(length, length);
+
+        final ByteBuf buf = allocator.buffer(data.length, data.length);
         buf.writeBytes(data);
         return buf;
     }
@@ -118,17 +135,13 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
         return nearLow;
     }
 
-    private byte[] compute(final int protocol) {
-        return this.compute(protocol, protocol);
+    @VisibleForTesting
+    byte[] computeBytes(final int protocol) {
+        return this.computeBytes(protocol, ByteBufAllocator.DEFAULT);
     }
 
     @VisibleForTesting
-    byte[] compute(final int protocol, final int updateProtocol) {
-        return this.compute(protocol, updateProtocol, ByteBufAllocator.DEFAULT);
-    }
-
-    @VisibleForTesting
-    byte[] compute(final int protocol, final int updateProtocol, final @NotNull ByteBufAllocator allocator) {
+    byte[] computeBytes(final int protocol, final @NotNull ByteBufAllocator allocator) {
         final Packet packet = this.packetFactory.apply(protocol);
 
         final ByteBuf buf = allocator.buffer();
@@ -138,7 +151,7 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
 
             final byte[] data = new byte[buf.readableBytes()];
             buf.getBytes(buf.readerIndex(), data);
-            this.dataMap.put(updateProtocol, data);
+
             return data;
         } finally {
             buf.release();
@@ -152,6 +165,14 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
             }
         }
         return false;
+    }
+
+    private static IntObjectMap<byte[]> copyOf(final IntObjectMap<byte[]> source) {
+        final IntObjectMap<byte[]> copy = new IntObjectHashMap<>(source.size() + 1);
+        for (final IntObjectMap.PrimitiveEntry<byte[]> entry : source.entries()) {
+            copy.put(entry.key(), entry.value());
+        }
+        return copy;
     }
 
 }
