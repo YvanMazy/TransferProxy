@@ -26,7 +26,6 @@ package net.transferproxy.network.packet.built;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.Unpooled;
 import io.netty.util.collection.IntObjectHashMap;
 import io.netty.util.collection.IntObjectMap;
 import net.transferproxy.api.network.packet.Packet;
@@ -91,12 +90,12 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
         byte[] data = this.dataMap.get(protocol);
         if (data == null) {
             if (this.lazy && this.isAvailable(protocol)) {
-                data = this.compute(protocol);
+                data = this.compute(protocol, protocol, allocator);
             } else {
                 final int low = this.findLow(protocol);
                 data = this.dataMap.get(low);
                 if (data == null) {
-                    data = this.compute(low, protocol);
+                    data = this.compute(low, protocol, allocator);
                     this.dataMap.put(low, data);
                 } else {
                     this.dataMap.put(protocol, data);
@@ -125,17 +124,25 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
 
     @VisibleForTesting
     byte[] compute(final int protocol, final int updateProtocol) {
+        return this.compute(protocol, updateProtocol, ByteBufAllocator.DEFAULT);
+    }
+
+    @VisibleForTesting
+    byte[] compute(final int protocol, final int updateProtocol, final @NotNull ByteBufAllocator allocator) {
         final Packet packet = this.packetFactory.apply(protocol);
 
-        final ByteBuf buf = Unpooled.buffer();
-        writeVarInt(buf, packet.getId());
-        packet.write(Protocolized.of(protocol), buf);
-        buf.capacity(buf.readableBytes());
+        final ByteBuf buf = allocator.buffer();
+        try {
+            writeVarInt(buf, packet.getId());
+            packet.write(Protocolized.of(protocol), buf);
 
-        final byte[] data = new byte[buf.readableBytes()];
-        buf.getBytes(buf.readerIndex(), data);
-        this.dataMap.put(updateProtocol, data);
-        return data;
+            final byte[] data = new byte[buf.readableBytes()];
+            buf.getBytes(buf.readerIndex(), data);
+            this.dataMap.put(updateProtocol, data);
+            return data;
+        } finally {
+            buf.release();
+        }
     }
 
     private boolean isAvailable(final int protocol) {
