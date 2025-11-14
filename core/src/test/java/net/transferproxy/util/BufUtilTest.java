@@ -24,12 +24,12 @@
 
 package net.transferproxy.util;
 
-import net.transferproxy.util.test.TestGenerationUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import net.kyori.adventure.nbt.*;
+import net.transferproxy.util.test.TestGenerationUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

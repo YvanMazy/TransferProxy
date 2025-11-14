@@ -24,10 +24,10 @@
 
 package net.transferproxy.api.terminal;
 
-import net.transferproxy.api.terminal.command.builtin.SystemInfoCommand;
-import net.transferproxy.api.terminal.command.builtin.PluginsCommand;
 import net.transferproxy.api.terminal.command.builtin.NetworkInfoCommand;
+import net.transferproxy.api.terminal.command.builtin.PluginsCommand;
 import net.transferproxy.api.terminal.command.builtin.StopCommand;
+import net.transferproxy.api.terminal.command.builtin.SystemInfoCommand;
 
 public class DefaultTerminalExecutor extends BaseTerminalExecutor {
 

@@ -24,9 +24,9 @@
 
 package net.transferproxy.util;
 
-import net.transferproxy.util.test.TestGenerationUtil;
 import com.google.gson.JsonElement;
 import net.kyori.adventure.nbt.BinaryTag;
+import net.transferproxy.util.test.TestGenerationUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

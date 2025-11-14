@@ -29,7 +29,8 @@ import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.network.protocol.Protocolized;
 import org.jetbrains.annotations.NotNull;
 
-import static net.transferproxy.util.BufUtil.*;
+import static net.transferproxy.util.BufUtil.readString;
+import static net.transferproxy.util.BufUtil.writeString;
 
 public record DummyTestPacket(int protocol, String data) implements Packet {
 

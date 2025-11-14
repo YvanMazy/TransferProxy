@@ -24,9 +24,9 @@
 
 package net.transferproxy.api.event.listener;
 
-import net.transferproxy.api.network.connection.PlayerConnection;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.transferproxy.api.network.connection.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
 public final class DefaultReadyListener implements ReadyListener {

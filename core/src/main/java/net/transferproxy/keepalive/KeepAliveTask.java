@@ -24,13 +24,13 @@
 
 package net.transferproxy.keepalive;
 
+import io.netty.channel.Channel;
 import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.network.connection.ConnectionState;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.network.packet.built.BuiltPacketImpl;
 import net.transferproxy.network.packet.config.KeepAlivePacket;
-import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

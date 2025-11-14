@@ -24,11 +24,11 @@
 
 package net.transferproxy.network.packet.built;
 
-import net.transferproxy.api.network.packet.Packet;
-import net.transferproxy.api.network.packet.built.BuiltPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.api.network.packet.built.BuiltPacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

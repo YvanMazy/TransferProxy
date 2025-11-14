@@ -24,9 +24,9 @@
 
 package net.transferproxy.network.packet.config.clientbound;
 
+import io.netty.buffer.ByteBuf;
 import net.transferproxy.api.resourcepack.KnownPack;
 import net.transferproxy.network.packet.pack.SelectKnownPacksPacket;
-import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

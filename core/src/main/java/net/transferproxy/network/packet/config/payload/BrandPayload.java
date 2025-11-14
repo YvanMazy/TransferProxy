@@ -24,8 +24,8 @@
 
 package net.transferproxy.network.packet.config.payload;
 
-import net.transferproxy.api.network.connection.PlayerConnection;
 import io.netty.buffer.ByteBuf;
+import net.transferproxy.api.network.connection.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
 import static net.transferproxy.util.BufUtil.readString;

@@ -24,8 +24,8 @@
 
 package net.transferproxy.network.packet.config.serverbound;
 
-import net.transferproxy.network.packet.cookie.CookieResponsePacket;
 import io.netty.buffer.ByteBuf;
+import net.transferproxy.network.packet.cookie.CookieResponsePacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
