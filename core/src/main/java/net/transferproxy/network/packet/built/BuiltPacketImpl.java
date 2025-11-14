@@ -49,7 +49,7 @@ public class BuiltPacketImpl implements BuiltPacket {
         buf.getBytes(buf.readerIndex(), this.data);
     }
 
-    public BuiltPacketImpl(final byte @NotNull[] data) {
+    public BuiltPacketImpl(final byte @NotNull [] data) {
         this.data = Objects.requireNonNull(data, "data must not be null");
     }
 

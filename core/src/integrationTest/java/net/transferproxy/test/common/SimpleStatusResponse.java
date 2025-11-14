@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public record SimpleStatusResponse(String description, Players players, Version version, String favicon) implements Serializable {
 
-    public record Version(String name, int protocol) implements Serializable{
+    public record Version(String name, int protocol) implements Serializable {
 
     }
 
