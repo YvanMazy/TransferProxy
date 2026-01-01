@@ -3,10 +3,10 @@ dependencies {
     api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.19.0'
 
     // Logging
-    api 'org.jline:jline-terminal-jansi:3.29.0'
+    api 'org.jline:jline-terminal-jansi:3.30.6'
 
     // Adventure library
-    def version = '4.21.0'
+    def version = '4.26.1'
     api("net.kyori:adventure-api:$version") {
         exclude module: 'gson'
     }
@@ -16,7 +16,7 @@ dependencies {
     api "net.kyori:adventure-text-logger-slf4j:$version"
     api "net.kyori:adventure-text-minimessage:$version"
 
-    api 'com.google.code.gson:gson:2.13.1'
+    api 'com.google.code.gson:gson:2.13.2'
 }
 
 configurations {
