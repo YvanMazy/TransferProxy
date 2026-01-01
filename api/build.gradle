@@ -1,6 +1,6 @@
 dependencies {
     // Configuration
-    api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.19.0'
+    api 'tools.jackson.dataformat:jackson-dataformat-yaml:3.0.3'
 
     // Logging
     api 'org.jline:jline-terminal-jansi:3.30.6'
