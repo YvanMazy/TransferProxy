@@ -32,6 +32,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public final class TestGenerationUtil {
 
+    private static final MiniMessage MINI_MESSAGE = MiniMessage.builder().emitVirtuals(false).build();
+
     private TestGenerationUtil() throws IllegalAccessException {
         throw new IllegalAccessException("You cannot instantiate a utility class");
     }
@@ -54,8 +56,7 @@ public final class TestGenerationUtil {
     }
 
     public static Component generateComplexComponent() {
-        return MiniMessage.miniMessage()
-                .deserialize("<color:#FF5555>This is a <color:#55FF55>test! <rainbow:!2>||||||||||||||||||||||||</rainbow>");
+        return MINI_MESSAGE.deserialize("<color:#FF5555>This is a <color:#55FF55>test! <rainbow:!2>||||||||||||||||||||||||</rainbow>");
     }
 
 }
