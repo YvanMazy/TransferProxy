@@ -1,3 +1,7 @@
+# TransferProxy configuration file
+# If you have any questions or issues, feel free to create an issue here:
+# https://github.com/YvanMazy/TransferProxy/issues
+
 network:
   bind-address: "0.0.0.0"
   bind-port: 25565
@@ -26,6 +30,8 @@ status:
   # You can also directly specify the protocol number, such as 766.
   protocol: "AUTO"
   # Displayed number of online players.
+  # To display a real number of online players, here is the documentation:
+  # https://github.com/YvanMazy/TransferProxy/wiki/Display-the-correct-number-of-online-players
   online: -1
   # Displayed maximum number of online players.
   # This value is only used for display and has no real effect.
