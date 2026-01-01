@@ -26,7 +26,7 @@ allprojects {
         api 'org.tinylog:tinylog-impl:2.7.0'
 
         // Networking
-        api 'io.netty:netty-all:4.2.1.Final'
+        api 'io.netty:netty-all:4.2.9.Final'
 
         // Annotations
         api 'org.jetbrains:annotations:24.1.0'
