@@ -178,7 +178,7 @@ public class IntegrationHandler implements TestExecutionListener {
                         .authentication(Auth.byUsername(PLAYER_NAME))
                         .gameArguments(List.of("--offlineDeveloperMode"))
                         .processDirectory(this.cacheDirectory)
-                        .inheritIO(false))
+                        .inheritIO(true))
                 .start();
     }
 

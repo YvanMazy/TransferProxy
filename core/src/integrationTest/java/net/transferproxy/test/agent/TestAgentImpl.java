@@ -28,10 +28,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.server.level.ParticleStatus;
+import net.minecraft.server.network.EventLoopGroupHolder;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.ChatVisiblity;
 import net.minecraft.world.entity.player.PlayerModelPart;
@@ -57,7 +59,7 @@ public final class TestAgentImpl extends UnicastRemoteObject implements TestAgen
         Minecraft.getInstance().schedule(() -> {
             final Minecraft minecraft = Minecraft.getInstance();
             final ServerAddress address = new ServerAddress(host, port);
-            ConnectScreen.startConnecting(minecraft.screen,
+            ConnectScreen.startConnecting(new JoinMultiplayerScreen(new TitleScreen()),
                     minecraft,
                     address,
                     new ServerData("Test", address.toString(), ServerData.Type.OTHER),
@@ -88,8 +90,11 @@ public final class TestAgentImpl extends UnicastRemoteObject implements TestAgen
         final ServerData serverData = new ServerData("Test", host + ":" + port, ServerData.Type.OTHER);
         final CompletableFuture<SimpleStatusResponse> future = new CompletableFuture<>();
         try {
-            this.serverStatusPinger.pingServer(serverData, () -> {
-            }, new StatusResponseCallback(serverData, future));
+            this.serverStatusPinger.pingServer(serverData,
+                    () -> {
+                    },
+                    new StatusResponseCallback(serverData, future),
+                    EventLoopGroupHolder.remote(Minecraft.getInstance().options.useNativeTransport()));
         } catch (final UnknownHostException e) {
             future.completeExceptionally(e);
         }
