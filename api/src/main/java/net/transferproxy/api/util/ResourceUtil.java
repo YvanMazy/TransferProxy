@@ -25,6 +25,7 @@
 package net.transferproxy.api.util;
 
 import org.jetbrains.annotations.NotNull;
+import tools.jackson.databind.MapperFeature;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.dataformat.yaml.YAMLMapper;
@@ -38,8 +39,10 @@ import java.util.Objects;
 
 public final class ResourceUtil {
 
-    private static final ObjectMapper DEFAULT_MAPPER =
-            YAMLMapper.builder().propertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE).build();
+    private static final ObjectMapper DEFAULT_MAPPER = YAMLMapper.builder()
+            .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
+            .propertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE)
+            .build();
 
     private ResourceUtil() throws IllegalAccessException {
         throw new IllegalAccessException("You cannot instantiate a utility class");
