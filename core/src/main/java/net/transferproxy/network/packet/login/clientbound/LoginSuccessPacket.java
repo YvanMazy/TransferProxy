@@ -37,7 +37,10 @@ import java.util.UUID;
 
 import static net.transferproxy.util.BufUtil.*;
 
-public record LoginSuccessPacket(UUID uuid, String username, Property[] properties) implements Packet {
+public record LoginSuccessPacket(UUID uuid, String username, Property[] properties, UUID sessionId) implements Packet {
+
+    private static final int SESSION_ID_PROTOCOL = 776; // 776 = 26.2
+    private static final UUID EMPTY_SESSION_ID = new UUID(0L, 0L);
 
     public LoginSuccessPacket(final @NotNull PlayerConnection connection, final @NotNull ByteBuf buf) {
         this(readUUID(buf),
@@ -45,7 +48,8 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
                 readArray(buf,
                         Property[]::new,
                         sub -> new Property(readString(sub), readString(sub), sub.readBoolean() ? readString(buf) : null),
-                        16));
+                        16),
+                connection.getProtocol() >= SESSION_ID_PROTOCOL ? readUUID(buf) : null);
         if (connection.getProtocol() < 768) { // 768 = 1.21.2
             buf.readBoolean();
         }
@@ -70,7 +74,11 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
                 }
             });
         }
-        if (protocolized.getProtocol() < 768) { // 768 = 1.21.2
+        final int protocol = protocolized.getProtocol();
+        if (protocol >= SESSION_ID_PROTOCOL) {
+            writeUUID(buf, this.sessionId != null ? this.sessionId : EMPTY_SESSION_ID);
+        }
+        if (protocol < 768) { // 768 = 1.21.2
             buf.writeBoolean(true);
         }
     }
@@ -90,12 +98,12 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
         }
         final LoginSuccessPacket that = (LoginSuccessPacket) o;
         return Objects.equals(this.uuid, that.uuid) && Objects.equals(this.username, that.username) &&
-                Arrays.equals(this.properties, that.properties);
+                Arrays.equals(this.properties, that.properties) && Objects.equals(this.sessionId, that.sessionId);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(this.uuid, this.username);
+        int result = Objects.hash(this.uuid, this.username, this.sessionId);
         result = 31 * result + Arrays.hashCode(this.properties);
         return result;
     }
@@ -103,7 +111,7 @@ public record LoginSuccessPacket(UUID uuid, String username, Property[] properti
     @Override
     public String toString() {
         return "LoginSuccessPacket{uuid=" + this.uuid + ", username='" + this.username + "', properties=" +
-                Arrays.toString(this.properties) + '}';
+                Arrays.toString(this.properties) + ", sessionId=" + this.sessionId + '}';
     }
 
 }

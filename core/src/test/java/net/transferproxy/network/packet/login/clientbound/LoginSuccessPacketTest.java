@@ -37,11 +37,15 @@ class LoginSuccessPacketTest extends PacketTestBase {
         final UUID uuid = UUID.fromString("169033d6-0967-49dc-828e-a6c48665e08f");
         final String username = "Darkkraft";
         final Property[] properties = {new Property("name", "value", "signature")};
-        this.test(new LoginSuccessPacket(uuid, username, new Property[0]), LoginSuccessPacket::new);
-        this.test(new LoginSuccessPacket(uuid, username, properties), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, new Property[0], null), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, properties, null), LoginSuccessPacket::new);
         mockClientProtocol(768);
-        this.test(new LoginSuccessPacket(uuid, username, new Property[0]), LoginSuccessPacket::new);
-        this.test(new LoginSuccessPacket(uuid, username, properties), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, new Property[0], null), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, properties, null), LoginSuccessPacket::new);
+        mockClientProtocol(776); // 776 = 26.2
+        final UUID sessionId = UUID.fromString("069a79f4-44e9-4726-a5be-fca90e38aaf5");
+        this.test(new LoginSuccessPacket(uuid, username, new Property[0], sessionId), LoginSuccessPacket::new);
+        this.test(new LoginSuccessPacket(uuid, username, properties, sessionId), LoginSuccessPacket::new);
     }
 
 }
