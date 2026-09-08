@@ -44,7 +44,7 @@ the [official wiki](https://github.com/YvanMazy/TransferProxy/wiki).
 
 ## 📋 Requirements
 
-- Java version: 17 or higher.
+- Java version: 25 or higher.
 - Minecraft client version: 1.20.5 or higher, to support the transfer packet functionality.
 
 ## 🔌 Contribution
