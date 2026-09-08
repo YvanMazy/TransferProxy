@@ -1,7 +1,7 @@
 buildscript() {
     repositories {
         maven {
-            url 'https://jitpack.io'
+            url = 'https://jitpack.io'
         }
     }
     dependencies {
@@ -38,7 +38,7 @@ shadowJar {
     manifest {
         attributes 'Main-Class': 'net.transferproxy.main.Main'
     }
-    archiveClassifier.set('')
+    archiveClassifier.set('all')
 }
 
 tasks.register('copyJar', Copy) {
@@ -57,7 +57,7 @@ testing {
         targets.configureEach {
 
             repositories {
-                maven { url 'https://jitpack.io' }
+                maven { url = 'https://jitpack.io' }
             }
 
             dependencies {
@@ -75,8 +75,6 @@ def integrationJavaToolchain = {
 }
 
 integrationTest {
-    // shadowJar overwrites the jar this suite runs against, Gradle needs the ordering to be explicit
-    mustRunAfter tasks.shadowJar
     systemProperty 'library.cache.dir', gradle.gradleUserHomeDir.toPath().resolve('caches').resolve('TransferProxy').resolve('data').toString();
     systemProperty 'tinylog.configuration', 'test-tinylog.properties'
     systemProperty 'minecraft.version', minecraftRemapper.version
