@@ -26,15 +26,15 @@ allprojects {
         api 'org.tinylog:tinylog-impl:2.7.0'
 
         // Networking
-        api 'io.netty:netty-all:4.2.9.Final'
+        api 'io.netty:netty-all:4.2.17.Final'
 
         // Annotations
-        api 'org.jetbrains:annotations:26.0.2'
+        api 'org.jetbrains:annotations:26.1.0'
     }
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
+            languageVersion = JavaLanguageVersion.of(25)
             vendor = JvmVendorSpec.ADOPTIUM
         }
     }
@@ -50,7 +50,8 @@ allprojects {
     def applyTestDependencies = { config ->
         config.implementation config.platform('org.junit:junit-bom:5.11.3')
         config.implementation 'org.junit.jupiter:junit-jupiter'
-        config.implementation 'org.mockito:mockito-core:5.14.2'
+        config.implementation 'org.mockito:mockito-core:5.23.0'
+        config.runtimeOnly 'org.junit.platform:junit-platform-launcher'
     }
 
     plugins.withType(JvmTestSuitePlugin).tap {

@@ -1,22 +1,22 @@
 dependencies {
     // Configuration
-    api 'tools.jackson.dataformat:jackson-dataformat-yaml:3.0.3'
+    api 'tools.jackson.dataformat:jackson-dataformat-yaml:3.2.2'
 
     // Logging
-    api 'org.jline:jline-terminal-jansi:3.30.6'
+    api 'org.jline:jline-terminal-jansi:3.30.16'
 
     // Adventure library
-    def version = '4.26.1'
+    def version = '5.2.0'
     api("net.kyori:adventure-api:$version") {
         exclude module: 'gson'
     }
     api "net.kyori:adventure-nbt:$version"
     api "net.kyori:adventure-text-serializer-gson:$version"
-    api "net.kyori:adventure-text-serializer-gson-legacy-impl:$version"
+    api "net.kyori:adventure-text-serializer-json-legacy-impl:$version"
     api "net.kyori:adventure-text-logger-slf4j:$version"
     api "net.kyori:adventure-text-minimessage:$version"
 
-    api 'com.google.code.gson:gson:2.13.2'
+    api 'com.google.code.gson:gson:2.14.0'
 }
 
 configurations {
