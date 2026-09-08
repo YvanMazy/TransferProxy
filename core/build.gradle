@@ -5,7 +5,7 @@ buildscript() {
         }
     }
     dependencies {
-        classpath 'com.github.YvanMazy.MinecraftRemapperGradle:MinecraftRemapperGradle:a2558bb063'
+        classpath 'com.github.YvanMazy.MinecraftRemapperGradle:MinecraftRemapperGradle:bf2e1e35e0'
     }
 }
 
@@ -24,7 +24,7 @@ dependencies {
 }
 
 minecraftRemapper {
-    version = "1.21.11"
+    version = "26.2"
     directionType = 'CLIENT'
     includeRemappedJarDependency = true
     includeLibrariesDependency = true
@@ -70,11 +70,13 @@ testing {
 }
 
 def integrationJavaToolchain = {
-    languageVersion = JavaLanguageVersion.of(21)
+    languageVersion = JavaLanguageVersion.of(25)
     vendor = java.toolchain.vendor
 }
 
 integrationTest {
+    // shadowJar overwrites the jar this suite runs against, Gradle needs the ordering to be explicit
+    mustRunAfter tasks.shadowJar
     systemProperty 'library.cache.dir', gradle.gradleUserHomeDir.toPath().resolve('caches').resolve('TransferProxy').resolve('data').toString();
     systemProperty 'tinylog.configuration', 'test-tinylog.properties'
     systemProperty 'minecraft.version', minecraftRemapper.version
