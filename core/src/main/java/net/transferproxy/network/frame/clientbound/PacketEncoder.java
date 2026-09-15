@@ -45,7 +45,7 @@ public final class PacketEncoder extends MessageToByteEncoder<Packet> {
 
     @Override
     protected void encode(final ChannelHandlerContext ctx, final Packet msg, final ByteBuf out) {
-        writeVarInt(out, msg.getId());
+        writeVarInt(out, this.connection.getPacketProviderGroup().getPacketId(msg));
         msg.write(this.connection, out);
     }
 

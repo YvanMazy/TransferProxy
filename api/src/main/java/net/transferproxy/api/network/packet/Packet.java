@@ -72,9 +72,11 @@ public interface Packet {
      * Returns the unique numeric identifier for this packet type.
      * <p>
      * This ID is used by the network protocol to recognize and route packets correctly.
+     * It corresponds to the latest supported protocol, older protocols may use another ID.
      * </p>
      *
      * @return the packet's network protocol ID
+     * @see net.transferproxy.api.network.packet.provider.PacketProviderGroup#getPacketId(Packet)
      */
     @Contract(pure = true)
     int getId();

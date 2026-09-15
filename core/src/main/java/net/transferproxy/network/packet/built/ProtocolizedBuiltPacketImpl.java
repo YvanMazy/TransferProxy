@@ -28,8 +28,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.util.collection.IntObjectHashMap;
 import io.netty.util.collection.IntObjectMap;
+import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
+import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.network.protocol.Protocolized;
 import net.transferproxy.util.BiIntFunction;
 import org.jetbrains.annotations.NotNull;
@@ -100,14 +102,18 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
                     final IntObjectMap<byte[]> newMap = copyOf(localMap);
 
                     if (this.lazy && this.isAvailable(protocol)) {
-                        data = this.computeBytes(protocol, allocator);
+                        data = this.computeBytes(protocol, protocol, allocator);
                         newMap.put(protocol, data);
                     } else {
                         final int low = this.findLow(protocol);
-                        final byte[] lowData = localMap.get(low);
+                        // The packet ID depends on the group, so the low data can only be shared within the same group
+                        final boolean sameGroup = getGroup(low) == getGroup(protocol);
+                        final byte[] lowData = sameGroup ? localMap.get(low) : null;
                         if (lowData == null) {
-                            data = this.computeBytes(low, allocator);
-                            newMap.put(low, data);
+                            data = this.computeBytes(low, protocol, allocator);
+                            if (sameGroup) {
+                                newMap.put(low, data);
+                            }
                             newMap.put(protocol, data);
                         } else {
                             data = lowData;
@@ -137,16 +143,16 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
 
     @VisibleForTesting
     byte[] computeBytes(final int protocol) {
-        return this.computeBytes(protocol, ByteBufAllocator.DEFAULT);
+        return this.computeBytes(protocol, protocol, ByteBufAllocator.DEFAULT);
     }
 
     @VisibleForTesting
-    byte[] computeBytes(final int protocol, final @NotNull ByteBufAllocator allocator) {
+    byte[] computeBytes(final int protocol, final int groupProtocol, final @NotNull ByteBufAllocator allocator) {
         final Packet packet = this.packetFactory.apply(protocol);
 
         final ByteBuf buf = allocator.buffer();
         try {
-            writeVarInt(buf, packet.getId());
+            writeVarInt(buf, getGroup(groupProtocol).getPacketId(packet));
             packet.write(Protocolized.of(protocol), buf);
 
             final byte[] data = new byte[buf.readableBytes()];
@@ -173,6 +179,10 @@ public class ProtocolizedBuiltPacketImpl implements ProtocolizedBuiltPacket {
             copy.put(entry.key(), entry.value());
         }
         return copy;
+    }
+
+    private static PacketProviderGroup getGroup(final int protocol) {
+        return TransferProxy.getInstance().getModuleManager().getPacketProviderGroupFunction().apply(protocol);
     }
 
 }

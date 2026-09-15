@@ -24,7 +24,7 @@ dependencies {
 }
 
 minecraftRemapper {
-    version = "26.2"
+    version = "26.3"
     directionType = 'CLIENT'
     includeRemappedJarDependency = true
     includeLibrariesDependency = true

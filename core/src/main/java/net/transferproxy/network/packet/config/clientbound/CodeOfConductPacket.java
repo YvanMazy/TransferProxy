@@ -45,7 +45,7 @@ public record CodeOfConductPacket(String codeOfConduct) implements Packet {
 
     @Override
     public int getId() {
-        return 0x13;
+        return 0x14;
     }
 
 }

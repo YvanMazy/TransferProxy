@@ -22,31 +22,26 @@
  * SOFTWARE.
  */
 
-package net.transferproxy.network.packet.provider;
+package net.transferproxy.network.packet.provider.impl;
 
-import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
-import net.transferproxy.network.packet.provider.impl.LatestPacketProviderGroup;
-import net.transferproxy.network.packet.provider.impl.V26_2PacketProviderGroup;
-import org.jetbrains.annotations.Contract;
+import net.transferproxy.api.network.packet.Packet;
+import net.transferproxy.network.packet.config.clientbound.CodeOfConductPacket;
+import net.transferproxy.network.packet.config.clientbound.ServerSelectKnownPacksPacket;
+import net.transferproxy.network.packet.config.clientbound.StoreCookiePacket;
+import net.transferproxy.network.packet.config.clientbound.TransferPacket;
 import org.jetbrains.annotations.NotNull;
 
-public final class PacketProviderGroups {
+public final class V26_2PacketProviderGroup extends LatestPacketProviderGroup {
 
-    private static final PacketProviderGroup LATEST_GROUP = new LatestPacketProviderGroup();
-    private static final PacketProviderGroup V26_2_GROUP = new V26_2PacketProviderGroup();
-
-    private PacketProviderGroups() throws IllegalAccessException {
-        throw new IllegalAccessException("You cannot instantiate this class");
-    }
-
-    @Contract(pure = true)
-    public static @NotNull PacketProviderGroup determineGroup(final int protocol) {
-        return protocol >= 777 ? LATEST_GROUP : V26_2_GROUP; // 777 = 26.3
-    }
-
-    @Contract(pure = true)
-    public static @NotNull PacketProviderGroup getDefaultGroup() {
-        return LATEST_GROUP;
+    @Override
+    public int getPacketId(final @NotNull Packet packet) {
+        return switch (packet) {
+            case StoreCookiePacket _ -> 0x0A;
+            case TransferPacket _ -> 0x0B;
+            case ServerSelectKnownPacksPacket _ -> 0x0E;
+            case CodeOfConductPacket _ -> 0x13;
+            default -> super.getPacketId(packet);
+        };
     }
 
 }

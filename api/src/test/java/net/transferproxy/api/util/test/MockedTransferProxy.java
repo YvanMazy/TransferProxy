@@ -35,7 +35,9 @@ import org.mockito.Mockito;
 public class MockedTransferProxy extends TransferProxy {
 
     public static void mock() {
-        new MockedTransferProxy().start();
+        if (TransferProxy.getInstance() == null) {
+            new MockedTransferProxy().start();
+        }
     }
 
     // I use the yaml configuration because it has the default values

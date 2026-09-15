@@ -27,16 +27,39 @@ package net.transferproxy.network.packet.built;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
+import net.transferproxy.api.TransferProxy;
+import net.transferproxy.api.network.connection.ConnectionState;
+import net.transferproxy.api.network.packet.Packet;
 import net.transferproxy.api.network.packet.built.ProtocolizedBuiltPacket;
+import net.transferproxy.api.network.packet.provider.PacketProvider;
+import net.transferproxy.api.network.packet.provider.PacketProviderGroup;
 import net.transferproxy.api.network.protocol.Protocolized;
+import net.transferproxy.api.util.test.MockedTransferProxy;
 import net.transferproxy.network.packet.PacketTestBase;
+import net.transferproxy.network.packet.provider.PacketProviderGroups;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.function.IntFunction;
 
 import static net.transferproxy.util.BufUtil.readVarInt;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ProtocolizedBuiltPacketImplTest extends PacketTestBase {
+
+    @BeforeAll
+    static void setUpProxy() {
+        MockedTransferProxy.mock();
+    }
+
+    @BeforeEach
+    void setUpGroupFunction() {
+        mockGroupFunction(PacketProviderGroups::determineGroup);
+    }
 
     @SuppressWarnings("deprecation")
     @Test
@@ -90,7 +113,57 @@ class ProtocolizedBuiltPacketImplTest extends PacketTestBase {
             assertDoesNotThrow(() -> builtPacket.get(allocator, protocol)).release();
         }
 
-        verify(builtPacket, times(3)).computeBytes(anyInt(), any(ByteBufAllocator.class));
+        verify(builtPacket, times(3)).computeBytes(anyInt(), anyInt(), any(ByteBufAllocator.class));
+    }
+
+    @Test
+    void testPacketIdIsResolvedByGroup() {
+        final int oldId = 0x10;
+        final PacketProviderGroup oldGroup = new PacketProviderGroup() {
+            @Override
+            public PacketProvider @Nullable [] getProviders(final @NotNull ConnectionState state) {
+                return null;
+            }
+
+            @Override
+            public int getPacketId(final @NotNull Packet packet) {
+                return oldId;
+            }
+        };
+        final PacketProviderGroup newGroup = _ -> null;
+        mockGroupFunction(protocol -> protocol >= 12 ? newGroup : oldGroup);
+
+        final var builtPacket = spy(new ProtocolizedBuiltPacketImpl(i -> new DummyTestPacket(i, "test data"), true, 5, 10, 15));
+
+        final ByteBufAllocator allocator = ByteBufAllocator.DEFAULT;
+        record Entry(int protocol, int expectedProtocol, int expectedId) {
+
+        }
+        // @formatter:off
+        for (final Entry entry : new Entry[] {
+                new Entry(11, 10, oldId),
+                new Entry(12, 10, DummyTestPacket.ID),
+                new Entry(10, 10, oldId),
+                new Entry(13, 10, DummyTestPacket.ID),
+                new Entry(15, 15, DummyTestPacket.ID),
+                new Entry(5, 5, oldId)
+        }) {
+            final ByteBuf buf = assertDoesNotThrow(() -> builtPacket.get(allocator, entry.protocol));
+            assertEquals(entry.expectedId, readVarInt(buf), "Wrong packet ID for protocol " + entry.protocol);
+
+            final DummyTestPacket packet = assertDoesNotThrow(() -> new DummyTestPacket(buf));
+            assertEquals(entry.expectedProtocol, packet.protocol());
+
+            buf.release();
+        }
+        // @formatter:on
+
+        // 10 is shared with 11, but not with 12 and 13 which are in another group
+        verify(builtPacket, times(5)).computeBytes(anyInt(), anyInt(), any(ByteBufAllocator.class));
+    }
+
+    private static void mockGroupFunction(final @NotNull IntFunction<PacketProviderGroup> function) {
+        when(TransferProxy.getInstance().getModuleManager().getPacketProviderGroupFunction()).thenReturn(function);
     }
 
 }

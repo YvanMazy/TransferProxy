@@ -43,7 +43,7 @@ public final class ServerSelectKnownPacksPacket extends SelectKnownPacksPacket {
 
     @Override
     public int getId() {
-        return 0x0E;
+        return 0x0F;
     }
 
 }
