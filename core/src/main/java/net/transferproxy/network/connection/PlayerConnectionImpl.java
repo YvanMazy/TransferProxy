@@ -65,6 +65,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerConnectionImpl extends SimpleChannelInboundHandler<ServerboundPacket> implements PlayerConnection {
 
@@ -90,6 +91,8 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     private final Object codeOfConductLock = new Object();
     private CompletableFuture<Void> codeOfConductFuture;
 
+    private final AtomicBoolean transferRequested = new AtomicBoolean();
+
     public PlayerConnectionImpl(final @NotNull Channel channel) {
         this.channel = Objects.requireNonNull(channel, "channel must not be null");
     }
@@ -103,6 +106,10 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     public void transfer(final @NotNull String host, final int hostPort) {
         this.ensureState(ConnectionState.CONFIG, "transfer");
         final PreTransferEvent event = new PreTransferEvent(this, host, hostPort);
+        // Listeners run before the state is closed, so concurrent and recursive calls must be rejected here
+        if (!this.transferRequested.compareAndSet(false, true)) {
+            throw new IllegalStateException("PlayerConnection#transfer has already been called");
+        }
         TransferProxy.getInstance().getModuleManager().getEventManager().call(EventType.PRE_TRANSFER, event);
         this.sendPacket(new TransferPacket(event.getHost(), event.getHostPort()));
         if (TransferProxy.getInstance().getConfiguration().getLogging().isLogTransfer()) {
