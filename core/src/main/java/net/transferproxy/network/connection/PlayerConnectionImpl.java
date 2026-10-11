@@ -111,9 +111,15 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
             throw new IllegalStateException("PlayerConnection#transfer has already been called");
         }
         TransferProxy.getInstance().getModuleManager().getEventManager().call(EventType.PRE_TRANSFER, event);
-        this.sendPacket(new TransferPacket(event.getHost(), event.getHostPort()));
+        // A listener may have closed the connection
+        if (this.state != ConnectionState.CONFIG || !this.channel.isActive()) {
+            return;
+        }
+        final String targetHost = event.getHost();
+        final int targetPort = event.getHostPort();
+        this.sendPacket(new TransferPacket(targetHost, targetPort));
         if (TransferProxy.getInstance().getConfiguration().getLogging().isLogTransfer()) {
-            LOGGER.info("Player {} are transferred to {}:{}", this.getDisplay(), event.getHost(), event.getHostPort());
+            LOGGER.info("Player {} are transferred to {}:{}", this.getDisplay(), targetHost, targetPort);
         }
         this.state = ConnectionState.CLOSED;
     }
