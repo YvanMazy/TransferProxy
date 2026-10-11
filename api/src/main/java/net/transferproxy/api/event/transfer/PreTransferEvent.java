@@ -35,6 +35,8 @@ import java.util.Objects;
  * <p>
  * Listeners may read and rewrite the destination ({@link #getHost()}/{@link #getHostPort()});
  * the (possibly modified) values are used to build the outgoing transfer packet.
+ * <p>
+ * Listeners are called synchronously on the thread that requested the transfer.
  */
 public class PreTransferEvent {
 
