@@ -28,7 +28,9 @@ import net.kyori.adventure.key.Key;
 import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.configuration.ProxyConfiguration;
 import net.transferproxy.api.event.EventType;
+import net.transferproxy.api.event.listener.PreTransferListener;
 import net.transferproxy.api.event.listener.ReadyListener;
+import net.transferproxy.api.event.transfer.PreTransferEvent;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.test.util.ByteUtil;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,7 +43,9 @@ import java.rmi.RemoteException;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JoinTransferIntegrationTest {
@@ -51,11 +55,14 @@ class JoinTransferIntegrationTest {
     private static final int TEST_LOG_AMOUNT = 3;
     private static final Phaser PHASER = new Phaser(2);
     private static final AtomicBoolean SUCCESS = new AtomicBoolean();
+    private static final AtomicInteger PRE_TRANSFER_COUNT = new AtomicInteger();
 
     private static final Key AMOUNT_KEY = Key.key("transferproxy", "log_amount");
 
     private static String host;
     private static int hostPort;
+    private static volatile String lastTransferHost;
+    private static volatile int lastTransferPort;
 
     @BeforeAll
     static void beforeAll() {
@@ -66,6 +73,8 @@ class JoinTransferIntegrationTest {
         hostPort = network.getBindPort();
 
         proxy.getModuleManager().getEventManager().<ReadyListener>addListener(EventType.READY, JoinTransferIntegrationTest::onReady);
+        proxy.getModuleManager().getEventManager()
+                .<PreTransferListener>addListener(EventType.PRE_TRANSFER, JoinTransferIntegrationTest::onPreTransfer);
     }
 
     @Test
@@ -82,6 +91,17 @@ class JoinTransferIntegrationTest {
             PHASER.arriveAndAwaitAdvance();
         }
         assertTrue(SUCCESS.get());
+
+        // PRE_TRANSFER must fire once per performed transfer, right before the packet is sent
+        assertEquals(TEST_LOG_AMOUNT, PRE_TRANSFER_COUNT.get());
+        assertEquals(host, lastTransferHost);
+        assertEquals(hostPort, lastTransferPort);
+    }
+
+    private static void onPreTransfer(final PreTransferEvent event) {
+        lastTransferHost = event.getHost();
+        lastTransferPort = event.getHostPort();
+        PRE_TRANSFER_COUNT.incrementAndGet();
     }
 
     private static void onReady(final PlayerConnection connection) {

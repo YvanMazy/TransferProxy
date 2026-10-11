@@ -34,6 +34,8 @@ import io.netty.handler.timeout.ReadTimeoutException;
 import net.kyori.adventure.text.Component;
 import net.transferproxy.api.TransferProxy;
 import net.transferproxy.api.configuration.ProxyConfiguration;
+import net.transferproxy.api.event.EventType;
+import net.transferproxy.api.event.transfer.PreTransferEvent;
 import net.transferproxy.api.network.connection.ConnectionState;
 import net.transferproxy.api.network.connection.PlayerConnection;
 import net.transferproxy.api.network.packet.Packet;
@@ -100,9 +102,11 @@ public class PlayerConnectionImpl extends SimpleChannelInboundHandler<Serverboun
     @Override
     public void transfer(final @NotNull String host, final int hostPort) {
         this.ensureState(ConnectionState.CONFIG, "transfer");
-        this.sendPacket(new TransferPacket(host, hostPort));
+        final PreTransferEvent event = new PreTransferEvent(this, host, hostPort);
+        TransferProxy.getInstance().getModuleManager().getEventManager().call(EventType.PRE_TRANSFER, event);
+        this.sendPacket(new TransferPacket(event.getHost(), event.getHostPort()));
         if (TransferProxy.getInstance().getConfiguration().getLogging().isLogTransfer()) {
-            LOGGER.info("Player {} are transferred to {}:{}", this.getDisplay(), host, hostPort);
+            LOGGER.info("Player {} are transferred to {}:{}", this.getDisplay(), event.getHost(), event.getHostPort());
         }
         this.state = ConnectionState.CLOSED;
     }
