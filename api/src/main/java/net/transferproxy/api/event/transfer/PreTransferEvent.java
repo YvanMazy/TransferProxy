@@ -37,6 +37,9 @@ import java.util.Objects;
  * the (possibly modified) values are used to build the outgoing transfer packet.
  * <p>
  * Listeners are called synchronously on the thread that requested the transfer.
+ * <p>
+ * If a listener throws an exception, the player is disconnected and the exception is rethrown to the caller of
+ * {@link PlayerConnection#transfer(String, int)}. Listeners should catch their non-critical failures themselves.
  */
 public class PreTransferEvent {
 
